@@ -32,6 +32,7 @@ V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal
 - Testes de sintaxe e os 15 scripts de dev/tests passaram.
 
 ## Últimos commits importantes
+- 710e2a2 fix quest and objective map focus
 - dec1c0e v0.1.1-map-quest-focus
 - cc10e6f v0.1.1-portable-smoke-verified
 - c0f764a v0.1.1-quest-howto

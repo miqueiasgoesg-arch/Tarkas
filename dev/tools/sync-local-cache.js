@@ -1,0 +1,1 @@
+const {setDataRoot}=require('../../src/shared/dataStorage');setDataRoot(require('path').join(__dirname,'..','..','.tarkas-data'));require('../../src/services/tarkovData').syncCore('regular').then(x=>console.log('SYNC_OK',x.updatedAt)).catch(e=>{console.error(e);process.exit(1)});

@@ -1,0 +1,1 @@
+const https=require('https');https.get('https://json.tarkov.dev/endpoints',r=>{let b='';r.on('data',d=>b+=d);r.on('end',()=>{console.log('status',r.statusCode);console.log(b.slice(0,30000))})}).on('error',e=>{console.error(e);process.exit(1)});

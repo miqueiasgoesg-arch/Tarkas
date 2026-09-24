@@ -1,0 +1,1 @@
+const https=require('https');const url='https://raw.githubusercontent.com/sayser/TarkovTracker/master/tools/build_loot_markers_from_api.ps1';https.get(url,{headers:{'User-Agent':'TarkasDev/0.1'}},r=>{let b='';r.on('data',d=>b+=d);r.on('end',()=>{console.log('status',r.statusCode,'bytes',b.length);console.log(b.slice(0,40000))})}).on('error',e=>{console.error(e);process.exit(1)});

@@ -3,6 +3,8 @@ contextBridge.exposeInMainWorld('tarkas', {
   dashboard:()=>ipcRenderer.invoke('dashboard:get'),
   toggleQuest:id=>ipcRenderer.invoke('quest:toggle',id),
   saveSetting:(key,value)=>ipcRenderer.invoke('setting:save',key,value),
+  getSetting:(key,fallback)=>ipcRenderer.invoke('setting:get',key,fallback),
+  playerLevel:()=>ipcRenderer.invoke('player:level'),
   syncData:mode=>ipcRenderer.invoke('data:sync',mode),
   dataStatus:()=>ipcRenderer.invoke('data:status'),
   questCatalog:mode=>ipcRenderer.invoke('quests:catalog',mode),

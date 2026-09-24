@@ -26,8 +26,10 @@ function toggleQuest(id){
   return setQuestStatus(id,q?.status==='completed'?'active':'completed');
 }
 function saveSetting(key,value){ db.prepare('INSERT INTO settings(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').run(key,String(value)); return true; }
+function getSetting(key,fallback=null){const row=db.prepare('SELECT value FROM settings WHERE key=?').get(key);return row?row.value:fallback}
+function playerLevel(){const n=Number(getSetting('playerLevel','1'));return Number.isInteger(n)&&n>=1&&n<=79?n:1}
 function questProgress(){return db.prepare('SELECT * FROM quest_progress').all()}
 function setQuestStatus(id,status){const allowed=['locked','available','active','completed'];if(!allowed.includes(status))throw new Error('status inválido');db.prepare(`INSERT INTO quest_progress(id,status,updated_at) VALUES(?,?,datetime('now')) ON CONFLICT(id) DO UPDATE SET status=excluded.status,updated_at=excluded.updated_at`).run(id,status);return {id,status}}
 function toggleObjective(id,questId){db.prepare(`INSERT INTO objective_progress(id,quest_id,done,updated_at) VALUES(?,?,1,datetime('now')) ON CONFLICT(id) DO UPDATE SET done=1-done,updated_at=datetime('now')`).run(id,questId);return db.prepare('SELECT * FROM objective_progress WHERE id=?').get(id)}
 function objectiveProgress(){return db.prepare('SELECT * FROM objective_progress').all()}
-module.exports={initDb,getDashboard,toggleQuest,saveSetting,questProgress,setQuestStatus,toggleObjective,objectiveProgress};
+module.exports={initDb,getDashboard,toggleQuest,saveSetting,getSetting,playerLevel,questProgress,setQuestStatus,toggleObjective,objectiveProgress};

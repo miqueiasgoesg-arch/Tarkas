@@ -1,0 +1,25 @@
+const fs=require('node:fs');
+const endpoint='http://127.0.0.1:9222/json';
+const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+(async()=>{
+ const page=(await fetch(endpoint).then(r=>r.json())).find(x=>x.type==='page'&&x.url.includes('/resources/app.asar/'));
+ if(!page)throw new Error('Packaged Tarkas page not found');
+ const ws=new WebSocket(page.webSocketDebuggerUrl);
+ await new Promise((resolve,reject)=>{ws.addEventListener('open',resolve,{once:true});ws.addEventListener('error',reject,{once:true})});
+ let id=0;const waits=new Map();
+ ws.addEventListener('message',e=>{const m=JSON.parse(e.data);if(m.id&&waits.has(m.id)){const p=waits.get(m.id);waits.delete(m.id);m.error?p.reject(new Error(m.error.message)):p.resolve(m.result)}});
+ const send=(method,params={})=>new Promise((resolve,reject)=>{const n=++id;waits.set(n,{resolve,reject});ws.send(JSON.stringify({id:n,method,params}))});
+ const ev=async expression=>{const r=await send('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});if(r.exceptionDetails)throw new Error(r.exceptionDetails.text||'Renderer script failed');return r.result?.value};
+ await send('Page.enable');await send('Runtime.enable');await pause(900);await ev(`document.querySelector('#nav button[data-page="dashboard"]').click()`);await pause(600);
+ const dash=await ev(`(()=>({title:document.querySelector('#title')?.textContent,level:document.querySelector('#playerlevel')?.value,cards:document.querySelectorAll('.card').length}))()`);
+ if(dash.title!=='Visão Geral'||!dash.level||dash.cards<4)throw new Error('Dashboard check failed: '+JSON.stringify(dash));
+ await send('Page.captureScreenshot',{format:'png'}).then(s=>fs.writeFileSync(process.env.TEMP+'\\Tarkas-v011-dashboard.png',Buffer.from(s.data,'base64')));
+ const guide=await ev(`(async()=>{const d=await window.tarkas.questCatalog('regular');const q=d.quests.find(q=>q.objectives.some(o=>o.items.some(i=>i.icon)));if(!q)throw Error('No quest with item illustrations');window.__qaGuide={id:q.id,name:q.name};document.querySelector('#nav button[data-page="quests"]').click();await new Promise(r=>setTimeout(r,250));const st=document.querySelector('#qstate');st.value='all';st.dispatchEvent(new Event('change',{bubbles:true}));const search=document.querySelector('#qs');search.value=q.name;search.dispatchEvent(new Event('input',{bubbles:true}));await new Promise(r=>setTimeout(r,150));const row=[...document.querySelectorAll('.qrow')].find(x=>x.querySelector('h3')?.textContent===q.name);if(!row)throw Error('Guide quest did not render');const details=row.querySelector('.qguide');details.open=true;await Promise.all([...details.querySelectorAll('.qitem img')].map(img=>img.decode().catch(()=>null)));return{title:document.querySelector('#title')?.textContent,name:q.name,howTo:details.innerText,itemCards:details.querySelectorAll('.qitem').length,itemImages:details.querySelectorAll('.qitem img').length,loadedItemImages:[...details.querySelectorAll('.qitem img')].filter(img=>img.naturalWidth>0).length,objectiveButtons:details.querySelectorAll('.qobjmap').length}})()`);
+ if(guide.title!=='Quests'||guide.itemCards<1||guide.itemImages<1||guide.loadedItemImages!==guide.itemImages||!guide.howTo)throw new Error('Quest guide check failed: '+JSON.stringify(guide));
+ await send('Page.captureScreenshot',{format:'png'}).then(s=>fs.writeFileSync(process.env.TEMP+'\\Tarkas-v011-quest-guide.png',Buffer.from(s.data,'base64')));
+ const map=await ev(`(async()=>{document.querySelector('#nav button[data-page="mapa"]').click();await new Promise(r=>setTimeout(r,500));const ms=await window.tarkas.maps('regular'),m=ms.find(x=>x.slug==='customs');const sel=document.querySelector('#raidmap');sel.value=m.id;sel.dispatchEvent(new Event('change',{bubbles:true}));await new Promise(r=>setTimeout(r,1300));return{title:document.querySelector('#title')?.textContent,name:document.querySelector('.maphead b')?.textContent,svg:Boolean(document.querySelector('.mapart svg')),markers:document.querySelectorAll('.overlaymap .mark').length,legend:document.querySelector('.legend')?.innerText,floors:document.querySelectorAll('.floorbtn').length}})()`);
+ if(map.title!=='Mapa Interativo'||map.name!=='Customs'||!map.svg||map.markers<1||!map.legend)throw new Error('Map check failed: '+JSON.stringify(map));
+ await send('Page.captureScreenshot',{format:'png'}).then(s=>fs.writeFileSync(process.env.TEMP+'\\Tarkas-v011-map-module.png',Buffer.from(s.data,'base64')));
+ console.log(JSON.stringify({build:page.url,dashboard:dash,questGuide:guide,map,screenshots:['Tarkas-v011-dashboard.png','Tarkas-v011-quest-guide.png','Tarkas-v011-map-module.png'].map(x=>process.env.TEMP+'\\'+x)},null,2));
+ ws.close();
+})().catch(error=>{console.error(error.stack||error);process.exitCode=1});

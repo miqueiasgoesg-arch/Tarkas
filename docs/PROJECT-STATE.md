@@ -27,7 +27,9 @@ V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal
 - Gerado: 24/09/2026 20:00:41
 - SHA-256: 02C4D97AEDC6959DC5512D961AE5CAEA5C15B8AD1A7EE634759F91E917F54A67
 - Build portátil gerado com npm.cmd run dist; electron-builder concluiu com exit code 0.
-- O EXE recém-compilado foi aberto no notebook. Teste no renderer real: “Ver local no mapa” destacou a quest e o objetivo corretos; “Abrir mapa” destacou os objetivos da quest selecionada. Screenshot de QA salvo temporariamente no notebook.
+- QA visual no renderer real do EXE: Visão Geral (6 cards), Como fazer (8/8 imagens de itens carregadas), e Customs (SVG, 5 andares, legenda e 429 marcadores).
+- No mesmo EXE, “Ver local no mapa” destacou o objetivo certo; “Abrir mapa” destacou a quest. Capturas de QA ficaram temporariamente no notebook.
+- Build copiada ao Drive e sincronizada no PC principal; o hash confere nos dois.
 - Teste automatizado adicional confirmou foco de quest bloqueada com dados reais de Shoreline.
 - Testes de sintaxe e os 15 scripts de dev/tests passaram.
 
@@ -38,10 +40,15 @@ V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal
 - c0f764a v0.1.1-quest-howto
 - daa614b v0.1.1-quest-guide-data
 
+## Distribuição da candidata V0.1.1
+- Cópia versionada no Drive: G:\Meu Drive\Tarkas Releases\V0.1.1\Tarkas-0.1.1-Windows.exe.
+- O PC principal sincronizou o mesmo arquivo nesse caminho; tamanho e SHA-256 conferem com a build do notebook.
+- A fonte de desenvolvimento em G:\Meu Drive\Tarkas-dev-source é um snapshot sem Git; preparar uma cópia Git de fallback no PC antes de qualquer desenvolvimento nele.
+
 ## Próximos passos
-1. Manter esta build como candidata V0.1.1; a cópia oficial ainda depende da validação manual final do usuário nos três módulos.
-2. Depois da validação, copiar a release aprovada para Google Drive e PC principal.
-3. Refinamentos posteriores: switches Labs visíveis, ícone próprio e documentação Battle Pass quando houver fonte confiável.
+1. Notebook permanece como cópia principal; não desenvolver em paralelo no PC.
+2. Refinamentos V0.2: switches Labs visíveis, ícone próprio e documentação Battle Pass quando houver fonte confiável.
+3. O usuário pode abrir a candidata sincronizada e enviar feedback manual quando quiser.
 
 ## Correção Quest → Mapa (24/09/2026)
 - Causa: o commit dec1c0e guardava os IDs da quest/objetivo, mas o Map Engine não os consumia.

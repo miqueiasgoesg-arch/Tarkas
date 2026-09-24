@@ -25,10 +25,10 @@ V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal
 - Arquivo: dist/Tarkas-0.1.1-Windows.exe
 - Tamanho: 355041270 bytes
 - Gerado: 24/09/2026 19:11:02
-- SHA-256: 9fb8f4c1ba8bc5e37623a59d5b14e32ddc9a5d800fc9fa5b45c427d9ca0fad20
-- A execução final do electron-builder terminou com erro de limpeza ENOENT do arquivo temporário nsis.7z, mas o portátil foi efetivamente gerado antes desse erro.
+- SHA-256: e4a03b3fb904a9dbe95f01b3a25a0242942acfc2a81e94ab4d6fe966de8cd111
+- Build repetido em ambiente limpo: electron-builder concluiu com exit code 0 em 28,34 s. O erro ENOENT anterior não se repetiu.
 - Smoke test do portátil recém-gerado: abriu no notebook com 4 processos Tarkas/Electron e encerrou sem processos órfãos.
-- Não promover ainda como release final até corrigir/entender o erro de cleanup do builder e validar visualmente o novo guia de quests.
+- Build tecnicamente aprovado; falta validação visual do novo guia de quests antes da promoção final.
 
 ## Últimos commits importantes
 - cc10e6f v0.1.1-portable-smoke-verified
@@ -37,7 +37,7 @@ V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal
 
 ## Próximos passos
 1. Validar visualmente “Como fazer” e Quest → Mapa.
-2. Corrigir/contornar cleanup ENOENT do electron-builder e obter build com exit code 0.
+2. Build limpo com exit code 0 concluído.
 3. Reexecutar testes/audit.
 4. Atualizar checklist e gerar hash final.
 5. Copiar release final para Google Drive e depois PC principal.

@@ -34,6 +34,7 @@ V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal
 - Testes de sintaxe e os 15 scripts de dev/tests passaram.
 
 ## Últimos commits importantes
+- f113af0 qa v0.1.1 modules and distribute release
 - 710e2a2 fix quest and objective map focus
 - dec1c0e v0.1.1-map-quest-focus
 - cc10e6f v0.1.1-portable-smoke-verified
@@ -43,10 +44,12 @@ V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal
 ## Distribuição da candidata V0.1.1
 - Cópia versionada no Drive: G:\Meu Drive\Tarkas Releases\V0.1.1\Tarkas-0.1.1-Windows.exe.
 - O PC principal sincronizou o mesmo arquivo nesse caminho; tamanho e SHA-256 conferem com a build do notebook.
-- A fonte de desenvolvimento em G:\Meu Drive\Tarkas-dev-source é um snapshot sem Git; preparar uma cópia Git de fallback no PC antes de qualquer desenvolvimento nele.
+- Clone de fallback no PC: E:\DESENVOLVIMENTO\Projeto-Tarkas, branch master, commit f113af0, árvore limpa.
+- O clone tem dependências instaladas; `npm.cmd run check` passou. `npm audit --omit=dev` encontrou 0 vulnerabilidades; npm 11 reporta 14 vulnerabilidades nas ferramentas de desenvolvimento, sem upgrades nesta V0.1.1.
+- Um bundle Git completo foi guardado em G:\Meu Drive\Tarkas-dev-source\Projeto-Tarkas-2026-09-24.bundle para atualizar o fallback. O notebook segue como único local de desenvolvimento.
 
 ## Próximos passos
-1. Notebook permanece como cópia principal; não desenvolver em paralelo no PC.
+1. Notebook permanece como cópia principal; não desenvolver em paralelo no PC. Quando o notebook não responder, o clone E:\DESENVOLVIMENTO\Projeto-Tarkas está pronto como fallback.
 2. Refinamentos V0.2: switches Labs visíveis, ícone próprio e documentação Battle Pass quando houver fonte confiável.
 3. O usuário pode abrir a candidata sincronizada e enviar feedback manual quando quiser.
 

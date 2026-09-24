@@ -23,22 +23,26 @@ V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal
 
 ## Build atual
 - Arquivo: dist/Tarkas-0.1.1-Windows.exe
-- Tamanho: 355041270 bytes
-- Gerado: 24/09/2026 19:11:02
-- SHA-256: e4a03b3fb904a9dbe95f01b3a25a0242942acfc2a81e94ab4d6fe966de8cd111
-- Build repetido em ambiente limpo: electron-builder concluiu com exit code 0 em 28,34 s. O erro ENOENT anterior não se repetiu.
-- Smoke test do portátil recém-gerado: abriu no notebook com 4 processos Tarkas/Electron e encerrou sem processos órfãos.
-- Build tecnicamente aprovado; falta validação visual do novo guia de quests antes da promoção final.
+- Tamanho: 355043500 bytes
+- Gerado: 24/09/2026 20:00:41
+- SHA-256: 02C4D97AEDC6959DC5512D961AE5CAEA5C15B8AD1A7EE634759F91E917F54A67
+- Build portátil gerado com npm.cmd run dist; electron-builder concluiu com exit code 0.
+- O EXE recém-compilado foi aberto no notebook. Teste no renderer real: “Ver local no mapa” destacou a quest e o objetivo corretos; “Abrir mapa” destacou os objetivos da quest selecionada. Screenshot de QA salvo temporariamente no notebook.
+- Teste automatizado adicional confirmou foco de quest bloqueada com dados reais de Shoreline.
+- Testes de sintaxe e os 15 scripts de dev/tests passaram.
 
 ## Últimos commits importantes
+- dec1c0e v0.1.1-map-quest-focus
 - cc10e6f v0.1.1-portable-smoke-verified
 - c0f764a v0.1.1-quest-howto
 - daa614b v0.1.1-quest-guide-data
 
 ## Próximos passos
-1. Validar visualmente “Como fazer” e Quest → Mapa.
-2. Build limpo com exit code 0 concluído.
-3. Reexecutar testes/audit.
-4. Atualizar checklist e gerar hash final.
-5. Copiar release final para Google Drive e depois PC principal.
-6. Refinamentos posteriores: switches Labs visíveis, ícone próprio e documentação Battle Pass quando fonte confiável estiver disponível.
+1. Manter esta build como candidata V0.1.1; a cópia oficial ainda depende da validação manual final do usuário nos três módulos.
+2. Depois da validação, copiar a release aprovada para Google Drive e PC principal.
+3. Refinamentos posteriores: switches Labs visíveis, ícone próprio e documentação Battle Pass quando houver fonte confiável.
+
+## Correção Quest → Mapa (24/09/2026)
+- Causa: o commit dec1c0e guardava os IDs da quest/objetivo, mas o Map Engine não os consumia.
+- Foco agora inclui quests selecionadas independentemente do status; o objetivo selecionado ganha destaque visual no mapa e a quest aparece na faixa “Quest em foco”.
+- Foco de quest/objetivo validado no EXE recém-compilado dist/Tarkas-0.1.1-Windows.exe, incluindo cliques reais nos dois botões da tela de Quests.

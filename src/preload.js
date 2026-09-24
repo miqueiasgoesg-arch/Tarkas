@@ -12,7 +12,7 @@ contextBridge.exposeInMainWorld('tarkas', {
   setQuestStatus:(id,status)=>ipcRenderer.invoke('progress:quest',id,status),
   toggleObjective:(id,questId)=>ipcRenderer.invoke('progress:objective',id,questId),
   plannedQuests:(mode,level)=>ipcRenderer.invoke('quests:planned',mode,level),
-  raidPlan:(mode,map,level)=>ipcRenderer.invoke('raid:plan',mode,map,level),
+  raidPlan:(mode,map,level,focusQuestId)=>ipcRenderer.invoke('raid:plan',mode,map,level,focusQuestId),
   maps:mode=>ipcRenderer.invoke('maps:list',mode),
   mapDetail:(mode,id)=>ipcRenderer.invoke('maps:detail',mode,id),
   mapSvg:file=>ipcRenderer.invoke('map:svg',file),

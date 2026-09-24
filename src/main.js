@@ -37,7 +37,7 @@ ipcMain.handle('progress:get',()=>({quests:questProgress(),objectives:objectiveP
 ipcMain.handle('progress:quest',(_e,id,status)=>setQuestStatus(id,status));
 ipcMain.handle('progress:objective',(_e,id,questId)=>toggleObjective(id,questId));
 ipcMain.handle('quests:planned',(_e,mode,level)=>planQuests(mode,questProgress(),level??playerLevel()));
-ipcMain.handle('raid:plan',(_e,mode,map,level)=>raidPlan(mode,map,questProgress(),level??playerLevel()));
+ipcMain.handle('raid:plan',(_e,mode,map,level,focusQuestId)=>raidPlan(mode,map,questProgress(),level??playerLevel(),focusQuestId||''));
 ipcMain.handle('maps:list',(_e,mode)=>maps(mode));
 ipcMain.handle('maps:detail',(_e,mode,id)=>mapDetail(mode,id));
 ipcMain.handle('map:project',(_e,mode,id,position)=>{const m=mapDetail(mode,id);if(!m?.calibration)return null;return{point:projectPoint(position,m.calibration),floor:pointLayer(position,m.calibration)}});

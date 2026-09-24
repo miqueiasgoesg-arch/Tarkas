@@ -1,0 +1,1 @@
+const fs=require('fs'),p='D:/DESENVOLVIMENTO/Projeto-Tarkas/assets/maps';for(const f of fs.readdirSync(p).filter(x=>x.endsWith('.svg'))){const s=fs.readFileSync(p+'/'+f,'utf8');console.log(f,(Buffer.byteLength(s)/1048576).toFixed(2)+' MB','nodes',(s.match(/</g)||[]).length)}

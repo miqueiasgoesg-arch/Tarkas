@@ -1,0 +1,1 @@
+const fs=require('fs'),p=process.env.APPDATA+'\\projeto-tarkas\\game-data\\regular-maps.json';const d=JSON.parse(fs.readFileSync(p,'utf8')).data.data.maps;for(const m of Object.values(d)){console.log(m.normalizedName, Object.keys(m).filter(k=>/map|image|svg|link|asset/i.test(k)).map(k=>k+'='+JSON.stringify(m[k])).join(' | '))}

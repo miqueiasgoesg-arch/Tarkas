@@ -1,0 +1,1 @@
+const urls=['https://json.tarkov.dev/regular/tasks_pt','https://json.tarkov.dev/regular/tasks_en','https://json.tarkov.dev/regular/maps_pt','https://json.tarkov.dev/regular/traders_pt'];(async()=>{for(const u of urls){const r=await fetch(u);const t=await r.text();console.log(u,r.status,t.length,t.slice(0,160).replace(/\s+/g,' '))}})();

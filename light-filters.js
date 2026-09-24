@@ -1,0 +1,4 @@
+const fs=require('fs');const p="D:\\DESENVOLVIMENTO\\Projeto-Tarkas\\src\\renderer\\app.js";let s=fs.readFileSync(p,'utf8');
+s=s.replace("document.querySelector('#raidmap').onchange=draw;['fx','fs','fb','fq'].forEach(i=>document.querySelector('#'+i).onchange=draw)",
+"document.querySelector('#raidmap').onchange=draw;['fx','fs','fb','fq'].forEach(i=>document.querySelector('#'+i).onchange=()=>{const cls={fx:'extract',fs:'spawn',fb:'boss',fq:'objective'}[i],on=document.querySelector('#'+i).checked;document.querySelectorAll('.overlaymap .'+cls).forEach(el=>el.style.display=on?'inline':'none')})");
+fs.writeFileSync(p,s);console.log('filter-light',s.includes("const cls={fx:'extract'"));

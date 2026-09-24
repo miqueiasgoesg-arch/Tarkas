@@ -1,0 +1,1 @@
+const fs=require('fs');const p=process.env.APPDATA+'\\projeto-tarkas\\game-data\\regular-tasks.json';const x=JSON.parse(fs.readFileSync(p,'utf8')).data;const tasks=x.data?.tasks||x.tasks||x;const a=Object.values(tasks);console.log('tasks',a.length);console.log(JSON.stringify(a.slice(0,2),null,2).slice(0,8000));

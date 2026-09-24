@@ -1,0 +1,1 @@
+const fs=require('fs'),p='D:/DESENVOLVIMENTO/Projeto-Tarkas/assets/maps';for(const f of fs.readdirSync(p)){const s=fs.readFileSync(p+'/'+f,'utf8');const ids=[...s.matchAll(/<(?:g|svg)[^>]+(?:id|data-floor|inkscape:label)=["']([^"']+)["']/gi)].map(x=>x[1]);console.log('\n'+f,ids.slice(0,80).join(' | '))}

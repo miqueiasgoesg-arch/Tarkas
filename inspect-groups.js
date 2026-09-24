@@ -1,0 +1,1 @@
+const fs=require('fs'),path=require('path');for(const f of fs.readdirSync('assets/maps').filter(x=>x.endsWith('.svg'))){const s=fs.readFileSync(path.join('assets/maps',f),'utf8');const ids=[...s.matchAll(/<g[^>]*\sid=["']([^"']+)["']/gi)].map(x=>x[1]);console.log('\n'+f+'\n'+ids.slice(0,80).join(' | '))}

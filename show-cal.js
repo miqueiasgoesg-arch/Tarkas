@@ -1,0 +1,1 @@
+const c=require('./calibration-config.json');for(const k of ['customs','factory','interchange','the-lab','lighthouse','reserve','shoreline','streets-of-tarkov','woods']){let x=c[k];console.log(k,JSON.stringify({transform:x?.transform,rotation:x?.coordinateRotation,bounds:x?.bounds}))}

@@ -1,17 +1,29 @@
 {
   "name": "projeto-tarkas",
+  "productName": "Tarkas",
   "version": "0.1.0",
-  "description": "Projeto Tarkas - companion de progressao para Escape from Tarkov",
+  "description": "Companion de progressao para Escape from Tarkov",
   "main": "src/main.js",
   "scripts": {
     "start": "electron .",
-    "check": "node --check src/main.js && node --check src/preload.js && node --check src/renderer/app.js"
+    "check": "node --check src/main.js && node --check src/preload.js && node --check src/renderer/app.js",
+    "build:win": "electron-builder --win portable --x64",
+    "dist": "npm run check && npm run build:win"
   },
   "private": true,
-  "dependencies": {
-    "better-sqlite3": "^12.2.0"
-  },
-  "devDependencies": {
-    "electron": "^38.1.2"
+  "dependencies": {"better-sqlite3": "^12.2.0"},
+  "devDependencies": {"electron": "^38.1.2", "electron-builder": "^26.0.12"},
+  "build": {
+    "appId": "br.com.tarkas.app",
+    "productName": "Tarkas",
+    "compression": "store",
+    "directories": {"output": "dist"},
+    "files": ["src/**/*","assets/**/*","calibration-config.json","map-config.json","package.json"],
+    "asarUnpack": ["node_modules/better-sqlite3/**/*"],
+    "win": {
+      "signAndEditExecutable": false,
+      "target": [{"target": "portable","arch": ["x64"]}],
+      "artifactName": "Tarkas-${version}-Windows.${ext}"
+    }
   }
 }

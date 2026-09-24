@@ -1,1 +1,0 @@
-const {maps}=require('./src/services/mapEngine');const ms=maps('regular');console.log(ms.length,ms.slice(0,15).map(m=>m.slug+'|'+m.name).join('\n'))

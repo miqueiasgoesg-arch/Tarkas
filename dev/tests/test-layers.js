@@ -1,6 +1,6 @@
 const assert=require('assert');
-const {pointLayer}=require('./src/services/mapEngine');
-const c=require('./calibration-config.json');
+const {pointLayer}=require('../../src/services/mapEngine');
+const c=require('../../calibration-config.json');
 const cases=[
   ['factory',{x:0,y:-2,z:0},'Basement'],
   ['factory',{x:0,y:4,z:0},'Second_Floor'],

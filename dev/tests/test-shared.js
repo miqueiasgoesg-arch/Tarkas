@@ -1,0 +1,1 @@
+const s=require('../../src/shared/schema');const m=require('../../src/shared/syncModel');console.log('shared-core',s.SCHEMA_VERSION,s.SYNC_ENTITIES.length,m.makeSyncEnvelope('test').schemaVersion);

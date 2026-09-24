@@ -1,1 +1,0 @@
-const c=require('./calibration-config.json');const views={customs:[1062.4827,535.17401],factory:[130.81831,141.23242],interchange:[1127.6852,947.02582]};for(const k of Object.keys(views)){const x=c[k],[[x1,z1],[x2,z2]]=x.bounds,[sx,ox,sy,oy]=x.transform;console.log(k,'raw->',[[x1*sx+ox,z1*sy+oy],[x2*sx+ox,z2*sy+oy]],'view',views[k])}

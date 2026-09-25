@@ -48,10 +48,15 @@ V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal
 - O clone tem dependências instaladas; `npm.cmd run check` passou. `npm audit --omit=dev` encontrou 0 vulnerabilidades; npm 11 reporta 14 vulnerabilidades nas ferramentas de desenvolvimento, sem upgrades nesta V0.1.1.
 - Um bundle Git completo foi guardado em G:\Meu Drive\Tarkas-dev-source\Projeto-Tarkas-2026-09-24.bundle para atualizar o fallback. O notebook segue como único local de desenvolvimento.
 
+## Candidata V0.1.2 e fallback (25/09/2026)
+- EXE versionado no Drive: G:\Meu Drive\Tarkas Releases\V0.1.2\Tarkas-0.1.2-Windows.exe; PC sincronizou o mesmo tamanho e SHA-256.
+- Bundle Git completo no Drive: G:\Meu Drive\Tarkas-dev-source\Projeto-Tarkas-2026-09-25.bundle, atualizado até este checkpoint.
+- O clone existente no PC tem alterações locais em `docs/PROJECT-STATE.md`, `src/renderer/app.js`, `src/renderer/style.css` e o arquivo não rastreado `dev/tools/test-live-labs-switches.cjs`. Foi preservado sem atualização; revisar essas alterações antes de usá-lo para desenvolvimento. O bundle V0.1.2 já está sincronizado no PC.
+
 ## Próximos passos
-1. Notebook permanece como cópia principal; não desenvolver em paralelo no PC. Quando o notebook não responder, o clone E:\DESENVOLVIMENTO\Projeto-Tarkas está pronto como fallback.
+1. Notebook permanece como cópia principal; não desenvolver em paralelo no PC. Se precisar alternar, preservar e revisar as alterações locais já presentes no clone do PC antes de integrá-las.
 2. Refinamentos V0.2: ícone próprio e documentação Battle Pass somente quando houver fonte confiável.
-3. A candidata V0.1.2 fica versionada no Drive para feedback manual.
+3. A candidata V0.1.2 está versionada no Drive para feedback manual.
 
 ## Camada de switches de Labs (25/09/2026)
 - Adicionado o controle `Switches`, ligado por padrão, com marcadores roxos e legenda própria.

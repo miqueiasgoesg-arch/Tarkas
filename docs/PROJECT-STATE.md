@@ -9,7 +9,7 @@ Este arquivo deve ser atualizado em checkpoints relevantes. Antes de retomar em 
 V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal para dados do jogo; não duplicar manualmente informação estruturada disponível na fonte.
 
 ## Estado atual
-- Versão: 0.1.2.
+- Versão candidata: 0.1.3.
 - UI principal: Visão Geral, Quests, Mapa Interativo.
 - Player level persistente.
 - Quest Engine: 515 quests, nível/pré-requisitos/progresso Ativar-Concluir.
@@ -22,17 +22,19 @@ V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal
 - Battle Pass/documents: não inventar; integrar somente com fonte confiável/estruturada.
 
 ## Build atual
-- Arquivo: dist/Tarkas-0.1.2-Windows.exe
-- Tamanho: 355044005 bytes
-- Gerado: 24/09/2026 21:12:28 (relógio do notebook)
-- SHA-256: 1C429CE43D818FFF6F6E82EAAD8318D69C39475E550FCE8D5BB5E8AEF433A5EF
+- Arquivo: dist/Tarkas-0.1.3-Windows.exe
+- Tamanho: 355052879 bytes
+- Gerado: 25/09/2026 09:09:07 (relógio do notebook)
+- SHA-256: D89A317228227A64B11A3EE735BBB2C2720F9E8E6A0BA10FDCBDF398759DE231
 - Build portátil gerado com npm.cmd run dist; electron-builder concluiu com exit code 0.
-- QA no renderer do EXE recém-compilado: mapa Labs mostrou 15/15 switches e legenda; o controle escondeu 15 e restaurou 15; os 3 botões de nível mantiveram os pontos; Customs exibiu somente o switch presente nos dados.
-- Captura real do mapa Labs foi salva temporariamente no notebook. O listener de camadas foi exercitado no EXE; um erro de escopo encontrado no primeiro teste foi corrigido e a build recriada antes da validação final.
-- Quest → Mapa previamente validado no EXE V0.1.1: “Ver local no mapa” destacou o objetivo e “Abrir mapa” destacou a quest.
-- Teste automatizado cobre os 15 switches projetados dentro dos limites do mapa; `npm.cmd run check` e os 15 scripts de `dev/tests` passaram.
+- O recurso de ícone foi extraído do EXE e conferido visualmente (32×32); corresponde ao PNG Tarkas.
+- EXE recém-compilado aberto no notebook com depuração remota: renderer mostrou o app, Mapa Interativo abriu The Lab, controle Switches ligado e 15 marcadores presentes; captura visual conferida.
+- `npm.cmd run check` e os 15 scripts de `dev/tests` passaram antes da build.
+- Labs, três níveis e switches já haviam sido exercitados no EXE V0.1.2. Quest → Mapa foi validado no EXE V0.1.1: “Ver local no mapa” destacou o objetivo e “Abrir mapa” destacou a quest.
+- O ícone do app vem de `assets/tarkas-icon.png`, a partir da fonte vetorial `assets/tarkas-icon.svg`.
 
 ## Últimos commits importantes
+- e4d035c feat(app): add custom Tarkas icon
 - c7d2826 feat(labs): add visible switch markers
 - f113af0 qa v0.1.1 modules and distribute release
 - 710e2a2 fix quest and objective map focus
@@ -55,14 +57,21 @@ V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal
 
 ## Próximos passos
 1. Notebook permanece como cópia principal; não desenvolver em paralelo no PC. Se precisar alternar, preservar e revisar as alterações locais já presentes no clone do PC antes de integrá-las.
-2. Refinamentos V0.2: ícone próprio e documentação Battle Pass somente quando houver fonte confiável.
-3. A candidata V0.1.2 está versionada no Drive para feedback manual.
+2. Refinamentos V0.2: documentação Battle Pass somente quando houver fonte confiável.
+3. A candidata V0.1.3 está versionada no Drive para feedback manual.
 
 ## Camada de switches de Labs (25/09/2026)
 - Adicionado o controle `Switches`, ligado por padrão, com marcadores roxos e legenda própria.
 - A camada usa apenas as 15 posições já presentes em `mapDetail`; o teste de dados exige projeção e inclusão no mapa para todas elas.
 - Validado no EXE portátil V0.1.2 aberto no notebook: 15 visíveis, 0 ao desmarcar, 15 ao marcar novamente; os três andares permaneceram selecionáveis.
 - O primeiro teste real encontrou `ReferenceError` porque os listeners usavam `filterState` e `refreshMarks` fora do escopo. O estado foi movido ao escopo da tela do mapa, a versão 0.1.2 foi reconstruída e a nova build passou a validação.
+
+## Ícone próprio e candidata V0.1.3 (25/09/2026)
+- Reaproveitado o rascunho já presente no clone divergente do PC: moldura verde escura, traço dourado e letra T. O clone do PC permaneceu sem alterações.
+- SVG principal em `assets/tarkas-icon.svg`; PNG correspondente em `assets/tarkas-icon.png`, configurado como ícone do executável Windows.
+- `package.json` avançou para 0.1.3. O EXE foi compilado, teve o ícone extraído do recurso do Windows e foi aberto no notebook para validar a tela real.
+- Release versionado no Drive: G:\Meu Drive\Tarkas Releases\V0.1.3\Tarkas-0.1.3-Windows.exe.
+- Bundle Git completo: G:\Meu Drive\Tarkas-dev-source\Projeto-Tarkas-2026-09-25-v0.1.3.bundle.
 
 ## Correção Quest → Mapa (24/09/2026)
 - Causa: o commit dec1c0e guardava os IDs da quest/objetivo, mas o Map Engine não os consumia.

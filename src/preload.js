@@ -7,6 +7,7 @@ contextBridge.exposeInMainWorld('tarkas', {
   playerLevel:()=>ipcRenderer.invoke('player:level'),
   syncData:mode=>ipcRenderer.invoke('data:sync',mode),
   dataStatus:()=>ipcRenderer.invoke('data:status'),
+  battlePassDocuments:()=>ipcRenderer.invoke('battlepass:documents'),
   questCatalog:mode=>ipcRenderer.invoke('quests:catalog',mode),
   progress:()=>ipcRenderer.invoke('progress:get'),
   setQuestStatus:(id,status)=>ipcRenderer.invoke('progress:quest',id,status),

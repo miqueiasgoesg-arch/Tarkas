@@ -25,7 +25,7 @@ O MGOES-NOTE é a máquina preferencial de desenvolvimento. Se estiver indispon�
 - Melhorias de calibração e tratamento dos poucos outliers de mapas.
 - Guia de chaves ligado a quests/mapas.
 - Refinamentos de Raid Mode e camada de switches.
-- Battle Pass/documentos somente quando houver fonte estruturada e confiável.
+- Rastreador local do inventário dos documentos de Battle Pass sustentados pelo cache do tarkov.dev; progresso por tier/recompensas aguardam fonte estruturada.
 
 ### V0.3
 - Stash/inventário.

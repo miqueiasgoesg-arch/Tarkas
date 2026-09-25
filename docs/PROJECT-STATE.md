@@ -51,7 +51,7 @@ V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal
 ## Candidata V0.1.2 e fallback (25/09/2026)
 - EXE versionado no Drive: G:\Meu Drive\Tarkas Releases\V0.1.2\Tarkas-0.1.2-Windows.exe; PC sincronizou o mesmo tamanho e SHA-256.
 - Bundle Git completo no Drive: G:\Meu Drive\Tarkas-dev-source\Projeto-Tarkas-2026-09-25.bundle, atualizado até este checkpoint.
-- O clone do PC está divergente e mudou durante este checkpoint. Na última leitura, o HEAD observado era `ff68ec5`, com `package.json` modificado e `assets/tarkas-icon.svg` não rastreado. Não foi sobrescrito; conferir e preservar as alterações locais antes de alternar ou integrar. O EXE e o bundle V0.1.2 foram sincronizados no PC; o SHA-256 do EXE confere.
+- O clone do PC está divergente e mudou durante este checkpoint. Na última leitura, o HEAD observado era `ff68ec5`, com `package.json` modificado e os arquivos não rastreados `assets/tarkas-icon.svg` e `.png`. Não foi sobrescrito; conferir e preservar as alterações locais antes de alternar ou integrar. O EXE e o bundle V0.1.2 foram sincronizados no PC; o SHA-256 do EXE confere.
 
 ## Próximos passos
 1. Notebook permanece como cópia principal; não desenvolver em paralelo no PC. Se precisar alternar, preservar e revisar as alterações locais já presentes no clone do PC antes de integrá-las.

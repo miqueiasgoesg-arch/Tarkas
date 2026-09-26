@@ -12,3 +12,12 @@
 - Rodar `tools/PitStop.ps1` e testes antes de releases.
 - Exigir Sinal Verde antes de considerar uma release pronta.
 - Preferir executável/atalho simples no PC.
+
+## Modo EconÃ´mico Codex [NICK-ECONOMY-2026-09-26]
+- Ler docs/CODEX-ECONOMY.md antes de iniciar tarefa Codex.
+- Receber escopo fechado e parar quando os critÃ©rios de aceite forem atingidos.
+- NÃ£o explorar melhorias extras, nÃ£o reler histÃ³rico sem necessidade e nÃ£o gerar builds intermediÃ¡rias.
+- Usar testes direcionados durante o desenvolvimento e validaÃ§Ã£o completa somente no fechamento.
+- Ignorar node_modules/dist/build/backups/logs/caches/mÃ­dias/dados salvo necessidade explÃ­cita.
+- Manter PROJECT-STATE.md conciso; histÃ³ria antiga vai para CHANGELOG/ARCHIVE.
+- Resposta final curta: AlteraÃ§Ãµes | Testes | Problemas | PrÃ³ximo passo.

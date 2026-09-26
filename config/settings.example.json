@@ -1,0 +1,21 @@
+{
+  "app": {
+    "version": "0.1.0",
+    "portable": true,
+    "startWithWindows": false
+  },
+  "paths": {
+    "data": "data",
+    "logs": "logs",
+    "backups": "backups"
+  },
+  "safety": {
+    "requirePcStandalone": true,
+    "backupBeforeImportantWrite": true,
+    "preserveUserDataOnUpdate": true
+  },
+  "monitoring": {
+    "resourceLogging": true,
+    "usageLog": "logs/usage.jsonl"
+  }
+}

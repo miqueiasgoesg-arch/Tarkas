@@ -1,9 +1,9 @@
-# Projeto Tarkas — Estado atual
+﻿# Projeto Tarkas — Estado atual
 
 Atualizado: 26/09/2026
 
 ## Regra de continuidade
-Este arquivo deve ser atualizado em checkpoints relevantes. Antes de retomar em outra máquina/sessão, conferir este estado + Git. Notebook é preferencial; PC principal é fallback automático e vice-versa. Não executar o mesmo desenvolvimento simultaneamente nas duas máquinas.
+Este arquivo deve ser atualizado em checkpoints relevantes. Todo Codex roda no PC MgoesPC, que passa a ser a fonte oficial de desenvolvimento. O notebook MGOES-NOTE é apenas laboratório/testes auxiliares e não deve executar Codex. Não desenvolver simultaneamente nas duas máquinas.
 
 ## Prioridade
 V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal para dados do jogo; não duplicar manualmente informação estruturada disponível na fonte.
@@ -58,7 +58,7 @@ V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal
 - O clone do PC está divergente e foi preservado sem alterações. Na última verificação (25/09), seu HEAD era `ed6d8d0` com commits locais adicionais; a árvore estava limpa e os arquivos `assets/tarkas-icon.svg` e `.png` pertenciam àquela cópia. O EXE V0.1.2 sincronizado no PC manteve o SHA-256 da build do notebook. Não mesclar nem sobrescrever o clone sem revisar esses commits.
 
 ## Próximos passos
-1. Notebook permanece como cópia principal; não desenvolver em paralelo no PC. Se precisar alternar, preservar e revisar as alterações locais já presentes no clone do PC antes de integrá-las.
+1. PC MgoesPC é a cópia principal para Codex e desenvolvimento oficial. Notebook é laboratório/testes auxiliares; não executar Codex nele.
 2. V0.2 registra itens documentais; requisitos e recompensas por tier continuam fora até existir fonte estruturada.
 3. A candidata V0.2.1 está versionada no Drive para feedback manual.
 

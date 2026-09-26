@@ -3,3 +3,12 @@ dist/
 release/
 .tarkas-data/
 *.log
+
+# Nick Core runtime/local state
+config/settings.json
+backups/*
+!backups/.gitkeep
+data/*
+!data/.gitkeep
+logs/*
+!logs/.gitkeep

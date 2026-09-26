@@ -1,6 +1,6 @@
 # Projeto Tarkas — Estado atual
 
-Atualizado: 25/09/2026
+Atualizado: 26/09/2026
 
 ## Regra de continuidade
 Este arquivo deve ser atualizado em checkpoints relevantes. Antes de retomar em outra máquina/sessão, conferir este estado + Git. Notebook é preferencial; PC principal é fallback automático e vice-versa. Não executar o mesmo desenvolvimento simultaneamente nas duas máquinas.
@@ -9,7 +9,7 @@ Este arquivo deve ser atualizado em checkpoints relevantes. Antes de retomar em 
 V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal para dados do jogo; não duplicar manualmente informação estruturada disponível na fonte.
 
 ## Estado atual
-- Versão candidata: 0.2.0.
+- Versão candidata: 0.2.1.
 - UI principal: Visão Geral, Quests, Mapa Interativo.
 - Player level persistente.
 - Quest Engine: 515 quests, nível/pré-requisitos/progresso Ativar-Concluir.
@@ -22,11 +22,12 @@ V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal
 - Battle Pass: rastreador local dos 8 itens de documentação publicados no cache do tarkov.dev; sem calcular progresso por tier.
 
 ## Build atual
-- Arquivo: dist/Tarkas-0.2.0-Windows.exe
-- Tamanho: 355058480 bytes
-- Gerado: 25/09/2026 09:56:20 (relógio do notebook)
-- SHA-256: FFC7CEE489401259C5EAF8398CA18C37819FF7FEAB3F432B8656B66BA7907879
-- Build portátil gerado com npm.cmd run dist; electron-builder concluiu com exit code 0.
+- Portátil: dist/Tarkas-Portable-0.2.1-Windows.exe
+- Instalador: dist/Tarkas-Setup-0.2.1-Windows.exe
+- Tamanhos: portátil 355058480 bytes; instalador 100169843 bytes.
+- Gerado: 26/09/2026 no notebook.
+- SHA-256: portátil D806FF3B703874C87EA10622EBF0166034FBF46C0E128F21BC951763F86935EA; instalador 0E13D20787DC8054B6610316330403920902AABBF141FA2BDB04984FAD294300.
+- Build portátil + instalador gerados com `npm.cmd run dist`; electron-builder concluiu com exit code 0.
 - O recurso de ícone foi extraído do EXE e conferido visualmente (32×32); corresponde ao PNG Tarkas.
 - EXE recém-compilado aberto no notebook com depuração remota: renderer mostrou o app, Mapa Interativo abriu The Lab, controle Switches ligado e 15 marcadores presentes; captura visual conferida.
 - `npm.cmd run check` e os 16 scripts de `dev/tests` passaram antes da build.
@@ -59,7 +60,7 @@ V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal
 ## Próximos passos
 1. Notebook permanece como cópia principal; não desenvolver em paralelo no PC. Se precisar alternar, preservar e revisar as alterações locais já presentes no clone do PC antes de integrá-las.
 2. V0.2 registra itens documentais; requisitos e recompensas por tier continuam fora até existir fonte estruturada.
-3. A candidata V0.2.0 está versionada no Drive para feedback manual.
+3. A candidata V0.2.1 está versionada no Drive para feedback manual.
 
 ## Camada de switches de Labs (25/09/2026)
 - Adicionado o controle `Switches`, ligado por padrão, com marcadores roxos e legenda própria.
@@ -88,3 +89,13 @@ V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal
 - SHA-256 do EXE: `FFC7CEE489401259C5EAF8398CA18C37819FF7FEAB3F432B8656B66BA7907879` (355.058.480 bytes).
 - Release V0.2.0 no Drive: `G:\Meu Drive\Tarkas Releases\V0.2.0\Tarkas-0.2.0-Windows.exe`.
 - Bundle Git completo V0.2.0: `G:\Meu Drive\Tarkas-dev-source\Projeto-Tarkas-2026-09-25-v0.2.0.bundle`.
+
+## Empacotamento Windows V0.2.1 (26/09/2026)
+- `electron-builder` configurado para gerar duas saídas x64: portátil e instalador NSIS assistido.
+- Artefatos: `dist/Tarkas-Portable-0.2.1-Windows.exe` (355058480 bytes) e `dist/Tarkas-Setup-0.2.1-Windows.exe` (100169843 bytes).
+- SHA-256 portátil: `D806FF3B703874C87EA10622EBF0166034FBF46C0E128F21BC951763F86935EA`.
+- SHA-256 instalador: `0E13D20787DC8054B6610316330403920902AABBF141FA2BDB04984FAD294300`.
+- `npm run check` e os 16 testes de `dev/tests` passaram antes da build; `npm run dist` terminou com exit code 0.
+- Smoke test do portátil passou. O instalador foi instalado silenciosamente em diretório isolado de QA, o app abriu, o desinstalador retornou exit code 0 e o diretório de teste foi removido.
+- Dados persistentes continuam fora da pasta do programa em `app.getPath('userData')/game-data`, portanto a instalação não depende de escrita na pasta do executável.
+- Release copiado para `G:\Meu Drive\Tarkas Releases\V0.2.1\` com os dois EXEs e `SHA256.txt`.

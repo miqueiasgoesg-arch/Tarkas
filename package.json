@@ -1,14 +1,16 @@
 {
   "name": "projeto-tarkas",
   "productName": "Tarkas",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Companion de progressao para Escape from Tarkov",
   "main": "src/main.js",
   "scripts": {
     "start": "electron .",
     "check": "node --check src/main.js && node --check src/preload.js && node --check src/renderer/app.js",
-    "build:win": "electron-builder --win portable --x64",
-    "dist": "npm run check && npm run build:win"
+    "build:win": "npm run build:portable && npm run build:installer",
+    "dist": "npm run check && npm run build:win",
+    "build:portable": "electron-builder --win portable --x64",
+    "build:installer": "electron-builder --win nsis --x64"
   },
   "private": true,
   "dependencies": {
@@ -44,9 +46,27 @@
           "arch": [
             "x64"
           ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
         }
-      ],
-      "artifactName": "Tarkas-${version}-Windows.${ext}"
+      ]
+    },
+    "portable": {
+      "artifactName": "Tarkas-Portable-${version}-Windows.${ext}"
+    },
+    "nsis": {
+      "artifactName": "Tarkas-Setup-${version}-Windows.${ext}",
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "Tarkas",
+      "deleteAppDataOnUninstall": false
     }
   }
 }

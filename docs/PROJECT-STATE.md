@@ -69,6 +69,13 @@ V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal
 - `npm.cmd run dist` concluiu no PC: portátil `dist/Tarkas-Portable-0.2.2-Windows.exe` (355072553 bytes, SHA-256 `7D802A645076186D304AE0AB101C7F1D881E966E3D3E0C061567B8F13DFC914A`) e instalador `dist/Tarkas-Setup-0.2.2-Windows.exe` (100170788 bytes, SHA-256 `A76C6A6E1BCB981E7889A3053D9F19F99EDBA0B7BCA9C0813C8744F87409440D`).
 - O portátil V0.2.2 foi aberto e validado no app real: Dashboard, guia de quest com imagens, Customs com 450 marcadores e o fluxo Quest → Mapa passaram; a captura visual confirmou os novos símbolos no mapa.
 
+## Ficha tática de marcador V0.2.3 (26/09/2026)
+- Ao clicar em um marcador, o mapa passa a abrir uma ficha contextual no mesmo painel; a interação não interfere em zoom, pan, filtros ou andares.
+- A ficha descreve apenas a categoria e o texto local do marcador. Para objetivo de quest, exibe o nome da quest e a descrição do objetivo; para boss, preserva nome e chance enviados pela fonte.
+- Aguardar build e validação no EXE para considerar esta candidata pronta.
+- V0.2.3 compilada no PC: portátil `dist/Tarkas-Portable-0.2.3-Windows.exe` (355074971 bytes, SHA-256 `2D4654AC1220F0C3431C67214BDCA3D7FA829AF34B509ADB175688F3CCB81D19`) e instalador `dist/Tarkas-Setup-0.2.3-Windows.exe` (100171353 bytes, SHA-256 `61EBBFB222024C0C4AD938F45DC7FF4A55EF8F027A69828E10D824695F38DBCA`).
+- O portátil recém-compilado foi aberto e passou: clicou em marcador de boss, abriu ficha com categoria, nome e chance; a regressão de Dashboard, guia de quest e Quest → Mapa também passou.
+
 ## Camada de switches de Labs (25/09/2026)
 - Adicionado o controle `Switches`, ligado por padrão, com marcadores roxos e legenda própria.
 - A camada usa apenas as 15 posições já presentes em `mapDetail`; o teste de dados exige projeção e inclusão no mapa para todas elas.

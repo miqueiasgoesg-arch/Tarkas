@@ -1,7 +1,8 @@
 {
   "name": "projeto-tarkas",
   "productName": "Tarkas",
-  "version": "0.2.3",
+  "author": "MGOES",
+  "version": "0.2.4",
   "description": "Companion de progressao para Escape from Tarkov",
   "main": "src/main.js",
   "scripts": {

@@ -76,6 +76,13 @@ V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal
 - V0.2.3 compilada no PC: portátil `dist/Tarkas-Portable-0.2.3-Windows.exe` (355074971 bytes, SHA-256 `2D4654AC1220F0C3431C67214BDCA3D7FA829AF34B509ADB175688F3CCB81D19`) e instalador `dist/Tarkas-Setup-0.2.3-Windows.exe` (100171353 bytes, SHA-256 `61EBBFB222024C0C4AD938F45DC7FF4A55EF8F027A69828E10D824695F38DBCA`).
 - O portátil recém-compilado foi aberto e passou: clicou em marcador de boss, abriu ficha com categoria, nome e chance; a regressão de Dashboard, guia de quest e Quest → Mapa também passou.
 
+## Identificação do Tarkas V0.2.4 (26/09/2026)
+- Nome da janela e título HTML unificados em `Tarkas`; autoria do pacote Windows declarada como `MGOES`.
+- Assinatura visual “Desenvolvido por MGOES” adicionada de modo discreto à barra lateral.
+- Aguardar compilação e abertura do EXE para validar os metadados do produto.
+- Build V0.2.4 concluída sem o antigo aviso de autoria: portátil `dist/Tarkas-Portable-0.2.4-Windows.exe` (SHA-256 `D96F4C7EF0AAD1E746DCD3543C42DF46AAC3C6270B45DA6BE3636A714EFE9EF3`) e instalador `dist/Tarkas-Setup-0.2.4-Windows.exe` (SHA-256 `B68346B78B3484D8C527949B8F67DAABF59FE8E930FF18BFB59B00986E3081E5`).
+- O portátil V0.2.4 foi aberto após encerrar apenas a instância temporária V0.2.3: a janela apresentou o título `Tarkas`; testes de Dashboard/Quest/Mapa e de ficha de marcador passaram.
+
 ## Camada de switches de Labs (25/09/2026)
 - Adicionado o controle `Switches`, ligado por padrão, com marcadores roxos e legenda própria.
 - A camada usa apenas as 15 posições já presentes em `mapDetail`; o teste de dados exige projeção e inclusão no mapa para todas elas.

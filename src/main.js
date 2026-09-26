@@ -9,7 +9,7 @@ const { tarkovPair } = require('./services/gameClock');
 const { setDataRoot } = require('./shared/dataStorage');
 let win; const svgCache=new Map();
 function createWindow() {
-  win = new BrowserWindow({ width: 1440, height: 900, minWidth: 1050, minHeight: 700,
+  win = new BrowserWindow({ title: 'Tarkas', width: 1440, height: 900, minWidth: 1050, minHeight: 700,
     backgroundColor: '#0b0d0c', show: false,
     webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false } });
   win.loadFile(path.join(__dirname, 'renderer', 'index.html'));

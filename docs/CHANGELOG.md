@@ -1,5 +1,10 @@
 # Changelog — Projeto Tarkas
 
+## 2026-09-26 — V0.2.4, identificação do produto
+- Janela e documento passam a usar o nome curto `Tarkas`.
+- O pacote Windows declara autoria `MGOES`, removendo o aviso de metadado ausente durante a compilação.
+- A barra lateral inclui a assinatura discreta “Desenvolvido por MGOES”.
+
 ## 2026-09-26 — V0.2.3, ficha tática no mapa
 - Clicar em um marcador do mapa abre uma ficha no próprio painel com categoria, nome e contexto disponível para extração, spawn, boss, objetivo e switch.
 - O painel usa somente os nomes, chances e descrições presentes no conjunto local estruturado; nenhum ponto ou detalhe adicional foi inferido.

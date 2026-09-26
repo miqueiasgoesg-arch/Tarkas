@@ -62,6 +62,13 @@ V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal
 2. V0.2 registra itens documentais; requisitos e recompensas por tier continuam fora até existir fonte estruturada.
 3. A candidata V0.2.1 está versionada no Drive para feedback manual.
 
+## Marcadores táticos V0.2.2 (26/09/2026)
+- Implementados símbolos por categoria no Mapa Interativo: extração (quadrado com seta), spawn (triângulo), boss (silhueta), objetivo (cruz) e switch (losango).
+- A alteração não introduz posições novas: ela somente torna visualmente distinguíveis os dados estruturados já disponíveis.
+- A próxima etapa é compilar e validar esta mudança no EXE recém-gerado antes de tratá-la como release.
+- `npm.cmd run dist` concluiu no PC: portátil `dist/Tarkas-Portable-0.2.2-Windows.exe` (355072553 bytes, SHA-256 `7D802A645076186D304AE0AB101C7F1D881E966E3D3E0C061567B8F13DFC914A`) e instalador `dist/Tarkas-Setup-0.2.2-Windows.exe` (100170788 bytes, SHA-256 `A76C6A6E1BCB981E7889A3053D9F19F99EDBA0B7BCA9C0813C8744F87409440D`).
+- O portátil V0.2.2 foi aberto e validado no app real: Dashboard, guia de quest com imagens, Customs com 450 marcadores e o fluxo Quest → Mapa passaram; a captura visual confirmou os novos símbolos no mapa.
+
 ## Camada de switches de Labs (25/09/2026)
 - Adicionado o controle `Switches`, ligado por padrão, com marcadores roxos e legenda própria.
 - A camada usa apenas as 15 posições já presentes em `mapDetail`; o teste de dados exige projeção e inclusão no mapa para todas elas.

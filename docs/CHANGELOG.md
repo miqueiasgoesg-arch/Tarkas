@@ -1,5 +1,9 @@
 # Changelog — Projeto Tarkas
 
+## 2026-09-26 — marcadores táticos legíveis
+- Mapa Interativo passou a usar símbolos distintos: quadrado para extrações, triângulo para spawns, silhueta para bosses, cruz para objetivos e losango para switches.
+- A legenda usa os mesmos símbolos dos marcadores e o destaque amarelo de uma quest continua prevalecendo.
+
 ## 2026-09-26 — migração do desenvolvimento
 - Repositório Git oficial 0.2.1 migrado do notebook para o PC `MgoesPC`.
 - PC passa a ser a fonte oficial para todas as sessões Codex.

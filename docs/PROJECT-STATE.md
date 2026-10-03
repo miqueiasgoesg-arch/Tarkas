@@ -59,7 +59,7 @@ V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal
 
 ## Próximos passos
 1. PC MgoesPC é a cópia principal para Codex e desenvolvimento oficial. Notebook é laboratório/testes auxiliares; não executar Codex nele.
-2. V0.2 registra itens documentais; requisitos e recompensas por tier continuam fora até existir fonte estruturada.
+2. Boss Radar no Raid Mode exibe chance, áreas, grupos e janela de entrada conforme o cache estruturado; minas/snipers seguem sem marcador até o cache trazer posições verificáveis.
 3. A candidata V0.2.1 está versionada no Drive para feedback manual.
 
 ## Marcadores táticos V0.2.2 (26/09/2026)

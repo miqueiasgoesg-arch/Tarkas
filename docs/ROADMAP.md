@@ -19,12 +19,12 @@ O MGOES-NOTE é a máquina preferencial de desenvolvimento. Se estiver indispon�
 
 ## Fora da V0.1 — ideias preservadas
 ### V0.2
-- Boss Radar completo.
+- Boss Radar completo (chance, pontos, grupos e janela de entrada exibidos a partir do cache local).
 - Progresso de quests mais detalhado e cadeia/pré-requisitos avançados.
 - “O que fazer agora?” por mapa.
 - Melhorias de calibração e tratamento dos poucos outliers de mapas.
 - Guia de chaves ligado a quests/mapas.
-- Refinamentos de Raid Mode e camada de switches.
+- Raid Mode: checklist de chaves e itens de objetivo das quests ativas/disponíveis por mapa; riscos só entram com posições estruturadas verificáveis.
 - Rastreador local do inventário dos documentos de Battle Pass sustentados pelo cache do tarkov.dev; progresso por tier/recompensas aguardam fonte estruturada.
 
 ### V0.3

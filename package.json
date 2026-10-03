@@ -2,7 +2,7 @@
   "name": "projeto-tarkas",
   "productName": "Tarkas",
   "author": "MGOES",
-  "version": "0.2.4",
+  "version": "0.4.11",
   "description": "Companion de progressao para Escape from Tarkov",
   "main": "src/main.js",
   "scripts": {
@@ -39,7 +39,7 @@
       "node_modules/better-sqlite3/**/*"
     ],
     "win": {
-      "icon": "assets/tarkas-icon.png",
+      "icon": "assets/tarkas-icon-v4.png",
       "signAndEditExecutable": false,
       "target": [
         {

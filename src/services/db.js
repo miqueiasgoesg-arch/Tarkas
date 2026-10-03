@@ -2,8 +2,19 @@ const path = require('path');
 const Database = require('better-sqlite3');
 const { app } = require('electron');
 let db;
-function initDb(){
-  db = new Database(path.join(app.getPath('userData'),'tarkas.db'));
+let activeProfileId='default';
+function profileDatabasePath(profileId='default'){
+  const id=String(profileId||'default').trim().toLowerCase();
+  if(id==='default')return path.join(app.getPath('userData'),'tarkas.db');
+  if(!/^[a-z0-9_-]{1,48}$/.test(id))throw new Error('Perfil inválido');
+  return path.join(app.getPath('userData'),'profiles','tarkas-'+id+'.db');
+}
+function initDb(profileId='default'){
+  if(db)db.close();
+  activeProfileId=String(profileId||'default').trim().toLowerCase()||'default';
+  const dbPath=profileDatabasePath(activeProfileId);
+  require('fs').mkdirSync(path.dirname(dbPath),{recursive:true});
+  db = new Database(dbPath);
   db.pragma('journal_mode = WAL');
   db.exec(`CREATE TABLE IF NOT EXISTS quests(id TEXT PRIMARY KEY,name TEXT,map TEXT,trader TEXT,done INTEGER DEFAULT 0);
   CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY,value TEXT);
@@ -20,6 +31,7 @@ function initDb(){
   CREATE TABLE IF NOT EXISTS quest_progress(id TEXT PRIMARY KEY,status TEXT DEFAULT 'locked',updated_at TEXT);
   CREATE TABLE IF NOT EXISTS objective_progress(id TEXT PRIMARY KEY,quest_id TEXT,done INTEGER DEFAULT 0,updated_at TEXT);`);
   db.exec('CREATE TABLE IF NOT EXISTS raid_kits(id TEXT PRIMARY KEY,name TEXT,items_json TEXT,created_at TEXT);');
+  db.exec('CREATE TABLE IF NOT EXISTS item_locations(id TEXT PRIMARY KEY,item_id TEXT,item_name TEXT,map_name TEXT,area TEXT,note TEXT,created_at TEXT);');
   const count=db.prepare('SELECT COUNT(*) n FROM quests').get().n;
   if(!count){ const ins=db.prepare('INSERT INTO quests VALUES(?,?,?,?,0)');
     [['q1','Debut','Customs','Prapor'],['q2','Shortage','Any','Therapist'],['q3','Checking','Customs','Prapor'],['q4','Introduction','Woods','Mechanic']].forEach(x=>ins.run(...x)); }
@@ -27,6 +39,10 @@ function initDb(){
 function commandOverview(){
   const count=table=>db.prepare('SELECT COUNT(*) n FROM '+table).get().n;
   return {builds:count('builds'),pins:count('map_pins'),raids:count('raid_logs'),goals:db.prepare('SELECT COUNT(*) n FROM goals WHERE done=0').get().n,favorites:count('favorite_items'),stash:count('stash')};
+}
+function profileSummary(){
+  const count=table=>db.prepare('SELECT COUNT(*) n FROM '+table).get().n;
+  return {id:activeProfileId,level:playerLevel(),quests:count('quest_progress'),builds:count('builds'),stash:count('stash'),raids:count('raid_logs'),updatedAt:getSetting('profileLastUpdated','')};
 }
 function savedBuilds(){return db.prepare('SELECT id,name,weapon_id,weapon_name,notes,created_at,updated_at FROM builds ORDER BY updated_at DESC').all().map(build=>({...build,items:db.prepare('SELECT item_id id,item_name name,slot_name slot FROM build_items WHERE build_id=?').all(build.id)}))}
 function saveBuild(name,weaponId,weaponName,notes='',items=[]){
@@ -75,7 +91,7 @@ function toggleQuest(id){
   const q=db.prepare('SELECT status FROM quest_progress WHERE id=?').get(id);
   return setQuestStatus(id,q?.status==='completed'?'active':'completed');
 }
-function saveSetting(key,value){ db.prepare('INSERT INTO settings(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').run(key,String(value)); return true; }
+function saveSetting(key,value){ db.prepare('INSERT INTO settings(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').run(key,String(value)); if(key!=='profileLastUpdated')db.prepare('INSERT INTO settings(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').run('profileLastUpdated',new Date().toISOString()); return true; }
 function getSetting(key,fallback=null){const row=db.prepare('SELECT value FROM settings WHERE key=?').get(key);return row?row.value:fallback}
 function playerLevel(){const n=Number(getSetting('playerLevel','1'));return Number.isInteger(n)&&n>=1&&n<=79?n:1}
 function questProgress(){return db.prepare('SELECT * FROM quest_progress').all()}
@@ -85,7 +101,11 @@ function objectiveProgress(){return db.prepare('SELECT * FROM objective_progress
 function raidKits(){return db.prepare('SELECT * FROM raid_kits ORDER BY created_at DESC').all().map(kit=>({...kit,items:JSON.parse(kit.items_json||'[]')}))}
 function saveRaidKit(name,items){const title=String(name||'').trim(),list=Array.isArray(items)?items.map(item=>String(item).trim()).filter(Boolean).slice(0,40):[];if(!title||title.length>100||!list.length)throw new Error('Kit inválido');db.prepare('INSERT INTO raid_kits(id,name,items_json,created_at) VALUES(?,?,?,?)').run('kit-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7),title,JSON.stringify(list),new Date().toISOString());return true}
 function removeRaidKit(id){db.prepare('DELETE FROM raid_kits WHERE id=?').run(String(id));return true}
-const profileTables=['settings','reminders','stash','builds','build_items','map_pins','raid_logs','goals','favorite_items','item_tags','shopping_list','quest_progress','objective_progress','raid_kits'];
-function exportProfile(){const data={};for(const table of profileTables)data[table]=db.prepare('SELECT * FROM '+table).all();return {format:'tarkas-profile',version:1,exportedAt:new Date().toISOString(),data}}
-function importProfile(snapshot){if(snapshot?.format!=='tarkas-profile'||snapshot.version!==1||!snapshot.data)throw new Error('Backup incompatível');const transaction=db.transaction(()=>{for(const table of profileTables)db.prepare('DELETE FROM '+table).run();for(const table of profileTables){const rows=Array.isArray(snapshot.data[table])?snapshot.data[table]:[];if(!rows.length)continue;const columns=Object.keys(rows[0]).filter(column=>/^[a-z_]+$/.test(column));if(!columns.length)continue;const statement=db.prepare('INSERT OR REPLACE INTO '+table+'('+columns.join(',')+') VALUES('+columns.map(()=>'?').join(',')+')');for(const row of rows)statement.run(...columns.map(column=>row[column]??null))}});transaction();return true}
-module.exports={initDb,getDashboard,commandOverview,savedBuilds,saveBuild,shoppingList,addShoppingItem,completeShoppingItem,addBuildMissingToShopping,raidHistory,addRaidLog,goalsList,addGoal,completeGoal,mapPins,addMapPin,removeMapPin,favorites,toggleFavorite,stashItems,setStashItem,addReminder,completeReminder,toggleQuest,saveSetting,getSetting,playerLevel,questProgress,setQuestStatus,toggleObjective,objectiveProgress,raidKits,saveRaidKit,removeRaidKit,exportProfile,importProfile};
+function itemLocations(itemId){return db.prepare('SELECT * FROM item_locations WHERE item_id=? ORDER BY created_at DESC').all(String(itemId))}
+function addItemLocation(itemId,itemName,mapName,area,note=''){const id=String(itemId||''),name=String(itemName||'').trim(),map=String(mapName||'').trim(),place=String(area||'').trim();if(!id||!name||!map||!place||name.length>160||map.length>80||place.length>160)throw new Error('Local inválido');db.prepare('INSERT INTO item_locations(id,item_id,item_name,map_name,area,note,created_at) VALUES(?,?,?,?,?,?,?)').run('loc-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7),id,name,map,place,String(note||'').slice(0,400),new Date().toISOString());return true}
+function removeItemLocation(id){db.prepare('DELETE FROM item_locations WHERE id=?').run(String(id));return true}
+const profileTables=['settings','reminders','stash','builds','build_items','map_pins','raid_logs','goals','favorite_items','item_tags','shopping_list','quest_progress','objective_progress','raid_kits','item_locations'];
+function exportProfile(){const data={};for(const table of profileTables)data[table]=db.prepare('SELECT * FROM '+table).all();return {format:'tarkas-profile',version:1,profile:{id:activeProfileId,level:playerLevel()},exportedAt:new Date().toISOString(),data}}
+function validateProfileSnapshot(snapshot){if(snapshot?.format!=='tarkas-profile'||snapshot.version!==1||!snapshot.data||typeof snapshot.data!=='object')throw new Error('Backup incompatível');for(const table of profileTables){const rows=snapshot.data[table];if(rows!==undefined&&!Array.isArray(rows))throw new Error('Backup corrompido');if(Array.isArray(rows)&&rows.length>10000)throw new Error('Backup grande demais')}return true}
+function importProfile(snapshot){validateProfileSnapshot(snapshot);const transaction=db.transaction(()=>{for(const table of profileTables)db.prepare('DELETE FROM '+table).run();for(const table of profileTables){const rows=Array.isArray(snapshot.data[table])?snapshot.data[table]:[];if(!rows.length)continue;const columns=Object.keys(rows[0]).filter(column=>/^[a-z_]+$/.test(column));if(!columns.length)continue;const statement=db.prepare('INSERT OR REPLACE INTO '+table+'('+columns.join(',')+') VALUES('+columns.map(()=>'?').join(',')+')');for(const row of rows)statement.run(...columns.map(column=>row[column]??null))}saveSetting('profileLastUpdated',new Date().toISOString())});transaction();return true}
+module.exports={initDb,getDashboard,commandOverview,profileSummary,savedBuilds,saveBuild,shoppingList,addShoppingItem,completeShoppingItem,addBuildMissingToShopping,raidHistory,addRaidLog,goalsList,addGoal,completeGoal,mapPins,addMapPin,removeMapPin,favorites,toggleFavorite,stashItems,setStashItem,addReminder,completeReminder,toggleQuest,saveSetting,getSetting,playerLevel,questProgress,setQuestStatus,toggleObjective,objectiveProgress,raidKits,saveRaidKit,removeRaidKit,itemLocations,addItemLocation,removeItemLocation,exportProfile,importProfile,validateProfileSnapshot};

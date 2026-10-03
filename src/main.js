@@ -1,7 +1,8 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { autoUpdater } = require('electron-updater');
 const fs = require('fs');
 const path = require('path');
-const { initDb,getDashboard,commandOverview,savedBuilds,saveBuild,shoppingList,addShoppingItem,completeShoppingItem,addBuildMissingToShopping,raidHistory,addRaidLog,goalsList,addGoal,completeGoal,mapPins,addMapPin,removeMapPin,favorites,toggleFavorite,stashItems,setStashItem,addReminder,completeReminder,toggleQuest,saveSetting,getSetting,playerLevel,questProgress,setQuestStatus,toggleObjective,objectiveProgress,raidKits,saveRaidKit,removeRaidKit,exportProfile,importProfile } = require('./services/db');
+const { initDb,getDashboard,commandOverview,profileSummary,savedBuilds,saveBuild,shoppingList,addShoppingItem,completeShoppingItem,addBuildMissingToShopping,raidHistory,addRaidLog,goalsList,addGoal,completeGoal,mapPins,addMapPin,removeMapPin,favorites,toggleFavorite,stashItems,setStashItem,addReminder,completeReminder,toggleQuest,saveSetting,getSetting,playerLevel,questProgress,setQuestStatus,toggleObjective,objectiveProgress,raidKits,saveRaidKit,removeRaidKit,itemLocations,addItemLocation,removeItemLocation,exportProfile,importProfile } = require('./services/db');
 const { syncCore, getStatus } = require('./services/tarkovData');
 const { getBattlePassDocuments } = require('./services/battlePass');
 const { questSummary, planQuests, raidPlan, kappaTracker } = require('./services/questEngine');
@@ -9,9 +10,31 @@ const { maps, mapDetail, projectPoint, pointLayer } = require('./services/mapEng
 const { tarkovPair } = require('./services/gameClock');
 const { catalog:armoryCatalog,details:armoryDetails } = require('./services/armory');
 const { catalog:hideoutCatalog } = require('./services/hideout');
-const { catalog:marketCatalog } = require('./services/market');
+const { catalog:marketCatalog,details:marketDetails } = require('./services/market');
 const { setDataRoot } = require('./shared/dataStorage');
 let win; const svgCache=new Map();
+const profileRegistryPath=()=>path.join(app.getPath('userData'),'profiles.json');
+function loadProfiles(){try{const saved=JSON.parse(fs.readFileSync(profileRegistryPath(),'utf8'));if(Array.isArray(saved?.profiles)&&saved.profiles.length)return saved}catch{}return{activeId:'default',profiles:[{id:'default',name:'Principal',createdAt:new Date().toISOString()}]}}
+function saveProfiles(registry){fs.writeFileSync(profileRegistryPath(),JSON.stringify(registry,null,2),'utf8')}
+function activeProfile(){const registry=loadProfiles();const profile=registry.profiles.find(item=>item.id===registry.activeId)||registry.profiles[0];return{registry,profile}}
+function profileList(){const {registry}=activeProfile();return registry.profiles.map(profile=>({...profile,active:profile.id===registry.activeId}))}
+function createProfile(name){const title=String(name||'').trim().replace(/\s+/g,' ');if(!title||title.length>40)throw new Error('Informe um nome de até 40 caracteres');const {registry}=activeProfile();if(registry.profiles.length>=12)throw new Error('Limite de 12 perfis');const stem=title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,30)||'perfil';let id=stem,n=2;while(registry.profiles.some(profile=>profile.id===id))id=stem+'-'+n++;const profile={id,name:title,createdAt:new Date().toISOString()};registry.profiles.push(profile);registry.activeId=id;saveProfiles(registry);initDb(id);return profile}
+function switchProfile(id){const {registry}=activeProfile(),profile=registry.profiles.find(item=>item.id===String(id));if(!profile)throw new Error('Perfil não encontrado');registry.activeId=profile.id;saveProfiles(registry);initDb(profile.id);return profile}
+let updateState={status:'idle',version:null,progress:0,message:''};
+const updateSnapshot=()=>({...updateState,currentVersion:app.getVersion(),enabled:app.isPackaged});
+function sendUpdateState(){if(win&&!win.isDestroyed())win.webContents.send('update:state',updateSnapshot())}
+function configureUpdates(){
+  if(!app.isPackaged)return;
+  autoUpdater.autoDownload=true;
+  autoUpdater.autoInstallOnAppQuit=true;
+  autoUpdater.on('checking-for-update',()=>{updateState={...updateState,status:'checking',message:'Verificando atualizações…'};sendUpdateState()});
+  autoUpdater.on('update-available',info=>{updateState={...updateState,status:'downloading',version:info.version,progress:0,message:'Baixando atualização…'};sendUpdateState()});
+  autoUpdater.on('download-progress',progress=>{updateState={...updateState,status:'downloading',progress:Math.round(progress.percent||0),message:'Baixando atualização…'};sendUpdateState()});
+  autoUpdater.on('update-not-available',()=>{updateState={...updateState,status:'current',message:'O Tarkas já está atualizado.'};sendUpdateState()});
+  autoUpdater.on('update-downloaded',info=>{updateState={...updateState,status:'ready',version:info.version,progress:100,message:'Atualização pronta para instalar.'};sendUpdateState()});
+  autoUpdater.on('error',error=>{updateState={...updateState,status:'error',message:'Não foi possível verificar a atualização agora.'};console.warn('update check failed:',error.message);sendUpdateState()});
+  setTimeout(()=>autoUpdater.checkForUpdates().catch(()=>{}),5000);
+}
 function createWindow() {
   win = new BrowserWindow({ title: 'Tarkas', width: 1440, height: 900, minWidth: 1050, minHeight: 700,
     backgroundColor: '#0b0d0c', show: false,
@@ -27,14 +50,18 @@ app.commandLine.appendSwitch('disable-features','DawnGraphiteCache');
 const gotLock=app.requestSingleInstanceLock();
 if(!gotLock){app.quit()}else{
 app.on('second-instance',()=>{if(win){if(win.isMinimized())win.restore();win.show();win.focus()}});
-app.whenReady().then(async()=>{setDataRoot(path.join(app.getPath('userData'),'game-data'));initDb();const last=getStatus().last;if(!last){await syncCore('regular').catch(()=>{})}createWindow();const age=last?.updatedAt?Date.now()-Date.parse(last.updatedAt):0;if(last&&age>6*60*60*1000)setTimeout(()=>syncCore('regular').catch(()=>{}),2500);});
+app.whenReady().then(async()=>{setDataRoot(path.join(app.getPath('userData'),'game-data'));const {profile}=activeProfile();initDb(profile.id);const last=getStatus().last;if(!last){await syncCore('regular').catch(()=>{})}createWindow();configureUpdates();const age=last?.updatedAt?Date.now()-Date.parse(last.updatedAt):0;if(last&&age>6*60*60*1000)setTimeout(()=>syncCore('regular').catch(()=>{}),2500);});
 }
 app.on('window-all-closed',()=>app.quit());
 ipcMain.handle('dashboard:get',()=>getDashboard());
+ipcMain.handle('profiles:list',()=>profileList());
+ipcMain.handle('profiles:current',()=>({...activeProfile().profile,...profileSummary()}));
+ipcMain.handle('profiles:create',(_e,name)=>createProfile(name));
+ipcMain.handle('profiles:switch',(_e,id)=>switchProfile(id));
 ipcMain.handle('command:overview',()=>commandOverview());
 ipcMain.handle('kits:list',()=>raidKits()); ipcMain.handle('kits:save',(_e,name,items)=>saveRaidKit(name,items)); ipcMain.handle('kits:remove',(_e,id)=>removeRaidKit(id));
-ipcMain.handle('profile:export',async()=>{const choice=await dialog.showSaveDialog(win,{title:'Salvar backup do Tarkas',defaultPath:'tarkas-backup.json',filters:[{name:'Backup do Tarkas',extensions:['json']} ]});if(choice.canceled||!choice.filePath)return null;fs.writeFileSync(choice.filePath,JSON.stringify(exportProfile(),null,2),'utf8');return choice.filePath});
-ipcMain.handle('profile:import',async()=>{const choice=await dialog.showOpenDialog(win,{title:'Restaurar backup do Tarkas',properties:['openFile'],filters:[{name:'Backup do Tarkas',extensions:['json']}]});if(choice.canceled||!choice.filePaths[0])return false;importProfile(JSON.parse(fs.readFileSync(choice.filePaths[0],'utf8')));return true});
+ipcMain.handle('profile:export',async()=>{const profile=activeProfile().profile;const choice=await dialog.showSaveDialog(win,{title:'Salvar backup do Tarkas',defaultPath:'tarkas-'+profile.id+'-backup.json',filters:[{name:'Backup do Tarkas',extensions:['json']} ]});if(choice.canceled||!choice.filePath)return null;fs.writeFileSync(choice.filePath,JSON.stringify(exportProfile(),null,2),'utf8');return choice.filePath});
+ipcMain.handle('profile:import',async()=>{const choice=await dialog.showOpenDialog(win,{title:'Restaurar backup do Tarkas',properties:['openFile'],filters:[{name:'Backup do Tarkas',extensions:['json']}]});if(choice.canceled||!choice.filePaths[0])return false;const incoming=JSON.parse(fs.readFileSync(choice.filePaths[0],'utf8'));const recoveryDir=path.join(app.getPath('userData'),'restore-backups');fs.mkdirSync(recoveryDir,{recursive:true});const recoveryFile=path.join(recoveryDir,'antes-da-restauracao-'+Date.now()+'.json');fs.writeFileSync(recoveryFile,JSON.stringify(exportProfile(),null,2),'utf8');importProfile(incoming);return {restored:true,recoveryFile}});
 ipcMain.handle('builds:list',()=>savedBuilds());
 ipcMain.handle('builds:save',(_e,name,weaponId,weaponName,notes,items)=>saveBuild(name,weaponId,weaponName,notes,items));
 ipcMain.handle('shopping:list',()=>shoppingList());
@@ -66,6 +93,10 @@ ipcMain.handle('armory:catalog',(_e,mode)=>armoryCatalog(mode));
 ipcMain.handle('armory:detail',(_e,mode,id)=>armoryDetails(mode,id));
 ipcMain.handle('hideout:catalog',(_e,mode)=>hideoutCatalog(mode));
 ipcMain.handle('market:catalog',(_e,mode)=>marketCatalog(mode));
+ipcMain.handle('market:detail',(_e,mode,id)=>marketDetails(mode,id));
+ipcMain.handle('item-locations:list',(_e,itemId)=>itemLocations(itemId));
+ipcMain.handle('item-locations:add',(_e,itemId,itemName,mapName,area,note)=>addItemLocation(itemId,itemName,mapName,area,note));
+ipcMain.handle('item-locations:remove',(_e,id)=>removeItemLocation(id));
 ipcMain.handle('quests:catalog',(_e,mode)=>questSummary(mode));
 ipcMain.handle('kappa:tracker',(_e,mode)=>kappaTracker(mode,questProgress()));
 ipcMain.handle('progress:get',()=>({quests:questProgress(),objectives:objectiveProgress()}));
@@ -77,3 +108,6 @@ ipcMain.handle('maps:list',(_e,mode)=>maps(mode));
 ipcMain.handle('maps:detail',(_e,mode,id)=>mapDetail(mode,id));
 ipcMain.handle('map:project',(_e,mode,id,position)=>{const m=mapDetail(mode,id);if(!m?.calibration)return null;return{point:projectPoint(position,m.calibration),floor:pointLayer(position,m.calibration)}});
 ipcMain.handle('clock:tarkov',()=>tarkovPair());
+ipcMain.handle('update:status',()=>updateSnapshot());
+ipcMain.handle('update:check',async()=>{if(!app.isPackaged)return updateSnapshot();await autoUpdater.checkForUpdates().catch(()=>{});return updateSnapshot()});
+ipcMain.handle('update:install',()=>{if(updateState.status==='ready')autoUpdater.quitAndInstall(false,true);return true});

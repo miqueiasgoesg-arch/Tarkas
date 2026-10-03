@@ -2,7 +2,7 @@
   "name": "projeto-tarkas",
   "productName": "Tarkas",
   "author": "MGOES",
-  "version": "0.4.11",
+  "version": "0.5.0",
   "description": "Companion de progressao para Escape from Tarkov",
   "main": "src/main.js",
   "scripts": {
@@ -15,7 +15,8 @@
   },
   "private": true,
   "dependencies": {
-    "better-sqlite3": "^12.2.0"
+    "better-sqlite3": "^12.2.0",
+    "electron-updater": "^6.3.9"
   },
   "devDependencies": {
     "electron": "^38.1.2",
@@ -56,6 +57,13 @@
         }
       ]
     },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "miqueiasgoesg-arch",
+        "repo": "Tarkas"
+      }
+    ],
     "portable": {
       "artifactName": "Tarkas-Portable-${version}-Windows.${ext}"
     },

@@ -1,6 +1,10 @@
 const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('tarkas', {
   dashboard:()=>ipcRenderer.invoke('dashboard:get'),
+  profiles:()=>ipcRenderer.invoke('profiles:list'),
+  currentProfile:()=>ipcRenderer.invoke('profiles:current'),
+  createProfile:name=>ipcRenderer.invoke('profiles:create',name),
+  switchProfile:id=>ipcRenderer.invoke('profiles:switch',id),
   commandOverview:()=>ipcRenderer.invoke('command:overview'),
   raidKits:()=>ipcRenderer.invoke('kits:list'), saveRaidKit:(name,items)=>ipcRenderer.invoke('kits:save',name,items), removeRaidKit:id=>ipcRenderer.invoke('kits:remove',id),
   exportProfile:()=>ipcRenderer.invoke('profile:export'),
@@ -36,6 +40,10 @@ contextBridge.exposeInMainWorld('tarkas', {
   armoryDetail:(mode,id)=>ipcRenderer.invoke('armory:detail',mode,id),
   hideoutCatalog:mode=>ipcRenderer.invoke('hideout:catalog',mode),
   marketCatalog:mode=>ipcRenderer.invoke('market:catalog',mode),
+  marketDetail:(mode,id)=>ipcRenderer.invoke('market:detail',mode,id),
+  itemLocations:itemId=>ipcRenderer.invoke('item-locations:list',itemId),
+  addItemLocation:(itemId,itemName,mapName,area,note)=>ipcRenderer.invoke('item-locations:add',itemId,itemName,mapName,area,note),
+  removeItemLocation:id=>ipcRenderer.invoke('item-locations:remove',id),
   questCatalog:mode=>ipcRenderer.invoke('quests:catalog',mode),
   kappaTracker:mode=>ipcRenderer.invoke('kappa:tracker',mode),
   progress:()=>ipcRenderer.invoke('progress:get'),
@@ -48,4 +56,5 @@ contextBridge.exposeInMainWorld('tarkas', {
   mapSvg:file=>ipcRenderer.invoke('map:svg',file),
   mapProject:(mode,id,position)=>ipcRenderer.invoke('map:project',mode,id,position),
   tarkovClock:()=>ipcRenderer.invoke('clock:tarkov')
+  ,updateStatus:()=>ipcRenderer.invoke('update:status'), checkUpdate:()=>ipcRenderer.invoke('update:check'), installUpdate:()=>ipcRenderer.invoke('update:install'), onUpdateState:callback=>ipcRenderer.on('update:state',(_event,state)=>callback(state))
 });

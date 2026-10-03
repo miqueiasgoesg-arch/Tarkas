@@ -1,5 +1,16 @@
 # Changelog — Projeto Tarkas
 
+## Em preparação — V0.5.0, biblioteca e perfis
+- Biblioteca de itens com categorias claras, busca e fichas clicáveis.
+- Fichas mostram preço, descrição, comerciantes, vínculo com quests, Hideout e atalhos para mapas relacionados.
+- Locais pessoais de farm são salvos por perfil e incluídos no backup.
+- Perfis locais isolam progresso, stash, builds, raids e anotações; a restauração cria uma cópia de recuperação.
+
+## 2026-10-03 — V0.4.12, atualização automática
+- O Tarkas consulta versões publicadas no GitHub ao abrir.
+- Quando há uma versão nova, ela é baixada em segundo plano e pode ser instalada pelo painel da Visão Geral.
+- O processo mantém o perfil local; os backups continuam disponíveis na Central de Operações.
+
 ## 2026-10-03 — V0.4.11, operação e navegação
 - Adicionadas anotações pessoais em quests e lembretes com data/hora.
 - Melhoria na remoção de marcadores pessoais e no painel de operações.

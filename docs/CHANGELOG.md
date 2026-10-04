@@ -1,5 +1,9 @@
 # Changelog — Projeto Tarkas
 
+## 2026-10-03 — V0.5.3, atualização no próprio app
+- O aviso de atualização do Tarkas permanece visível na Visão Geral, mesmo depois do carregamento do painel inicial.
+- O cartão permite verificar a versão publicada, acompanhar o download e instalar/reiniciar sem baixar manualmente o instalador.
+
 ## 2026-10-03 — V0.5.2, guia didático e Roadmap
 - Nova aba Roadmap para mostrar o que está concluído, em andamento e planejado.
 - Missões exibem recompensas quando a fonte local informar EXP, itens, rublos ou reputação.

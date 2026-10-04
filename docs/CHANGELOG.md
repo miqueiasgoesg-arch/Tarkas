@@ -1,5 +1,13 @@
 # Changelog — Projeto Tarkas
 
+## 2026-10-04 — V0.5.6, estabilidade e navegação
+- Corrigida a troca de idioma da interface.
+- Criação automática do atalho do Tarkas na área de trabalho.
+- Cursor de operador refinado para os estados normal e interativo.
+- Mapas com controles visíveis de zoom e centralização.
+- Recompensas de quests exibem valores e comerciantes legíveis.
+- Ajustado o layout da fila de upgrades do Hideout e da navegação lateral.
+
 ## 2026-10-04 — V0.5.5, rota guiada e planejamento
 - Base multilíngue com detecção do idioma do sistema, escolha manual persistente por perfil e suporte inicial a português, inglês e espanhol.
 - Navegação, busca rápida, identificação do aplicativo e ações globais de atualização respeitam o idioma escolhido.

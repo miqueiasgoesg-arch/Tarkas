@@ -1,6 +1,6 @@
 # Changelog — Projeto Tarkas
 
-## Em desenvolvimento — internacionalização e instalação
+## 2026-10-04 — V0.5.5, rota guiada e planejamento
 - Base multilíngue com detecção do idioma do sistema, escolha manual persistente por perfil e suporte inicial a português, inglês e espanhol.
 - Navegação, busca rápida, identificação do aplicativo e ações globais de atualização respeitam o idioma escolhido.
 - Preparadas a correção do reinício pós-atualização e a criação de atalho na área de trabalho pelo próprio app.

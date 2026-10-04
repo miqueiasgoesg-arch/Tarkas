@@ -1,5 +1,10 @@
 # Changelog — Projeto Tarkas
 
+## 2026-10-04 — V0.5.4, campanha oficial e cursor
+- A aba História agora exibe uma campanha guiada com capítulos oficiais, sem depender do marcador ausente na base local.
+- Cada capítulo traz contexto, mapa, passo a passo didático, alertas para escolhas de rota e progresso local por perfil.
+- Cursor tático redesenhado: operador em pé com arma baixa no repouso e arma elevada em ações clicáveis; campos de texto continuam com cursor de digitação.
+
 ## 2026-10-03 — V0.5.3, atualização no próprio app
 - O aviso de atualização do Tarkas permanece visível na Visão Geral, mesmo depois do carregamento do painel inicial.
 - O cartão permite verificar a versão publicada, acompanhar o download e instalar/reiniciar sem baixar manualmente o instalador.

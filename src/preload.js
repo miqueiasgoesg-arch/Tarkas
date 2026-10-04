@@ -5,6 +5,7 @@ contextBridge.exposeInMainWorld('tarkas', {
   currentProfile:()=>ipcRenderer.invoke('profiles:current'),
   createProfile:name=>ipcRenderer.invoke('profiles:create',name),
   switchProfile:id=>ipcRenderer.invoke('profiles:switch',id),
+  updateProfileNickname:nickname=>ipcRenderer.invoke('profiles:nickname',nickname),
   profileAvatar:()=>ipcRenderer.invoke('profile:avatar'),
   uploadProfileAvatar:()=>ipcRenderer.invoke('profile:avatar:upload'),
   removeProfileAvatar:()=>ipcRenderer.invoke('profile:avatar:remove'),

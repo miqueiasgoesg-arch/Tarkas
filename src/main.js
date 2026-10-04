@@ -20,6 +20,7 @@ function activeProfile(){const registry=loadProfiles();const profile=registry.pr
 function profileList(){const {registry}=activeProfile();return registry.profiles.map(profile=>({...profile,active:profile.id===registry.activeId}))}
 function createProfile(name){const title=String(name||'').trim().replace(/\s+/g,' ');if(!title||title.length>40)throw new Error('Informe um nome de até 40 caracteres');const {registry}=activeProfile();if(registry.profiles.length>=12)throw new Error('Limite de 12 perfis');const stem=title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,30)||'perfil';let id=stem,n=2;while(registry.profiles.some(profile=>profile.id===id))id=stem+'-'+n++;const profile={id,name:title,createdAt:new Date().toISOString()};registry.profiles.push(profile);registry.activeId=id;saveProfiles(registry);initDb(id);return profile}
 function switchProfile(id){const {registry}=activeProfile(),profile=registry.profiles.find(item=>item.id===String(id));if(!profile)throw new Error('Perfil não encontrado');registry.activeId=profile.id;saveProfiles(registry);initDb(profile.id);return profile}
+function updateProfileNickname(nickname){const clean=String(nickname||'').trim().replace(/\s+/g,' ');if(clean.length>32)throw new Error('Use um nickname de até 32 caracteres');const {registry,profile}=activeProfile();if(clean)profile.nickname=clean;else delete profile.nickname;saveProfiles(registry);return profile}
 const avatarDirectory=()=>path.join(app.getPath('userData'),'profile-avatars');
 const avatarMime={'.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp'};
 function profileAvatar(){const {profile}=activeProfile(),file=String(profile.avatarFile||'');if(!file||path.basename(file)!==file)return null;const filePath=path.join(avatarDirectory(),file),extension=path.extname(file).toLowerCase(),mime=avatarMime[extension];if(!mime||!fs.existsSync(filePath))return null;try{return{dataUrl:'data:'+mime+';base64,'+fs.readFileSync(filePath).toString('base64')}}catch{return null}}
@@ -69,6 +70,7 @@ ipcMain.handle('profiles:list',()=>profileList());
 ipcMain.handle('profiles:current',()=>({...activeProfile().profile,...profileSummary()}));
 ipcMain.handle('profiles:create',(_e,name)=>createProfile(name));
 ipcMain.handle('profiles:switch',(_e,id)=>switchProfile(id));
+ipcMain.handle('profiles:nickname',(_e,nickname)=>updateProfileNickname(nickname));
 ipcMain.handle('profile:avatar',()=>profileAvatar());
 ipcMain.handle('profile:avatar:upload',()=>uploadProfileAvatar());
 ipcMain.handle('profile:avatar:remove',()=>removeProfileAvatar());

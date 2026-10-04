@@ -2,7 +2,7 @@
 
 ## Regra atual
 Prioridade absoluta: **V0.1 funcionando > refinamentos > novas funcionalidades**.
-O MGOES-NOTE é a máquina preferencial de desenvolvimento. Se estiver indisponível, o PC principal pode assumir automaticamente; o inverso também vale. Antes de trocar de máquina, conferir o estado do projeto e evitar processos duplicados.
+O PC MgoesPC é a máquina oficial de desenvolvimento. O MGOES-NOTE é apenas laboratório e não deve executar Codex neste projeto. Antes de trocar de máquina, conferir o estado do projeto e evitar processos duplicados.
 
 ## V0.1 — mínima, funcional e estável
 - Aplicativo Windows iniciado por executável, sem terminal/BAT para uso normal.

@@ -1,6 +1,6 @@
 ﻿# Projeto Tarkas — Estado atual
 
-Atualizado: 26/09/2026
+Atualizado: 03/10/2026
 
 ## Regra de continuidade
 Este arquivo deve ser atualizado em checkpoints relevantes. Todo Codex roda no PC MgoesPC, que passa a ser a fonte oficial de desenvolvimento. O notebook MGOES-NOTE é apenas laboratório/testes auxiliares e não deve executar Codex. Não desenvolver simultaneamente nas duas máquinas.
@@ -9,7 +9,11 @@ Este arquivo deve ser atualizado em checkpoints relevantes. Todo Codex roda no P
 V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal para dados do jogo; não duplicar manualmente informação estruturada disponível na fonte.
 
 ## Estado atual
-- Versão candidata: 0.2.1.
+- Versão candidata local: 0.5.0; ainda não publicada.
+- Atualização automática configurada para consultar releases publicadas no GitHub.
+- Biblioteca de itens: categorias, busca, fichas clicáveis, preço, comerciantes, vínculos com quests/Hideout e atalhos para mapa quando há vínculo verificável.
+- Perfis locais isolam progresso, stash, builds, raids e anotações. Backup exportável e restauração com cópia de recuperação.
+- Locais pessoais de farm podem ser adicionados por item e são preservados em backup.
 - UI principal: Visão Geral, Quests, Mapa Interativo.
 - Player level persistente.
 - Quest Engine: 515 quests, nível/pré-requisitos/progresso Ativar-Concluir.

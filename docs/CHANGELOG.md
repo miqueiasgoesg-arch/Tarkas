@@ -1,5 +1,11 @@
 # Changelog — Projeto Tarkas
 
+## Em preparação — V0.5.1, operador, história e interface
+- Cartão de Operador por perfil: imagem local do personagem em PNG, JPG ou WEBP.
+- Nova aba História: rota guiada de quests encadeadas, passos marcáveis e atalhos para o mapa.
+- Painel de nível, lembretes, rolagem e botões táticos refinados.
+- Corrigido o aviso de carregamento que permanecia na ficha de itens.
+
 ## Em preparação — V0.5.0, biblioteca e perfis
 - Biblioteca de itens com categorias claras, busca e fichas clicáveis.
 - Fichas mostram preço, descrição, comerciantes, vínculo com quests, Hideout e atalhos para mapas relacionados.

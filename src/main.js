@@ -61,7 +61,7 @@ app.commandLine.appendSwitch('disable-features','DawnGraphiteCache');
 const gotLock=app.requestSingleInstanceLock();
 if(!gotLock){app.quit()}else{
 app.on('second-instance',()=>{if(win){if(win.isMinimized())win.restore();win.show();win.focus()}});
-app.whenReady().then(()=>{setDataRoot(path.join(app.getPath('userData'),'game-data'));const {profile}=activeProfile();initDb(profile.id);const last=getStatus().last;createWindow();configureUpdates();const age=last?.updatedAt?Date.now()-Date.parse(last.updatedAt):0;if(!last||age>6*60*60*1000)setTimeout(()=>syncCore('regular').catch(()=>{}),900);});
+app.whenReady().then(()=>{setDataRoot(path.join(app.getPath('userData'),'game-data'));const {profile}=activeProfile();initDb(profile.id);const last=getStatus().last;createWindow();configureUpdates();setTimeout(()=>createDesktopShortcut(),900);const age=last?.updatedAt?Date.now()-Date.parse(last.updatedAt):0;if(!last||age>6*60*60*1000)setTimeout(()=>syncCore('regular').catch(()=>{}),900);});
 }
 app.on('window-all-closed',()=>app.quit());
 ipcMain.handle('dashboard:get',()=>getDashboard());

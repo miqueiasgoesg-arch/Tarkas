@@ -1,6 +1,6 @@
 ﻿# Projeto Tarkas — Estado atual
 
-Atualizado: 03/10/2026
+Atualizado: 04/10/2026
 
 ## Regra de continuidade
 Este arquivo deve ser atualizado em checkpoints relevantes. Todo Codex roda no PC MgoesPC, que passa a ser a fonte oficial de desenvolvimento. O notebook MGOES-NOTE é apenas laboratório/testes auxiliares e não deve executar Codex. Não desenvolver simultaneamente nas duas máquinas.
@@ -9,6 +9,8 @@ Este arquivo deve ser atualizado em checkpoints relevantes. Todo Codex roda no P
 V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal para dados do jogo; não duplicar manualmente informação estruturada disponível na fonte.
 
 ## Estado atual
+- Próxima candidata: suporte multilíngue com detecção do idioma do sistema e preferência salva por perfil. A navegação, o painel de versão/atualização e os textos globais já estão disponíveis em português, inglês e espanhol; os guias táticos serão ampliados progressivamente sem traduzir nomes oficiais do jogo.
+- O painel de atualização exibe a versão instalada. A próxima publicação também corrige o reinício após atualizar e permite criar um atalho na área de trabalho pelo próprio app.
 - Versão candidata local: 0.5.0; ainda não publicada.
 - Atualização automática configurada para consultar releases publicadas no GitHub.
 - Biblioteca de itens: categorias, busca, fichas clicáveis, preço, comerciantes, vínculos com quests/Hideout e atalhos para mapa quando há vínculo verificável.

@@ -1,5 +1,10 @@
 # Changelog — Projeto Tarkas
 
+## Em desenvolvimento — internacionalização e instalação
+- Base multilíngue com detecção do idioma do sistema, escolha manual persistente por perfil e suporte inicial a português, inglês e espanhol.
+- Navegação, busca rápida, identificação do aplicativo e ações globais de atualização respeitam o idioma escolhido.
+- Preparadas a correção do reinício pós-atualização e a criação de atalho na área de trabalho pelo próprio app.
+
 ## 2026-10-04 — V0.5.4, campanha oficial e cursor
 - A aba História agora exibe uma campanha guiada com capítulos oficiais, sem depender do marcador ausente na base local.
 - Cada capítulo traz contexto, mapa, passo a passo didático, alertas para escolhas de rota e progresso local por perfil.

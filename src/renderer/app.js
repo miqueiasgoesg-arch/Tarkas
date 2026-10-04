@@ -1,6 +1,17 @@
-const content=document.querySelector('#content'),title=document.querySelector('#title');let mapClockTimer=null,pendingMapName='',pendingQuestId='',pendingObjectiveId='';function stopMapClock(){if(mapClockTimer){clearInterval(mapClockTimer);mapClockTimer=null}}
+const content=document.querySelector('#content'),title=document.querySelector('#title');let mapClockTimer=null,pendingMapName='',pendingQuestId='',pendingObjectiveId='',appLanguage='pt-BR';const t=key=>window.tarkasI18n?.t(appLanguage,key)||key;function stopMapClock(){if(mapClockTimer){clearInterval(mapClockTimer);mapClockTimer=null}}
 function bossRadarHtml(bosses){if(!bosses?.length)return'<section class="boss-radar"><label>Boss Radar <b>0</b></label><small>Nenhum boss estruturado para este mapa no cache local.</small></section>';const percent=value=>Math.round((Number(value)||0)*100)+'%';return'<section class="boss-radar"><label>Boss Radar <b>'+bosses.length+'</b></label><div class="boss-radar-list">'+bosses.map(b=>'<article class="boss-radar-card"><strong>'+b.name+'</strong><span class="boss-chance">'+percent(b.chance)+'</span><small>'+((b.locations||[]).map(l=>l.name+' '+percent(l.chance)).join(' · ')||'Sem posição estruturada')+'</small>'+((b.escorts||[]).length?'<em>Grupo: '+b.escorts.map(e=>e.name+(e.amount?' ×'+e.amount:'')).join(' · ')+'</em>':'')+(b.spawnTime>=0?'<em>Entrada: '+Math.floor(b.spawnTime/60)+' min'+(b.spawnTimeRandom?' (variável)':'')+'</em>':'')+'</article>').join('')+'</div></section>'}
 const names={dashboard:'Visão Geral',quests:'Quests',mapa:'Mapa Interativo',battlepass:'Battle Pass',hideout:'Hideout',market:'Itens e Mercado'};
+function syncLanguageChrome(){
+  document.documentElement.lang=appLanguage;
+  const select=document.querySelector('#language-select');if(select)select.value=appLanguage;
+  const labels={dashboard:'dashboard',quests:'quests',mapa:'mapa',battlepass:'battlepass',hideout:'hideout',armory:'armory',operations:'operations',roadmap:'roadmap',story:'story',market:'market'};
+  Object.entries(labels).forEach(([page,key])=>{names[page]=t(key);const button=document.querySelector('#nav button[data-page="'+page+'"]');if(button)button.textContent=(button.textContent.match(/^[^\\w]*\s*/)?.[0]||'')+names[page]});
+  document.querySelector('#project-label').textContent=t('project');document.querySelector('#language-label').textContent=t('languageLabel');document.querySelector('#local-data-label').textContent=t('localData');document.querySelector('#developed-by').textContent=t('developedBy');
+  const brandVersion=document.querySelector('#brand-version');if(brandVersion&&brandVersion.textContent.includes('carregando'))brandVersion.textContent=t('commandCenter')+' · '+t('loadingVersion');
+  const installed=document.querySelector('#installed-version');if(installed&&installed.textContent.includes('carregando'))installed.textContent='Tarkas · '+t('loadingVersion');
+  title.textContent=names[document.querySelector('#nav button.active')?.dataset.page||'dashboard'];
+  if(typeof drawQuickNav==='function'){quickNav.textContent='⌕ '+t('search')+'  Ctrl+K';quickNavInput.placeholder=t('searchArea')}
+}
 function markerGlyph(type,cx,cy,r){const s=Math.max(r,1.5),x=Number(cx),y=Number(cy);if(type==='extract')return`<rect class="marker-shape" x="${x-s}" y="${y-s}" width="${2*s}" height="${2*s}" rx="${s*.25}"/><path class="marker-glyph" d="M ${x-s*.45} ${y} H ${x+s*.55} M ${x+s*.12} ${y-s*.42} L ${x+s*.55} ${y} L ${x+s*.12} ${y+s*.42}"/>`;if(type==='spawn')return`<path class="marker-shape" d="M ${x} ${y-s*1.2} L ${x+s*1.1} ${y+s} L ${x-s*1.1} ${y+s} Z"/><circle class="marker-glyph-dot" cx="${x}" cy="${y+s*.22}" r="${s*.22}"/>`;if(type==='boss')return`<path class="marker-shape boss-silhouette" d="M ${x-s*.72} ${y+s} Q ${x-s*.72} ${y+s*.1} ${x-s*.35} ${y-s*.1} Q ${x-s*.58} ${y-s*.95} ${x} ${y-s*.95} Q ${x+s*.58} ${y-s*.95} ${x+s*.35} ${y-s*.1} Q ${x+s*.72} ${y+s*.1} ${x+s*.72} ${y+s} Z"/><circle class="marker-glyph-dot" cx="${x}" cy="${y-s*.38}" r="${s*.23}"/>`;if(type==='switch')return`<rect class="marker-shape" x="${x-s*.72}" y="${y-s*.72}" width="${s*1.44}" height="${s*1.44}" transform="rotate(45 ${x} ${y})"/><path class="marker-glyph" d="M ${x} ${y-s*.52} V ${y+s*.52} M ${x-s*.35} ${y-s*.1} L ${x} ${y-s*.52} L ${x+s*.35} ${y-s*.1}"/>`;return`<circle class="marker-shape" cx="${x}" cy="${y}" r="${s}"/><path class="marker-glyph" d="M ${x} ${y-s*.58} V ${y+s*.58} M ${x-s*.58} ${y} H ${x+s*.58}"/>`}
 function decorateMapMarkers(){document.querySelectorAll('.overlaymap .mark:not([data-symbol])').forEach(mark=>{const circle=mark.querySelector(':scope>circle'),type=[...mark.classList].find(c=>['extract','spawn','boss','objective','switch'].includes(c));if(!circle||!type)return;mark.insertAdjacentHTML('afterbegin',markerGlyph(type,circle.getAttribute('cx'),circle.getAttribute('cy'),circle.getAttribute('r')));circle.remove();mark.dataset.symbol=type})}
 function bindMapMarkerDetails(){document.querySelectorAll('.overlaymap .mark:not([data-details-bound])').forEach(mark=>{const type=[...mark.classList].find(c=>['extract','spawn','boss','objective','switch'].includes(c));if(!type)return;const open=event=>{event.preventDefault();event.stopPropagation();const stage=mark.closest('#mapstage'),name=mark.querySelector('title')?.textContent||'Marcador sem descrição',labels={extract:'Extração',spawn:'Spawn',boss:'Boss',objective:'Objetivo de quest',switch:'Interruptor'},notes={extract:'Ponto de extração indicado pelos dados locais.',spawn:'Área de surgimento indicada pelos dados locais.',boss:'Local e chance apresentados conforme os dados estruturados disponíveis.',objective:'Objetivo relacionado ao seu plano de raid.',switch:'Interruptor mapeado nos dados estruturados disponíveis.'};stage?.querySelector('#marker-details')?.remove();if(!stage)return;const panel=document.createElement('section');panel.id='marker-details';panel.className='marker-details';const close=document.createElement('button');close.type='button';close.className='marker-details-close';close.textContent='Fechar';close.onclick=()=>panel.remove();const kind=document.createElement('span');kind.className='tag';kind.textContent=labels[type];const heading=document.createElement('h3');heading.textContent=name;const note=document.createElement('p');note.textContent=notes[type];panel.append(kind,heading,note,close);stage.append(panel)};mark.addEventListener('pointerdown',event=>event.stopPropagation());mark.addEventListener('click',open);mark.dataset.detailsBound='true'})}
@@ -98,7 +109,19 @@ async function openTarkasPage(page){
 }
 function renderActiveProfile(){const status=document.querySelector('aside .status');if(!status||status.dataset.profileLoading)return;status.dataset.profileLoading='true';window.tarkas.currentProfile().then(profile=>{let label=status.querySelector('.active-profile');if(!label){label=document.createElement('small');label.className='active-profile';status.append(label)}label.textContent='Perfil: '+profile.name}).catch(()=>{}).finally(()=>delete status.dataset.profileLoading)}
 document.querySelectorAll('#nav button').forEach(button=>button.onclick=()=>openTarkasPage(button.dataset.page));
-openTarkasPage('dashboard');
+async function initializeLanguage(){
+  const select=document.querySelector('#language-select');
+  try{appLanguage=window.tarkasI18n.normalize(await window.tarkas.getSetting('language',window.tarkasI18n.detect()))}catch{appLanguage=window.tarkasI18n.detect()}
+  syncLanguageChrome();
+  select.onchange=async()=>{
+    appLanguage=window.tarkasI18n.normalize(select.value);
+    syncLanguageChrome();
+    try{await window.tarkas.saveSetting('language',appLanguage)}catch{}
+    await openTarkasPage(document.querySelector('#nav button.active')?.dataset.page||'dashboard');
+  };
+  await openTarkasPage('dashboard');
+}
+initializeLanguage();
 
 function enhanceDashboardRaidCard(){
   const card=[...content.querySelectorAll('.card')].find(item=>item.querySelector('label')?.textContent==='Assistente de Raid');
@@ -254,7 +277,7 @@ const nextActionObserver=new MutationObserver(addNextAction);nextActionObserver.
 const nextActionStyle=document.createElement('style');nextActionStyle.textContent=`.next-action{background:linear-gradient(125deg,#282514,#151c15 70%);border-color:#756332}.next-action h2{margin:10px 0 5px;color:#eee4c2;font-size:21px}.next-action p{margin:0 0 15px;color:#b4bcae;font-size:12px}.next-action .qaction{border-color:#d1ad49;color:#f2d779}`;document.head.append(nextActionStyle);
 const brand=document.querySelector('.brand');
 if(brand){
-  brand.innerHTML='<img class="tarkas-logo" src="../../assets/tarkas-logo-v2.png" alt="Tarkas"><small>COMMAND CENTER · V0.2</small>';
+  brand.innerHTML='<img class="tarkas-logo" src="../../assets/tarkas-logo-v2.png" alt="Tarkas"><small id="brand-version">COMMAND CENTER · carregando versão</small>';
   const logoStyle=document.createElement('style');
   logoStyle.textContent=`.brand{padding-bottom:16px}.brand:after{margin-top:12px}.tarkas-logo{display:block;width:100%;max-width:224px;height:74px;object-fit:contain;object-position:left center;filter:contrast(1.08) saturate(.9);mix-blend-mode:screen}.brand small{position:relative;z-index:1;margin-top:6px}`;
   document.head.append(logoStyle);
@@ -485,18 +508,21 @@ async function addMapPinRemoval(){const panel=document.querySelector('.map-pins-
 const mapPinRemovalObserver=new MutationObserver(()=>addMapPinRemoval().catch(()=>{}));mapPinRemovalObserver.observe(content,{childList:true,subtree:true});
 
 let tarkasUpdateState=null;
+function showInstalledVersion(state){const version=String(state?.currentVersion||'').trim();if(!version)return;const label='Tarkas v'+version;const footer=document.querySelector('#installed-version'),brandVersion=document.querySelector('#brand-version');if(footer)footer.textContent=label;if(brandVersion)brandVersion.textContent='COMMAND CENTER · v'+version}
 function renderUpdatePanel(){
-  if(document.querySelector('#nav button.active')?.dataset.page!=='dashboard')return;
+  const state=tarkasUpdateState;showInstalledVersion(state);if(document.querySelector('#nav button.active')?.dataset.page!=='dashboard')return;
   document.querySelector('.app-update-panel')?.remove();
-  const state=tarkasUpdateState;if(!state?.enabled)return;
+  if(!state?.enabled)return;
   const panel=document.createElement('section');panel.className='app-update-panel '+state.status;
-  const copy={checking:['VERIFICANDO VERSÃO','Consultando a atualização publicada…'],downloading:['ATUALIZAÇÃO EM ANDAMENTO',(state.progress||0)+'% baixado'],ready:['NOVA VERSÃO PRONTA','Versão '+state.version+' foi baixada e pode ser instalada agora.'],current:['TARKAS ATUALIZADO','Você já está usando a versão mais recente.'],error:['ATUALIZAÇÃO INDISPONÍVEL','Tente novamente quando sua conexão estiver disponível.'],idle:['ATUALIZAÇÕES','Verifique se há uma nova versão do Tarkas.']}[state.status]||['ATUALIZAÇÕES',state.message||''];
-  panel.innerHTML='<div><small></small><b></b><span></span></div><button class="qaction"></button>';
+  const installed='v'+(state.currentVersion||'?'),available=state.version?' · disponível: v'+state.version:'';
+  const copy={checking:[t('checkingVersion'),'Consultando atualização para '+installed],downloading:['ATUALIZAÇÃO EM ANDAMENTO','Baixando v'+state.version+' · instalada: '+installed],ready:['NOVA VERSÃO PRONTA','Instalada: '+installed+' · pronta: v'+state.version],installing:['INSTALANDO ATUALIZAÇÃO','O Tarkas será aberto novamente ao terminar.'],current:['TARKAS ATUALIZADO','Você está usando a versão '+installed+'.'],error:['ATUALIZAÇÃO INDISPONÍVEL','Instalada: '+installed+'. Tente novamente quando sua conexão estiver disponível.'],idle:[t('updates'),'Versão instalada: '+installed+available]}[state.status]||[t('updates'),'Versão instalada: '+installed];
+  panel.innerHTML='<div><small></small><b></b><span></span></div><div class="app-update-actions"><button class="qaction update-action"></button><button class="qaction shortcut-action">'+t('createShortcut')+'</button><small></small></div>';
   panel.querySelector('small').textContent=copy[0];panel.querySelector('b').textContent=copy[1];panel.querySelector('span').textContent=state.message||'';
-  const button=panel.querySelector('button');
-  if(state.status==='ready'){button.textContent='Instalar e reiniciar';button.onclick=()=>window.tarkas.installUpdate()}
-  else if(state.status==='checking'||state.status==='downloading'){button.disabled=true;button.textContent=state.status==='downloading'?(state.progress||0)+'%':'Verificando…'}
-  else{button.textContent='Verificar agora';button.onclick=async()=>{button.disabled=true;await window.tarkas.checkUpdate()}}
+  const button=panel.querySelector('.update-action'),shortcut=panel.querySelector('.shortcut-action'),shortcutStatus=panel.querySelector('.app-update-actions small');
+  if(state.status==='ready'){button.textContent=t('restartInstall');button.onclick=()=>window.tarkas.installUpdate()}
+  else if(state.status==='checking'||state.status==='downloading'||state.status==='installing'){button.disabled=true;button.textContent=state.status==='downloading'?(state.progress||0)+'%':state.status==='installing'?'Reiniciando…':'Verificando…'}
+  else{button.textContent=t('checkNow');button.onclick=async()=>{button.disabled=true;await window.tarkas.checkUpdate()}}
+  shortcut.onclick=async()=>{shortcut.disabled=true;const result=await window.tarkas.createDesktopShortcut();shortcutStatus.textContent=result.message;shortcut.disabled=false};
   content.prepend(panel);
 }
 window.tarkas.updateStatus().then(state=>{tarkasUpdateState=state;renderUpdatePanel()}).catch(()=>{});
@@ -505,4 +531,4 @@ document.querySelector('#nav')?.addEventListener('click',()=>setTimeout(renderUp
 const updatePanelObserver=new MutationObserver(()=>{const onDashboard=document.querySelector('#nav button.active')?.dataset.page==='dashboard';if(onDashboard&&!document.querySelector('.app-update-panel')&&tarkasUpdateState?.enabled)renderUpdatePanel()});
 updatePanelObserver.observe(content,{childList:true,subtree:true});
 setTimeout(renderUpdatePanel,350);
-const tarkasUpdateStyle=document.createElement('style');tarkasUpdateStyle.textContent=`.app-update-panel{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:18px;padding:15px 18px;border:1px solid #4b4c35;background:linear-gradient(105deg,#181b14,#111511)}.app-update-panel small,.app-update-panel b,.app-update-panel span{display:block}.app-update-panel small{color:#d4b856;font-size:9px;letter-spacing:1.2px}.app-update-panel b{margin-top:4px;color:#ebe6d1;font-size:13px}.app-update-panel span{margin-top:3px;color:#9ea89a;font-size:11px}.app-update-panel.ready{border-color:#c49f3b;background:linear-gradient(105deg,#2a2514,#151812)}.app-update-panel.error{border-color:#70443c}.app-update-panel button{white-space:nowrap}@media(max-width:620px){.app-update-panel{align-items:flex-start;flex-direction:column}.app-update-panel button{margin:0}}`;document.head.append(tarkasUpdateStyle);
+const tarkasUpdateStyle=document.createElement('style');tarkasUpdateStyle.textContent=`.app-update-panel{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:18px;padding:15px 18px;border:1px solid #4b4c35;background:linear-gradient(105deg,#181b14,#111511)}.app-update-panel small,.app-update-panel b,.app-update-panel span{display:block}.app-update-panel small{color:#d4b856;font-size:9px;letter-spacing:1.2px}.app-update-panel b{margin-top:4px;color:#ebe6d1;font-size:13px}.app-update-panel span{margin-top:3px;color:#9ea89a;font-size:11px}.app-update-panel.ready{border-color:#c49f3b;background:linear-gradient(105deg,#2a2514,#151812)}.app-update-panel.error{border-color:#70443c}.app-update-panel button{white-space:nowrap}.app-update-actions{display:grid;grid-template-columns:auto auto;gap:7px;justify-items:end}.app-update-actions small{grid-column:1/-1;min-height:11px;text-align:right;color:#9da795;letter-spacing:0}.shortcut-action{font-size:10px!important}@media(max-width:780px){.app-update-panel{align-items:flex-start;flex-direction:column}.app-update-actions{justify-items:start}.app-update-actions small{text-align:left}}@media(max-width:500px){.app-update-actions{grid-template-columns:1fr}.app-update-actions small{grid-column:auto}}`;document.head.append(tarkasUpdateStyle);

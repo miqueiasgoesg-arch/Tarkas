@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const fs = require('fs');
 const path = require('path');
@@ -39,6 +39,12 @@ function configureUpdates(){
   autoUpdater.on('update-downloaded',info=>{updateState={...updateState,status:'ready',version:info.version,progress:100,message:'Atualização pronta para instalar.'};sendUpdateState()});
   autoUpdater.on('error',error=>{updateState={...updateState,status:'error',message:'Não foi possível verificar a atualização agora.'};console.warn('update check failed:',error.message);sendUpdateState()});
   setTimeout(()=>autoUpdater.checkForUpdates().catch(()=>{}),5000);
+}
+function createDesktopShortcut(){
+  if(process.platform!=='win32'||!app.isPackaged)return{created:false,message:'O atalho fica disponível na versão instalada do Tarkas.'};
+  const target=process.execPath,shortcut=path.join(app.getPath('desktop'),'Tarkas.lnk');
+  const created=shell.writeShortcutLink(shortcut,'create',{target,workingDirectory:path.dirname(target),description:'Abrir Tarkas'});
+  return{created,message:created?'Atalho criado na área de trabalho.':'Não foi possível criar o atalho agora.'};
 }
 function createWindow() {
   win = new BrowserWindow({ title: 'Tarkas', width: 1440, height: 900, minWidth: 1050, minHeight: 700,
@@ -118,4 +124,5 @@ ipcMain.handle('map:project',(_e,mode,id,position)=>{const m=mapDetail(mode,id);
 ipcMain.handle('clock:tarkov',()=>tarkovPair());
 ipcMain.handle('update:status',()=>updateSnapshot());
 ipcMain.handle('update:check',async()=>{if(!app.isPackaged)return updateSnapshot();await autoUpdater.checkForUpdates().catch(()=>{});return updateSnapshot()});
-ipcMain.handle('update:install',()=>{if(updateState.status==='ready')autoUpdater.quitAndInstall(false,true);return true});
+ipcMain.handle('shortcut:desktop',()=>createDesktopShortcut());
+ipcMain.handle('update:install',()=>{if(updateState.status!=='ready')return false;updateState={...updateState,status:'installing',message:'Instalando atualização e reiniciando o Tarkas…'};sendUpdateState();setTimeout(()=>autoUpdater.quitAndInstall(true,true),250);return true});

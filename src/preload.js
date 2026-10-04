@@ -58,6 +58,7 @@ contextBridge.exposeInMainWorld('tarkas', {
   mapDetail:(mode,id)=>ipcRenderer.invoke('maps:detail',mode,id),
   mapSvg:file=>ipcRenderer.invoke('map:svg',file),
   mapProject:(mode,id,position)=>ipcRenderer.invoke('map:project',mode,id,position),
-  tarkovClock:()=>ipcRenderer.invoke('clock:tarkov')
+  tarkovClock:()=>ipcRenderer.invoke('clock:tarkov'),
+  createDesktopShortcut:()=>ipcRenderer.invoke('shortcut:desktop')
   ,updateStatus:()=>ipcRenderer.invoke('update:status'), checkUpdate:()=>ipcRenderer.invoke('update:check'), installUpdate:()=>ipcRenderer.invoke('update:install'), onUpdateState:callback=>ipcRenderer.on('update:state',(_event,state)=>callback(state))
 });

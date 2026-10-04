@@ -1,6 +1,13 @@
 # Changelog — Projeto Tarkas
 
-## Em preparação — V0.5.1, operador, história e interface
+## 2026-10-03 — V0.5.2, guia didático e Roadmap
+- Nova aba Roadmap para mostrar o que está concluído, em andamento e planejado.
+- Missões exibem recompensas quando a fonte local informar EXP, itens, rublos ou reputação.
+- Abrir uma quest no mapa agora mostra um guia passo a passo e as chaves necessárias pela rota.
+- Boss Radar passa a abrir uma ficha clicável com chance, locais, entrada e capangas.
+- Biblioteca de itens fecha a ficha anterior ao trocar de categoria; painel de nível e cursor tático foram refinados.
+
+## 2026-10-03 — V0.5.1, operador, história e interface
 - Cartão de Operador por perfil: imagem local do personagem em PNG, JPG ou WEBP.
 - Nova aba História: rota guiada de quests encadeadas, passos marcáveis e atalhos para o mapa.
 - Painel de nível, lembretes, rolagem e botões táticos refinados.

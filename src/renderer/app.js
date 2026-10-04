@@ -125,11 +125,11 @@ async function addReminderPanel(){
     if(grid!==content.querySelector('.grid'))return;
     const card=document.createElement('section');
     card.className='card wide reminder-panel';
-    const label=document.createElement('label');label.textContent='Lembretes de raid';
-    const form=document.createElement('form');
-    const input=document.createElement('input');input.required=true;input.maxLength=160;input.placeholder='Ex.: Levar chave do Dorm 214';
-    const due=document.createElement('input');due.type='datetime-local';due.title='Data e hora opcional';
-    const button=document.createElement('button');button.className='qaction';button.textContent='Adicionar';
+    const label=document.createElement('label');label.className='reminder-title';label.innerHTML='<span>LEMBRETES DE RAID</span><small>Planeje antes de entrar</small>';
+    const form=document.createElement('form');form.className='reminder-form';
+    const input=document.createElement('input');input.className='reminder-input';input.required=true;input.maxLength=160;input.placeholder='O que você não pode esquecer?';input.setAttribute('aria-label','Novo lembrete');
+    const due=document.createElement('input');due.className='reminder-due';due.type='datetime-local';due.title='Data e hora opcional';due.setAttribute('aria-label','Data e hora do lembrete, opcional');
+    const button=document.createElement('button');button.className='qaction reminder-add';button.textContent='+ Adicionar';
     form.append(input,due,button);
     const list=document.createElement('div');list.className='reminder-list';
     if(data.reminders.length){
@@ -140,7 +140,7 @@ async function addReminderPanel(){
         done.onclick=async()=>{done.disabled=true;try{await window.tarkas.completeReminder(reminder.id);openTarkasPage('dashboard')}catch{done.disabled=false}};
         row.append(text,done);list.append(row);
       });
-    }else{const empty=document.createElement('small');empty.className='muted';empty.textContent='Nenhum lembrete pendente.';list.append(empty)}
+    }else{const empty=document.createElement('small');empty.className='reminder-empty';empty.innerHTML='<b>Sem lembretes por enquanto.</b><span>Adicione algo importante para a próxima raid.</span>';list.append(empty)}
     form.onsubmit=async event=>{event.preventDefault();button.disabled=true;try{await window.tarkas.addReminder(input.value,due.value?new Date(due.value).toISOString():'');openTarkasPage('dashboard')}catch{button.disabled=false;input.focus()}};
     card.append(label,form,list);grid.append(card);grid.dataset.reminderPanel='ready';
   }catch{grid.dataset.reminderPanel='error'}

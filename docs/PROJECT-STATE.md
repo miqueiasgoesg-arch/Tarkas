@@ -11,6 +11,8 @@ V0.1 funcional e estável antes de refinamentos. tarkov.dev é a fonte principal
 ## Estado atual
 - Próxima candidata: suporte multilíngue com detecção do idioma do sistema e preferência salva por perfil. A navegação, o painel de versão/atualização e os textos globais já estão disponíveis em português, inglês e espanhol; os guias táticos serão ampliados progressivamente sem traduzir nomes oficiais do jogo.
 - O painel de atualização exibe a versão instalada. A próxima publicação também corrige o reinício após atualizar e permite criar um atalho na área de trabalho pelo próprio app.
+- Pacote atual: cursor tático simplificado com operador e arma, rota animada em mapas, brasão de nível vetorial, Roadmap detalhado e fila de próximos upgrades do Hideout.
+- Dados regulares de quests, mapas, comerciantes, Hideout e preços foram sincronizados com sucesso em 04/10/2026.
 - Versão candidata local: 0.5.0; ainda não publicada.
 - Atualização automática configurada para consultar releases publicadas no GitHub.
 - Biblioteca de itens: categorias, busca, fichas clicáveis, preço, comerciantes, vínculos com quests/Hideout e atalhos para mapa quando há vínculo verificável.

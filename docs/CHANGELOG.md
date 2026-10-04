@@ -4,6 +4,8 @@
 - Base multilíngue com detecção do idioma do sistema, escolha manual persistente por perfil e suporte inicial a português, inglês e espanhol.
 - Navegação, busca rápida, identificação do aplicativo e ações globais de atualização respeitam o idioma escolhido.
 - Preparadas a correção do reinício pós-atualização e a criação de atalho na área de trabalho pelo próprio app.
+- Rota de raid ganhou animação por objetivos e extrações; o painel de nível agora usa brasão vetorial; Roadmap e Hideout receberam planejamento de próximas etapas.
+- Cache local de dados e preços atualizado em 04/10/2026, sem falhas na fonte.
 
 ## 2026-10-04 — V0.5.4, campanha oficial e cursor
 - A aba História agora exibe uma campanha guiada com capítulos oficiais, sem depender do marcador ausente na base local.

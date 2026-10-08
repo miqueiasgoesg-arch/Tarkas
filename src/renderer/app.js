@@ -897,14 +897,15 @@ const battlePassVerifiedLinksStyle=document.createElement('style');battlePassVer
 /* Rota pessoal: pontos reais definidos pelo jogador, não uma "rota segura" inventada pelo app. */
 async function addPersonalRoutePlanner(){
   const stage=document.querySelector('#mapstage'),desk=stage?.querySelector('.map-layer-desk'),svg=stage?.querySelector('.overlaymap'),mapName=stage?.querySelector('.maphead b')?.textContent;
-  if(!stage||!desk||!svg||!mapName||stage.querySelector('.personal-route-planner'))return;
+  if(!stage||!desk||!svg||!mapName||stage.querySelector('.personal-route-planner')||stage.dataset.personalRouteLoading)return;
+  stage.dataset.personalRouteLoading='true';
   const key='mapRoute:'+mapName;
   const panel=document.createElement('section');panel.className='personal-route-planner';
   panel.innerHTML='<div><small>PLANEJADOR DE ROTA PESSOAL</small><h3>Desenhe sua própria rota</h3><p>Adicione os pontos na ordem em que pretende passar por eles: spawn, objetivo, porta, extração. É uma anotação visual sua — não uma promessa de caminho seguro.</p></div><div class="personal-route-actions"><button type="button" class="qaction route-add">Adicionar pontos</button><button type="button" class="qaction route-clear">Limpar rota</button></div><small class="personal-route-status"></small>';
   const add=panel.querySelector('.route-add'),clear=panel.querySelector('.route-clear'),status=panel.querySelector('.personal-route-status');
   let points=[];
   try{const stored=JSON.parse(await window.tarkas.getSetting(key,'[]'));points=Array.isArray(stored)?stored.filter(point=>Number.isFinite(Number(point?.x))&&Number.isFinite(Number(point?.z))).slice(0,24):[]}catch{}
-  if(stage!==document.querySelector('#mapstage'))return;
+  if(stage!==document.querySelector('#mapstage')||stage.querySelector('.personal-route-planner')){delete stage.dataset.personalRouteLoading;return}
   const save=()=>window.tarkas.saveSetting(key,JSON.stringify(points)).catch(()=>{});
   const announce=()=>{status.textContent=svg.dataset.routePlacement==='ready'?'Clique no mapa para adicionar o próximo ponto.':'Rota salva com '+points.length+' ponto'+(points.length===1?'':'s')+'.';clear.disabled=!points.length};
   const render=()=>{
@@ -931,7 +932,7 @@ async function addPersonalRoutePlanner(){
       save();render();
     });
   }
-  desk.insertAdjacentElement('afterend',panel);render();
+  desk.insertAdjacentElement('afterend',panel);render();delete stage.dataset.personalRouteLoading;
 }
 const personalRoutePlannerObserver=new MutationObserver(()=>addPersonalRoutePlanner().catch(()=>{}));personalRoutePlannerObserver.observe(content,{childList:true,subtree:true});
 const personalRoutePlannerStyle=document.createElement('style');personalRoutePlannerStyle.textContent=`.personal-route-planner{display:grid;grid-template-columns:minmax(260px,1fr) auto;gap:10px 18px;align-items:center;margin:-2px 0 12px;padding:13px;border:1px solid #6a5832;background:linear-gradient(105deg,#201c11,#101510)}.personal-route-planner small,.personal-route-planner h3,.personal-route-planner p{display:block}.personal-route-planner>div>small{color:#dfbd61;font-size:9px;letter-spacing:1.1px}.personal-route-planner h3{margin:4px 0;color:#eee6d1;font-size:14px}.personal-route-planner p{max-width:720px;margin:0;color:#acb5a7;font-size:10px;line-height:1.45}.personal-route-actions{display:flex;gap:7px}.personal-route-actions .qaction{margin:0;white-space:nowrap}.personal-route-status{grid-column:1/-1;color:#a8bcaf;font-size:10px}.personal-route-layer{pointer-events:none}.personal-route-line{fill:none;stroke:#f0c955;stroke-width:3;stroke-dasharray:7 4;filter:drop-shadow(0 0 3px #161306);animation:personal-route-march 1.4s linear infinite}.personal-route-point circle{fill:#efd064;stroke:#28200b;stroke-width:1.3;filter:drop-shadow(0 0 3px #000)}.personal-route-point text{fill:#151207;font:700 4px Arial,sans-serif;pointer-events:none}@keyframes personal-route-march{to{stroke-dashoffset:-22}}@media(max-width:680px){.personal-route-planner{grid-template-columns:1fr}.personal-route-actions{flex-wrap:wrap}}`;document.head.append(personalRoutePlannerStyle);

@@ -9,18 +9,25 @@ function catalog(mode = 'regular') {
   const source = payload(mode, 'items');
   const items = Object.values(source?.items || source || {});
   const pt = payload(mode, 'items_pt');
-  return items.filter(item => item?.id && item?.name).map(item => ({
+  return items.filter(item => item?.id && item?.name).map(item => {
+    const flea=Number(item.avg24hPrice)||Number(item.low24hPrice)||Number(item.lastLowPrice)||0;
+    const traderPrices=[...(item.buyFromTrader||[]),...(item.sellToTrader||[])].map(row=>Number(row.priceRUB)||0).filter(Boolean);
+    const base=Number(item.basePrice)||0, trader=traderPrices.length?Math.max(...traderPrices):0;
+    const price=flea||trader||base;
+    const priceSource=flea?'flea':trader?'trader':base?'base':'none';
+    return ({
     id: item.id,
     name: pt?.[item.name] || item.name,
     shortName: pt?.[item.shortName] || item.shortName || item.name,
-    price: Number(item.avg24hPrice),
+    price,
+    priceSource,
     lowPrice: Number(item.low24hPrice) || null,
     lastLowPrice: Number(item.lastLowPrice) || null,
     scannedAt: item.lastScan || '',
     types: item.types || [],
-    icon: item.iconLink || item.image512pxLink || '',
+    icon: item.image512pxLink || item.iconLink || '',
     description: pt?.[item.description] || item.description || ''
-  })).sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+  })}).sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
 }
 
 function details(mode='regular',id='') {
@@ -47,7 +54,8 @@ function details(mode='regular',id='') {
   for(const station of stations)for(const level of station.levels||[])for(const requirement of level.itemRequirements||[])if(requirement.item===id)hideout.push({station:hideoutPt?.[station.name]||station.normalizedName||station.name||'Estação',level:Number(level.level)||0,count:Number(requirement.count)||1,foundInRaid:Boolean(requirement.attributes?.foundInRaid)});
   const buyFrom=(raw.buyFromTrader||[]).map(row=>({trader:traderName(row.trader),price:Number(row.priceRUB)||0,level:Number(row.minTraderLevel)||0,currency:row.currency||'RUB'})).sort((a,b)=>a.price-b.price);
   const sellTo=(raw.sellToTrader||[]).map(row=>({trader:traderName(row.trader),price:Number(row.priceRUB)||0,currency:row.currency||'RUB'})).sort((a,b)=>b.price-a.price);
-  return {id,name,shortName:pt?.[raw.shortName]||raw.shortName||name,description:pt?.[raw.description]||raw.description||'',types:raw.types||[],icon:raw.iconLink||raw.image512pxLink||'',price:Number(raw.avg24hPrice)||0,lowPrice:Number(raw.low24hPrice)||0,lastLowPrice:Number(raw.lastLowPrice)||0,scannedAt:raw.lastScan||'',wikiLink:raw.wikiLink||'',weight:Number(raw.weight)||0,buyFrom,sellTo,quests,hideout};
+  const flea=Number(raw.avg24hPrice)||Number(raw.low24hPrice)||Number(raw.lastLowPrice)||0,base=Number(raw.basePrice)||0,trader=buyFrom[0]?.price||sellTo[0]?.price||0,price=flea||trader||base,priceSource=flea?'flea':trader?'trader':base?'base':'none';
+  return {id,name,shortName:pt?.[raw.shortName]||raw.shortName||name,description:pt?.[raw.description]||raw.description||'',types:raw.types||[],icon:raw.image512pxLink||raw.iconLink||'',price,priceSource,lowPrice:Number(raw.low24hPrice)||0,lastLowPrice:Number(raw.lastLowPrice)||0,scannedAt:raw.lastScan||'',wikiLink:raw.wikiLink||'',weight:Number(raw.weight)||0,buyFrom,sellTo,quests,hideout};
 }
 
 module.exports = { catalog, details };

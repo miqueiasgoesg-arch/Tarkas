@@ -5,7 +5,7 @@ function catalog(mode='regular'){
   const translated=payload(mode,'items_pt');
   return items.filter(item=>item?.id&&((item.types||[]).includes('gun')||(item.types||[]).includes('mods'))).map(item=>({
     id:item.id,name:translated[item.name]||item.name,shortName:translated[item.shortName]||item.shortName||item.name,
-    kind:(item.types||[]).includes('gun')?'weapon':'attachment',types:item.types||[],icon:item.iconLink||item.image512pxLink||'',
+    kind:(item.types||[]).includes('gun')?'weapon':'attachment',types:item.types||[],icon:item.image512pxLink||item.iconLink||'',
     caliber:item.properties?.caliber||'',price:item.avg24hPrice||item.basePrice||0,ergonomics:item.properties?.ergonomics??null,
     recoil:item.properties?.recoilVertical??null,link:item.link||''
   })).sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));

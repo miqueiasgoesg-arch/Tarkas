@@ -2,7 +2,7 @@
   "name": "projeto-tarkas",
   "productName": "Tarkas",
   "author": "MGOES",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Companion de progressao para Escape from Tarkov",
   "main": "src/main.js",
   "scripts": {
@@ -38,6 +38,12 @@
     ],
     "asarUnpack": [
       "node_modules/better-sqlite3/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "assets/tarkas-icon.ico",
+        "to": "tarkas-icon.ico"
+      }
     ],
     "win": {
       "icon": "assets/tarkas-icon-v4.png",

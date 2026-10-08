@@ -44,7 +44,8 @@ function configureUpdates(){
 function createDesktopShortcut(){
   if(process.platform!=='win32'||!app.isPackaged)return{created:false,message:'O atalho fica disponível na versão instalada do Tarkas.'};
   const target=process.execPath,shortcut=path.join(app.getPath('desktop'),'Tarkas.lnk');
-  const created=shell.writeShortcutLink(shortcut,'create',{target,workingDirectory:path.dirname(target),description:'Abrir Tarkas'});
+  const icon=path.join(process.resourcesPath,'tarkas-icon.ico');
+  const created=shell.writeShortcutLink(shortcut,'create',{target,workingDirectory:path.dirname(target),description:'Abrir Tarkas',icon,iconIndex:0});
   return{created,message:created?'Atalho criado na área de trabalho.':'Não foi possível criar o atalho agora.'};
 }
 function createWindow() {

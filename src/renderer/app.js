@@ -897,7 +897,10 @@ const battlePassVerifiedLinksStyle=document.createElement('style');battlePassVer
 /* Rota pessoal: pontos reais definidos pelo jogador, não uma "rota segura" inventada pelo app. */
 async function addPersonalRoutePlanner(){
   const stage=document.querySelector('#mapstage'),desk=stage?.querySelector('.map-layer-desk'),svg=stage?.querySelector('.overlaymap'),mapName=stage?.querySelector('.maphead b')?.textContent;
-  if(!stage||!desk||!svg||!mapName||stage.querySelector('.personal-route-planner')||stage.dataset.personalRouteLoading)return;
+  if(!stage||!desk||!svg||!mapName)return;
+  const existing=[...stage.querySelectorAll('.personal-route-planner')];
+  if(existing.length){existing.slice(1).forEach(panel=>panel.remove());return}
+  if(stage.dataset.personalRouteLoading)return;
   stage.dataset.personalRouteLoading='true';
   const key='mapRoute:'+mapName;
   const panel=document.createElement('section');panel.className='personal-route-planner';

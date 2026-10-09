@@ -50,6 +50,7 @@ contextBridge.exposeInMainWorld('tarkas', {
   addItemLocation:(itemId,itemName,mapName,area,note)=>ipcRenderer.invoke('item-locations:add',itemId,itemName,mapName,area,note),
   removeItemLocation:id=>ipcRenderer.invoke('item-locations:remove',id),
   questCatalog:mode=>ipcRenderer.invoke('quests:catalog',mode),
+  questLines:mode=>ipcRenderer.invoke('quests:lines',mode),
   kappaTracker:mode=>ipcRenderer.invoke('kappa:tracker',mode),
   progress:()=>ipcRenderer.invoke('progress:get'),
   setQuestStatus:(id,status)=>ipcRenderer.invoke('progress:quest',id,status),

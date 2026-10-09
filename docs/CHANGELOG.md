@@ -1,5 +1,12 @@
 # Changelog — Projeto Tarkas
 
+## 2026-10-09 — V0.7.4, Mapas 2.0
+- Explorador tático reorganizado com camadas exclusivas, busca, filtros de documentos e stashes, andares, zoom, pan e painel lateral persistente.
+- Camadas verificadas para extrações, spawns, objetivos, bosses, perigos, switches, transições, BTR, portas, armas estacionárias e zonas de loot agrupado.
+- Rota sugerida agora desenha spawn possível → objetivo → extração ou informa claramente quando não há coordenada confirmada.
+- Factory à Noite compartilha a planta calibrada de Factory; Labirinto e Icebreaker mostram modo tático de dados enquanto não houver arte local redistribuível.
+- Inclusa validação automática de integridade para SVGs, calibração e posições dos 14 mapas antes da release.
+
 ## 2026-10-04 — V0.5.6, estabilidade e navegação
 - Corrigida a troca de idioma da interface.
 - Criação automática do atalho do Tarkas na área de trabalho.

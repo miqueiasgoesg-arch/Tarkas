@@ -1,5 +1,11 @@
 # Changelog — Projeto Tarkas
 
+## 2026-10-09 — V0.7.5, Mapas 2.0 — explorador e rotas
+- O painel lateral dos mapas ganhou acesso direto a **Rota da missão**, desenhando spawn possível → objetivo em foco → extração próxima apenas quando houver posições verificáveis.
+- Corrigido o filtro de Documentos e Stashes: a camada de objetivos necessária permanece ligada, então os marcadores filtrados não desaparecem.
+- A busca do explorador isola e realça marcadores pelo nome, com retorno da quantidade encontrada.
+- O mapa permanece em tela ampla, com a camada lateral fixa e a validação dos 14 mapas antes do empacotamento.
+
 ## 2026-10-09 — V0.7.4, Mapas 2.0
 - Explorador tático reorganizado com camadas exclusivas, busca, filtros de documentos e stashes, andares, zoom, pan e painel lateral persistente.
 - Camadas verificadas para extrações, spawns, objetivos, bosses, perigos, switches, transições, BTR, portas, armas estacionárias e zonas de loot agrupado.

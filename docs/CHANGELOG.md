@@ -1,5 +1,11 @@
 # Changelog — Projeto Tarkas
 
+## 2026-10-09 — V0.7.6, estabilidade de navegação
+- Navegação consolidada em um registro único de telas, evitando que implementações antigas concorram ao abrir Visão Geral, Missões, Mapa, Passe de Batalha e os módulos complementares.
+- Estados de carregamento e falha agora comunicam o status para leitores de tela e mantêm uma ação clara de tentativa novamente.
+- Painel de camadas do mapa passa a apresentar **áreas de spawn** agrupadas por setor, deixando explícita a diferença entre setores úteis e pontos técnicos brutos.
+- Mantidos os refinamentos de leitura dos mapas, painéis de conteúdo longo e trilha visual do roadmap.
+
 ## 2026-10-09 — V0.7.5, Mapas 2.0 — explorador e rotas
 - O painel lateral dos mapas ganhou acesso direto a **Rota da missão**, desenhando spawn possível → objetivo em foco → extração próxima apenas quando houver posições verificáveis.
 - Corrigido o filtro de Documentos e Stashes: a camada de objetivos necessária permanece ligada, então os marcadores filtrados não desaparecem.

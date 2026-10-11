@@ -1196,12 +1196,16 @@ function wireMapPage(){
   if(!art?.querySelector('svg'))addTacticalMapFallback();
   else art.style.opacity='1';
   ensureMapCanvasRecovery(canvas);
-  decorateMapMarkers();bindMapMarkerDetails();highlightQuestDocuments();
+  decorateMapMarkers();bindMapMarkerDetails();highlightQuestDocuments();localizeMapChrome(stage);requestAnimationFrame(()=>stage.isConnected&&localizeMapChrome(stage));
  };
  const observer=new MutationObserver(hydrate);
  observer.observe(stage,{childList:true,subtree:true});
  hydrate();
  setTimeout(()=>observer.disconnect(),20000);
+}
+function localizeMapChrome(stage){
+ const toolbar=content.querySelector('.toolbar:has(#raidmap)');[['fs',' Áreas de surgimento'],['fb',' Chefes'],['fw',' Interruptores']].forEach(([id,label])=>{const input=toolbar?.querySelector('#'+id),container=input?.parentElement;if(input&&container){[...container.childNodes].filter(node=>node.nodeType===Node.TEXT_NODE).forEach(node=>node.textContent=label)}});
+ const labels=new Map([['Spawns','Áreas de surgimento'],['Bosses','Chefes'],['Switches','Interruptores'],['Stashes','Esconderijos'],['Loot e acessos','Saque e acessos'],['Áreas de spawn','Áreas de surgimento']]);stage.querySelectorAll('.legend span,.map-filter-group button span,.map-intel-stats button span,.map-filter-tree summary').forEach(node=>{const clean=node.textContent.trim(),translated=labels.get(clean);if(translated)node.textContent=translated});
 }
 function wireQuestDossier(){
  const list=content.querySelector('#realquests');

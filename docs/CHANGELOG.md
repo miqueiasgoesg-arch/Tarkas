@@ -1,5 +1,12 @@
 # Changelog — Projeto Tarkas
 
+## 2026-10-11 — V0.7.7, Missões 2.0 — linhas e desbloqueios
+- Cada linha de missão ganha um **dossiê prático**: próxima etapa, comerciante, nível, mapa e progresso local, sem misturar lore com requisitos verificáveis.
+- O dossiê mostra itens concretos da próxima etapa, quantidade e a exigência de item encontrado em raid quando o catálogo a informar; etapas sem item deixam isso claro.
+- Atalhos levam diretamente à missão filtrada ou ao mapa relevante para preparar a raid.
+- O Roadmap registra **Mapas 2.0** como concluído e abre a fase de **Missões 2.0**.
+- A verificação de release passa a validar também o módulo de Missões 2.0, além da cobertura cartográfica dos 14 mapas.
+
 ## 2026-10-09 — V0.7.6, estabilidade de navegação
 - Navegação consolidada em um registro único de telas, evitando que implementações antigas concorram ao abrir Visão Geral, Missões, Mapa, Passe de Batalha e os módulos complementares.
 - Estados de carregamento e falha agora comunicam o status para leitores de tela e mantêm uma ação clara de tentativa novamente.

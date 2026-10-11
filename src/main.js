@@ -64,7 +64,7 @@ function createWindow() {
     backgroundColor: '#0b0d0c', show: false,
     webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false } });
   win.loadFile(path.join(__dirname, 'renderer', 'index.html'));
-  ipcMain.removeHandler('map:svg'); ipcMain.handle('map:svg',(_e,file)=>{if(!/^[A-Za-z0-9.-]+\.svg$/.test(file||''))return null;if(svgCache.has(file))return svgCache.get(file);try{let s=require('fs').readFileSync(path.join(__dirname,'..','assets','maps',file),'utf8');s=s.replace(/<\?xml[^>]*>|<!--[^]*?-->/g,'').replace(/>\s+</g,'><').trim();svgCache.set(file,s);return s}catch{return null}});
+  ipcMain.removeHandler('map:svg'); ipcMain.handle('map:svg',(_e,file)=>{if(!/^[A-Za-z0-9.-]+\.(?:svg|png)$/.test(file||''))return null;if(svgCache.has(file))return svgCache.get(file);try{const target=path.join(__dirname,'..','assets','maps',file);let s;if(file.endsWith('.png')){const image=require('fs').readFileSync(target).toString('base64');s='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1167 803" role="img" aria-label="Mapa do Labirinto"><image width="1167" height="803" href="data:image/png;base64,'+image+'"/></svg>'}else{s=require('fs').readFileSync(target,'utf8').replace(/<\?xml[^>]*>|<!--[^]*?-->/g,'').replace(/>\s+</g,'><').trim()}svgCache.set(file,s);return s}catch{return null}});
   win.once('ready-to-show', () => win.show());
 }
 app.commandLine.appendSwitch('disable-gpu-shader-disk-cache');

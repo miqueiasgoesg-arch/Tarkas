@@ -226,7 +226,10 @@ async function openTarkasPage(page){
     const renderers={dashboard,quests,mapa:raid,battlepass:battlePass,armory,operations,hideout,story,market,roadmap};
     const render=renderers[page];
     if(!render)throw new Error('Página não registrada: '+page);
-    await render();
+    await Promise.race([
+      render(),
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error('page render timeout')),12000))
+    ]);
   }catch(error){
     console.error('Tarkas page',page,error);
     content.innerHTML='<div class="placeholder" role="alert"><b>Esta área não pôde ser carregada agora.</b>Os dados locais permanecem preservados.<br><button type="button" class="qaction">Tentar novamente</button></div>';

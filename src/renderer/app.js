@@ -234,7 +234,7 @@ async function openTarkasPage(page){
     console.error('Tarkas page',page,error);
     content.innerHTML='<div class="placeholder" role="alert"><b>Esta área não pôde ser carregada agora.</b>Os dados locais permanecem preservados.<br><button type="button" class="qaction">Tentar novamente</button></div>';
     content.querySelector('button').onclick=()=>openTarkasPage(page);
-  }finally{content.removeAttribute('aria-busy');window.tarkasI18n?.translateUi(appLanguage,content);if(page==='operations')requestAnimationFrame(wireOperationsActions);if(page==='mapa')requestAnimationFrame(wireMapPage)}
+  }finally{content.removeAttribute('aria-busy');window.tarkasI18n?.translateUi(appLanguage,content);if(page==='operations')requestAnimationFrame(wireOperationsActions);if(page==='mapa')requestAnimationFrame(wireMapPage);if(page==='quests')requestAnimationFrame(wireQuestDossier)}
 }
 function renderActiveProfile(){const status=document.querySelector('aside .status');if(!status||status.dataset.profileLoading)return;status.dataset.profileLoading='true';window.tarkas.currentProfile().then(profile=>{let label=status.querySelector('.active-profile');if(!label){label=document.createElement('small');label.className='active-profile';status.append(label)}label.textContent='Perfil: '+profile.name}).catch(()=>{}).finally(()=>delete status.dataset.profileLoading)}
 document.querySelectorAll('#nav button').forEach(button=>{
@@ -1203,4 +1203,51 @@ function wireMapPage(){
  hydrate();
  setTimeout(()=>observer.disconnect(),20000);
 }
+function wireQuestDossier(){
+ const list=content.querySelector('#realquests');
+ if(!list||list.dataset.dossierReady)return;
+ list.dataset.dossierReady='true';
+ const dossier=document.createElement('section');
+ dossier.className='quest-dossier';
+ dossier.setAttribute('aria-live','polite');
+ list.insertAdjacentElement('beforebegin',dossier);
+ let catalog;
+ const getCatalog=()=>catalog||(catalog=window.tarkas.questCatalog('regular').catch(()=>null));
+ const render=async row=>{
+  if(!row)return;
+  list.querySelectorAll('.qrow').forEach(item=>item.classList.toggle('quest-selected',item===row));
+  const tag=row.querySelector('.tag')?.textContent||'';
+  const name=row.querySelector('h3')?.textContent||'Missão';
+  const summary=row.querySelector('small')?.textContent||'';
+  const objectives=[...row.querySelectorAll('.qguide li')].map(item=>{const copy=item.cloneNode(true);copy.querySelectorAll('button').forEach(button=>button.remove());return copy});
+  dossier.replaceChildren();
+  const header=document.createElement('header'),eyebrow=document.createElement('small'),title=document.createElement('h2'),meta=document.createElement('p');
+  eyebrow.textContent='DOSSIÊ OPERACIONAL';title.textContent=name;meta.textContent=tag;header.append(eyebrow,title,meta);
+  const briefing=document.createElement('article'),briefTitle=document.createElement('small'),briefCopy=document.createElement('p');
+  briefTitle.textContent='SITUAÇÃO';briefCopy.textContent=summary||'Abra os objetivos para conferir o que é exigido nesta missão.';briefing.append(briefTitle,briefCopy);
+  const objectivesPanel=document.createElement('article'),objectivesTitle=document.createElement('small'),objectiveList=document.createElement('ol');
+  objectivesTitle.textContent='OBJETIVOS';objectives.forEach(item=>objectiveList.append(item));
+  if(!objectives.length){const item=document.createElement('li');item.textContent='Os objetivos detalhados não estão disponíveis no catálogo local.';objectiveList.append(item)}
+  objectivesPanel.append(objectivesTitle,objectiveList);
+  const rewards=document.createElement('article'),rewardsTitle=document.createElement('small'),rewardsCopy=document.createElement('p');
+  rewardsTitle.textContent='RECOMPENSAS';rewardsCopy.textContent='Consultando recompensas registradas…';rewards.append(rewardsTitle,rewardsCopy);
+  const actions=document.createElement('div');actions.className='quest-dossier-actions';
+  const mapButton=row.querySelector('.qmap,.qobjmap');
+  if(mapButton){const action=document.createElement('button');action.type='button';action.className='qaction';action.textContent='Preparar no mapa';action.onclick=()=>mapButton.click();actions.append(action)}
+  const guideButton=document.createElement('button');guideButton.type='button';guideButton.className='qaction';guideButton.textContent='Abrir guia completo';guideButton.onclick=()=>{const guide=row.querySelector('.qguide');if(guide){guide.open=true;row.scrollIntoView({behavior:'smooth',block:'center'})}};actions.append(guideButton);
+  dossier.append(header,briefing,objectivesPanel,rewards,actions);
+  const localName=name;
+  const data=await getCatalog();
+  if(localName!==dossier.querySelector('h2')?.textContent)return;
+  const quest=data?.quests?.find(item=>item.name===localName);
+  const rewardLabels=(quest?.rewards||[]).map(item=>item.label||item.name).filter(Boolean);
+  rewardsCopy.textContent=rewardLabels.length?rewardLabels.slice(0,6).join(' · '):'A fonte local não detalha recompensas para esta missão. Confira o jogo antes de tomar decisões de compra.';
+ };
+ list.addEventListener('click',event=>{
+  if(event.target.closest('button,summary,input,select,a,label'))return;
+  const row=event.target.closest('.qrow');if(row&&list.contains(row))void render(row);
+ });
+ void render(list.querySelector('.qrow'));
+}
 const operationsActionsStyle=document.createElement('style');operationsActionsStyle.textContent=`.operations-grid .qaction{margin:16px 0 0;padding:7px 10px!important;font-size:10px!important}.operations-grid article{display:flex;flex-direction:column}.operations-grid article .qaction{align-self:flex-start}`;document.head.append(operationsActionsStyle);
+const questDossierStyle=document.createElement('style');questDossierStyle.textContent=`.quest-dossier{display:grid;grid-template-columns:1.15fr repeat(3,minmax(0,1fr));gap:10px;margin:14px 0;padding:14px;border:1px solid #756337;background:linear-gradient(120deg,#1d1b10,#0e140f)}.quest-dossier header{grid-row:span 2;padding:8px 12px;border-right:1px solid #554b2a}.quest-dossier small{display:block;color:#dfbd58;font-size:9px;letter-spacing:1.2px}.quest-dossier h2{margin:8px 0;color:#f2ead4;font-size:21px;line-height:1.1}.quest-dossier header p{margin:0;color:#aab4a5;font-size:11px;line-height:1.45}.quest-dossier article{padding:10px;border:1px solid #394332;background:#0b100c}.quest-dossier article p{margin:7px 0 0;color:#c2c8be;font-size:11px;line-height:1.5}.quest-dossier ol{display:grid;gap:5px;margin:8px 0 0;padding-left:18px;color:#c8cec5;font-size:11px;line-height:1.4}.quest-dossier li::marker{color:#e4c262}.quest-dossier-actions{display:flex;gap:7px;align-items:end;flex-wrap:wrap}.quest-dossier-actions .qaction{margin:0}.qrow.quest-selected{border-color:#bd9d45!important;box-shadow:inset 3px 0 #e1bd5a}@media(max-width:980px){.quest-dossier{grid-template-columns:1fr 1fr}.quest-dossier header{grid-column:1/-1;grid-row:auto;border-right:0;border-bottom:1px solid #554b2a}}@media(max-width:600px){.quest-dossier{grid-template-columns:1fr}.quest-dossier-actions{align-items:flex-start}}`;document.head.append(questDossierStyle);

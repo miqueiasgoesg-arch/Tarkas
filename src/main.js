@@ -29,6 +29,17 @@ function removeProfileAvatar(){const {registry,profile}=activeProfile();if(profi
 let updateState={status:'idle',version:null,progress:0,message:''};
 const updateSnapshot=()=>({...updateState,currentVersion:app.getVersion(),enabled:app.isPackaged});
 function sendUpdateState(){if(win&&!win.isDestroyed())win.webContents.send('update:state',updateSnapshot())}
+const releaseBase='https://github.com/miqueiasgoesg-arch/Tarkas/releases';
+const compareVersions=(left,right)=>{const a=String(left||'0').split('.').map(Number),b=String(right||'0').split('.').map(Number);for(let index=0;index<Math.max(a.length,b.length);index+=1){const delta=(a[index]||0)-(b[index]||0);if(delta)return delta}return 0};
+async function findManualUpdate(){
+  try{
+    const response=await fetch(releaseBase+'/latest/download/latest.yml',{headers:{accept:'text/plain'},redirect:'follow'});
+    if(!response.ok)throw new Error('manifesto indisponível');
+    const text=await response.text(),version=text.match(/^version:\s*([^\s]+)/m)?.[1];
+    if(version&&compareVersions(version,app.getVersion())>0){updateState={...updateState,status:'manual',version,message:'O download automático não está disponível nesta instalação. Abra a versão publicada para instalar manualmente.'};sendUpdateState();return true}
+  }catch(error){console.warn('manual update check failed:',error.message)}
+  return false
+}
 function configureUpdates(){
   if(!app.isPackaged)return;
   autoUpdater.autoDownload=true;
@@ -38,7 +49,7 @@ function configureUpdates(){
   autoUpdater.on('download-progress',progress=>{updateState={...updateState,status:'downloading',progress:Math.round(progress.percent||0),message:'Baixando atualização…'};sendUpdateState()});
   autoUpdater.on('update-not-available',()=>{updateState={...updateState,status:'current',message:'O Tarkas já está atualizado.'};sendUpdateState()});
   autoUpdater.on('update-downloaded',info=>{updateState={...updateState,status:'ready',version:info.version,progress:100,message:'Atualização pronta para instalar.'};sendUpdateState()});
-  autoUpdater.on('error',error=>{updateState={...updateState,status:'error',message:'Não foi possível verificar a atualização agora.'};console.warn('update check failed:',error.message);sendUpdateState()});
+  autoUpdater.on('error',error=>{updateState={...updateState,status:'error',message:'Não foi possível verificar a atualização agora.'};console.warn('update check failed:',error.message);sendUpdateState();findManualUpdate().catch(()=>{})});
   setTimeout(()=>autoUpdater.checkForUpdates().catch(()=>{}),5000);
 }
 function createDesktopShortcut(){
@@ -128,6 +139,7 @@ ipcMain.handle('maps:detail',(_e,mode,id)=>mapDetail(mode,id));
 ipcMain.handle('map:project',(_e,mode,id,position)=>{const m=mapDetail(mode,id);if(!m?.calibration)return null;return{point:projectPoint(position,m.calibration),floor:pointLayer(position,m.calibration)}});
 ipcMain.handle('clock:tarkov',()=>tarkovPair());
 ipcMain.handle('update:status',()=>updateSnapshot());
-ipcMain.handle('update:check',async()=>{if(!app.isPackaged)return updateSnapshot();await autoUpdater.checkForUpdates().catch(()=>{});return updateSnapshot()});
+ipcMain.handle('update:check',async()=>{if(!app.isPackaged)return updateSnapshot();await autoUpdater.checkForUpdates().catch(()=>{});if(updateState.status==='error')await findManualUpdate();return updateSnapshot()});
+ipcMain.handle('update:open-release',()=>shell.openExternal(updateState.version?releaseBase+'/tag/v'+updateState.version:releaseBase+'/latest'));
 ipcMain.handle('shortcut:desktop',()=>createDesktopShortcut());
 ipcMain.handle('update:install',()=>{if(updateState.status!=='ready')return false;updateState={...updateState,status:'installing',message:'Instalando atualização e reiniciando o Tarkas…'};sendUpdateState();setTimeout(()=>autoUpdater.quitAndInstall(true,true),250);return true});

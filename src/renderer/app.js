@@ -1204,7 +1204,7 @@ function wireMapPage(){
   if(!art?.querySelector('svg'))addTacticalMapFallback();
   else art.style.opacity='1';
   ensureMapCanvasRecovery(canvas);
-  decorateMapMarkers();clusterMapSpawnMarkers(stage);decorateMapMarkers();addSpawnClusterLegend(stage);bindMapMarkerDetails();highlightQuestDocuments();localizeMapChrome(stage);requestAnimationFrame(()=>stage.isConnected&&localizeMapChrome(stage));
+  decorateMapMarkers();clusterMapSpawnMarkers(stage);decorateMapMarkers();addMapLayerDesk();addMapExplorerSearch();addSpawnClusterLegend(stage);bindMapMarkerDetails();highlightQuestDocuments();localizeMapChrome(stage);addMapKeyGuide();void attachBossRadar();void addMapDataFreshness();void addPersonalRoutePlanner();void addMapAccessDirectory();void addVerifiedMapLayers().then(()=>{if(!stage.isConnected)return;decorateMapMarkers();bindMapMarkerDetails();refreshMapLayerCounts();localizeMapChrome(stage)}).catch(()=>{});requestAnimationFrame(()=>stage.isConnected&&localizeMapChrome(stage));
  };
  const observer=new MutationObserver(hydrate);
  observer.observe(stage,{childList:true,subtree:true});

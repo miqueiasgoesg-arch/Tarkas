@@ -1207,6 +1207,22 @@ function wireQuestDossier(){
  const list=content.querySelector('#realquests');
  if(!list||list.dataset.dossierReady)return;
  list.dataset.dossierReady='true';
+ const toolbar=content.querySelector('#qs')?.closest('.toolbar'),state=toolbar?.querySelector('#qstate');
+ if(state&&!state.querySelector('option[value="active"]'))state.append(new Option('Em andamento','active'));
+ if(toolbar&&!content.querySelector('.quest-mode-switcher')){
+  const modes=document.createElement('nav');modes.className='quest-mode-switcher';modes.setAttribute('aria-label','Modo de leitura das missões');
+  [['História','story'],['Secundárias','all'],['Operacional','active']].forEach(([label,target])=>{
+   const button=document.createElement('button');button.type='button';button.textContent=label;
+   button.classList.toggle('active',label==='Secundárias');
+   button.onclick=()=>{
+    modes.querySelectorAll('button').forEach(item=>item.classList.toggle('active',item===button));
+    if(target==='story'){openTarkasPage('story');return}
+    if(state){state.value=target;state.dispatchEvent(new Event('change'))}
+   };
+   modes.append(button);
+  });
+  toolbar.insertAdjacentElement('beforebegin',modes);
+ }
  const dossier=document.createElement('section');
  dossier.className='quest-dossier';
  dossier.setAttribute('aria-live','polite');
@@ -1247,7 +1263,9 @@ function wireQuestDossier(){
   if(event.target.closest('button,summary,input,select,a,label'))return;
   const row=event.target.closest('.qrow');if(row&&list.contains(row))void render(row);
  });
+ toolbar?.querySelectorAll('#qs,#qm,#qstate').forEach(control=>control.addEventListener(control.id==='qs'?'input':'change',()=>queueMicrotask(()=>void render(list.querySelector('.qrow')))));
  void render(list.querySelector('.qrow'));
 }
 const operationsActionsStyle=document.createElement('style');operationsActionsStyle.textContent=`.operations-grid .qaction{margin:16px 0 0;padding:7px 10px!important;font-size:10px!important}.operations-grid article{display:flex;flex-direction:column}.operations-grid article .qaction{align-self:flex-start}`;document.head.append(operationsActionsStyle);
 const questDossierStyle=document.createElement('style');questDossierStyle.textContent=`.quest-dossier{display:grid;grid-template-columns:1.15fr repeat(3,minmax(0,1fr));gap:10px;margin:14px 0;padding:14px;border:1px solid #756337;background:linear-gradient(120deg,#1d1b10,#0e140f)}.quest-dossier header{grid-row:span 2;padding:8px 12px;border-right:1px solid #554b2a}.quest-dossier small{display:block;color:#dfbd58;font-size:9px;letter-spacing:1.2px}.quest-dossier h2{margin:8px 0;color:#f2ead4;font-size:21px;line-height:1.1}.quest-dossier header p{margin:0;color:#aab4a5;font-size:11px;line-height:1.45}.quest-dossier article{padding:10px;border:1px solid #394332;background:#0b100c}.quest-dossier article p{margin:7px 0 0;color:#c2c8be;font-size:11px;line-height:1.5}.quest-dossier ol{display:grid;gap:5px;margin:8px 0 0;padding-left:18px;color:#c8cec5;font-size:11px;line-height:1.4}.quest-dossier li::marker{color:#e4c262}.quest-dossier-actions{display:flex;gap:7px;align-items:end;flex-wrap:wrap}.quest-dossier-actions .qaction{margin:0}.qrow.quest-selected{border-color:#bd9d45!important;box-shadow:inset 3px 0 #e1bd5a}@media(max-width:980px){.quest-dossier{grid-template-columns:1fr 1fr}.quest-dossier header{grid-column:1/-1;grid-row:auto;border-right:0;border-bottom:1px solid #554b2a}}@media(max-width:600px){.quest-dossier{grid-template-columns:1fr}.quest-dossier-actions{align-items:flex-start}}`;document.head.append(questDossierStyle);
+const questModesStyle=document.createElement('style');questModesStyle.textContent=`.quest-mode-switcher{display:flex;gap:2px;margin:14px 0 0;padding:5px;border:1px solid #425046;background:#111713}.quest-mode-switcher button{min-height:38px;border:0;border-right:1px solid #384438;background:transparent;color:#abb5a8;padding:0 16px;font-size:11px;letter-spacing:.7px;cursor:pointer}.quest-mode-switcher button:last-child{border-right:0}.quest-mode-switcher button:hover,.quest-mode-switcher button.active{background:#292613;color:#f0dfaa;box-shadow:inset 0 -2px #d6b251}@media(max-width:580px){.quest-mode-switcher{display:grid;grid-template-columns:repeat(3,1fr)}.quest-mode-switcher button{padding:0 5px;font-size:10px}}`;document.head.append(questModesStyle);

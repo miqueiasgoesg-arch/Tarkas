@@ -1,0 +1,11 @@
+{
+  "label": "Plantas táticas oficiais de The Lab",
+  "viewBox": "0 0 1024 1024",
+  "width": 1024,
+  "height": 1024,
+  "layers": [
+    { "id": "Technical_Level", "file": "Labs-Technical.png" },
+    { "id": "First_Level", "file": "Labs-First.png", "hidden": true },
+    { "id": "Second_Level", "file": "Labs-Second.png", "hidden": true }
+  ]
+}

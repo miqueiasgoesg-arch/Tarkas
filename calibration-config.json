@@ -1015,7 +1015,7 @@
         -193
       ]
     ],
-    "svgLayer": null,
+    "svgLayer": "First_Level",
     "heightRange": [
       -0.9,
       3
@@ -1023,7 +1023,7 @@
     "layers": [
       {
         "name": "Second Level",
-        "svgLayer": null,
+        "svgLayer": "Second_Level",
         "extents": [
           {
             "height": [
@@ -1047,7 +1047,7 @@
       },
       {
         "name": "Technical",
-        "svgLayer": null,
+        "svgLayer": "Technical_Level",
         "extents": [
           {
             "height": [

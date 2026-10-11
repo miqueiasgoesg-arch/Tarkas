@@ -89,7 +89,12 @@
     });
   }
 
-  const observer=new MutationObserver(()=>{addQuestLineBriefing();syncRoadmap()});
+  let queued=false;
+  const observer=new MutationObserver(()=>{
+    if(queued)return;
+    queued=true;
+    requestAnimationFrame(()=>{queued=false;addQuestLineBriefing();syncRoadmap()});
+  });
   observer.observe(content,{childList:true,subtree:true});
   addQuestLineBriefing();
   syncRoadmap();

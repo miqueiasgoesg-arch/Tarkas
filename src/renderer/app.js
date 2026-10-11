@@ -234,7 +234,7 @@ async function openTarkasPage(page){
     console.error('Tarkas page',page,error);
     content.innerHTML='<div class="placeholder" role="alert"><b>Esta área não pôde ser carregada agora.</b>Os dados locais permanecem preservados.<br><button type="button" class="qaction">Tentar novamente</button></div>';
     content.querySelector('button').onclick=()=>openTarkasPage(page);
-  }finally{content.removeAttribute('aria-busy');window.tarkasI18n?.translateUi(appLanguage,content);if(page==='operations')requestAnimationFrame(wireOperationsActions)}
+  }finally{content.removeAttribute('aria-busy');window.tarkasI18n?.translateUi(appLanguage,content);if(page==='operations')requestAnimationFrame(wireOperationsActions);if(page==='mapa')requestAnimationFrame(wireMapPage)}
 }
 function renderActiveProfile(){const status=document.querySelector('aside .status');if(!status||status.dataset.profileLoading)return;status.dataset.profileLoading='true';window.tarkas.currentProfile().then(profile=>{let label=status.querySelector('.active-profile');if(!label){label=document.createElement('small');label.className='active-profile';status.append(label)}label.textContent='Perfil: '+profile.name}).catch(()=>{}).finally(()=>delete status.dataset.profileLoading)}
 document.querySelectorAll('#nav button').forEach(button=>{
@@ -1182,5 +1182,25 @@ function wireOperationsActions(){
  });
  void addOperatorPanel();
  void addSavedBuildsPanel().then(()=>addBuildShoppingActions()).catch(()=>{});
+}
+function wireMapPage(){
+ const stage=content.querySelector('#mapstage');
+ if(!stage||stage.dataset.safeMapWire)return;
+ stage.dataset.safeMapWire='ready';
+ const hydrate=()=>{
+  if(!stage.isConnected){observer.disconnect();return}
+  const canvas=stage.querySelector('.mapcanvas');
+  if(!canvas)return;
+  observer.disconnect();
+  installMapViewports(stage);
+  const art=canvas.querySelector('.mapart');
+  if(!art?.querySelector('svg'))addTacticalMapFallback();
+  else art.style.opacity='1';
+  decorateMapMarkers();bindMapMarkerDetails();highlightQuestDocuments();
+ };
+ const observer=new MutationObserver(hydrate);
+ observer.observe(stage,{childList:true,subtree:true});
+ hydrate();
+ setTimeout(()=>observer.disconnect(),20000);
 }
 const operationsActionsStyle=document.createElement('style');operationsActionsStyle.textContent=`.operations-grid .qaction{margin:16px 0 0;padding:7px 10px!important;font-size:10px!important}.operations-grid article{display:flex;flex-direction:column}.operations-grid article .qaction{align-self:flex-start}`;document.head.append(operationsActionsStyle);

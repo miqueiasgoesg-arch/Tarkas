@@ -1,30 +1,68 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Planta tática do Labirinto">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Planta tática esquemática do Labirinto">
   <defs>
-    <linearGradient id="lab-floor" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#56605e"/><stop offset=".5" stop-color="#3f4848"/><stop offset="1" stop-color="#2f3738"/></linearGradient>
-    <linearGradient id="lab-hall" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#697273"/><stop offset="1" stop-color="#50595b"/></linearGradient>
-    <pattern id="lab-grid" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M8 0H0V8" fill="none" stroke="#bfccbd" stroke-opacity=".08" stroke-width=".35"/></pattern>
-    <pattern id="lab-hatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0V4" stroke="#1c2020" stroke-width="1" opacity=".45"/></pattern>
-    <filter id="lab-glow"><feGaussianBlur stdDeviation="1.6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <linearGradient id="concrete" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#72787c"/><stop offset="1" stop-color="#454c52"/></linearGradient>
+    <linearGradient id="corridor" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#60686d"/><stop offset="1" stop-color="#3f474d"/></linearGradient>
+    <pattern id="grid" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M8 0H0V8" fill="none" stroke="#d2d9d5" stroke-opacity=".06" stroke-width=".35"/></pattern>
+    <pattern id="hazard" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0V4" stroke="#4f1919" stroke-width="1.1"/></pattern>
+    <filter id="lamp"><feGaussianBlur stdDeviation="1.1" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
   </defs>
-  <rect width="256" height="256" fill="#090c0c"/>
-  <rect width="256" height="256" fill="url(#lab-grid)" opacity=".65"/>
+  <rect width="256" height="256" fill="#0b0e0f"/>
+  <rect width="256" height="256" fill="url(#grid)"/>
+
+  <!-- Planta baseada na silhueta real: arco oeste, núcleo industrial, corredor leste e acesso inferior. -->
   <g stroke-linejoin="round">
-    <path d="M14 81H34V55H62V30H98V42H158V27H198V46H228V76H244V112H224V146H242V184H210V217H174V236H133V218H94V239H54V217H25V186H10V148H28V113H12Z" fill="url(#lab-hall)" stroke="#9ea6a4" stroke-width="2.2"/>
-    <path d="M32 112H55V94H82V111H105V87H148V108H175V88H205V111H221V143H201V165H218V186H187V207H160V188H130V211H99V187H70V207H43V179H26V150H45V132H32Z" fill="#20282a" stroke="#151a1b" stroke-width="7"/>
-    <path d="M32 112H55V94H82V111H105V87H148V108H175V88H205V111H221V143H201V165H218V186H187V207H160V188H130V211H99V187H70V207H43V179H26V150H45V132H32Z" fill="none" stroke="#a3adab" stroke-opacity=".78" stroke-width="2.2"/>
-    <g fill="url(#lab-floor)" stroke="#c2cbca" stroke-width="1.5">
-      <path d="M36 58H69V84H56V103H34V81H36Z"/><path d="M82 44H118V73H103V87H76V63H82Z"/><path d="M145 42H184V70H202V96H174V84H145Z"/><path d="M48 156H82V183H67V204H40V179H28V151H48Z"/><path d="M96 124H159V182H143V201H112V183H95Z"/><path d="M174 143H204V168H190V194H163V174H174Z"/><path d="M98 211H132V235H96V218H98Z"/><path d="M205 49H227V76H211V95H197V69H205Z"/>
+    <path d="M49 25H66V58H83V76H111V63H155V75H177V58H205V72H231V105H217V126H235V168H219V194H195V181H177V205H158V230H142V246H111V229H94V207H73V190H48V169H28V139H43V112H25V80H41V48H49Z" fill="url(#corridor)" stroke="#aeb5b6" stroke-width="2"/>
+
+    <!-- Ala oeste: grande corredor curvo reconhecível. -->
+    <path d="M25 80H55V94C43 103 39 116 39 132C39 150 48 166 67 175L57 194H38V171H21V139H34V113H18V83H25Z" fill="#687076" stroke="#c1c8c8" stroke-width="1.5"/>
+    <path d="M55 94C43 103 39 116 39 132C39 150 48 166 67 175" fill="none" stroke="#161c20" stroke-width="9"/>
+    <path d="M55 94C43 103 39 116 39 132C39 150 48 166 67 175" fill="none" stroke="#b4bdbe" stroke-width="2.2"/>
+    <path d="M22 83H39M34 113H53M21 139H39M38 171H56" fill="none" stroke="#11171a" stroke-width="5"/>
+
+    <!-- Setores externos: norte e ala leste. -->
+    <path d="M49 25H66V58H82V79H62V66H46V48H49Z" fill="url(#concrete)" stroke="#c3cbcb" stroke-width="1.3"/>
+    <path d="M180 58H205V72H231V104H214V91H195V77H180Z" fill="url(#concrete)" stroke="#c3cbcb" stroke-width="1.3"/>
+    <path d="M218 106H235V168H219V154H203V130H217Z" fill="url(#concrete)" stroke="#c3cbcb" stroke-width="1.3"/>
+    <path d="M195 170H219V194H196V181H178V164H195Z" fill="url(#concrete)" stroke="#c3cbcb" stroke-width="1.3"/>
+
+    <!-- Núcleo quadrado e quatro salas industriais. -->
+    <path d="M70 76H185V183H159V206H96V184H70Z" fill="#596168" stroke="#d3d9d8" stroke-width="1.7"/>
+    <path d="M78 84H111V117H78Z" fill="url(#concrete)" stroke="#222a2e" stroke-width="2"/>
+    <path d="M145 84H177V117H145Z" fill="url(#concrete)" stroke="#222a2e" stroke-width="2"/>
+    <path d="M78 143H111V176H78Z" fill="url(#concrete)" stroke="#222a2e" stroke-width="2"/>
+    <path d="M145 143H177V176H145Z" fill="url(#concrete)" stroke="#222a2e" stroke-width="2"/>
+    <path d="M112 105H144V154H112Z" fill="#303b40" stroke="#c3cbca" stroke-width="1.4"/>
+    <path d="M118 112H138V148H118Z" fill="#20292e" stroke="#667176" stroke-width="1"/>
+    <circle cx="128" cy="130" r="9" fill="#505a5e" stroke="#c4ccca" stroke-width="1.1"/>
+    <path d="M121 130H135M128 123V137" stroke="#172025" stroke-width="1.7"/>
+    <circle cx="128" cy="130" r="2.8" fill="#d5bd55" filter="url(#lamp)"/>
+
+    <!-- Acesso inferior em Y: a silhueta vista nas referências. -->
+    <path d="M96 183H159V204H149L149 220L161 232L149 247H134L126 233L116 247H101L90 232L104 219V205H96Z" fill="url(#concrete)" stroke="#c2c9c8" stroke-width="1.5"/>
+    <path d="M113 205V219L101 231M142 205V219L153 232M126 205V234" fill="none" stroke="#172025" stroke-width="5"/>
+    <path d="M113 205V219L101 231M142 205V219L153 232M126 205V234" fill="none" stroke="#aeb8b7" stroke-width="1.4"/>
+
+    <!-- Equipamentos e divisórias dos setores; marcadores reais continuam por cima. -->
+    <g fill="#172127" stroke="#879095" stroke-width=".55">
+      <rect x="84" y="91" width="20" height="5"/><rect x="84" y="101" width="12" height="5"/><rect x="151" y="92" width="18" height="6"/><rect x="154" y="103" width="14" height="5"/>
+      <rect x="84" y="151" width="19" height="6"/><rect x="86" y="162" width="12" height="5"/><rect x="151" y="151" width="18" height="6"/><rect x="154" y="162" width="12" height="5"/>
+      <rect x="62" y="122" width="9" height="20"/><rect x="184" y="112" width="11" height="27"/><rect x="112" y="191" width="31" height="7"/>
     </g>
-    <path d="M95 109H161V185H95Z" fill="#424a4b" stroke="#d3dbd7" stroke-width="1.6"/>
-    <path d="M106 119H150V171H106Z" fill="#333d3e" stroke="#192021" stroke-width="2"/>
-    <path d="M113 126H143V164H113Z" fill="url(#lab-hatch)" stroke="#77817f" stroke-width=".75"/>
-    <circle cx="128" cy="145" r="14" fill="#5d6665" stroke="#c1c9c4" stroke-width="1.2"/><path d="M117 145H139M128 134V156" stroke="#1c2425" stroke-width="2"/><circle cx="128" cy="145" r="3.4" fill="#9f9d57" filter="url(#lab-glow)"/>
-    <g fill="#192224" stroke="#7e8988" stroke-width=".55"><rect x="42" y="65" width="13" height="6"/><rect x="42" y="74" width="13" height="5"/><rect x="87" y="51" width="20" height="6"/><rect x="87" y="61" width="11" height="6"/><rect x="155" y="51" width="18" height="7"/><rect x="177" y="57" width="11" height="14"/><rect x="52" y="164" width="17" height="6"/><rect x="54" y="173" width="12" height="6"/><rect x="178" y="152" width="15" height="7"/><rect x="178" y="164" width="10" height="14"/><rect x="105" y="215" width="18" height="6"/><rect x="105" y="224" width="18" height="5"/></g>
-    <g fill="#d0ad43" stroke="#201b0b" stroke-width=".7"><rect x="59" y="84" width="10" height="3"/><rect x="104" y="75" width="10" height="3"/><rect x="161" y="80" width="10" height="3"/><rect x="84" y="112" width="3" height="10"/><rect x="166" y="116" width="3" height="10"/><rect x="84" y="174" width="3" height="10"/><rect x="155" y="185" width="10" height="3"/><rect x="68" y="185" width="10" height="3"/><rect x="125" y="207" width="3" height="10"/></g>
-    <g fill="#813d3c" fill-opacity=".9" stroke="#c06a60" stroke-width=".8"><path d="M36 92H55V104H36Z"/><path d="M197 76H217V91H197Z"/><path d="M28 142H44V151H28Z"/><path d="M189 194H209V207H189Z"/></g>
-    <g fill="#161b1c" stroke="#aeb7b4" stroke-width=".8"><path d="M15 113H29V145H15Z"/><path d="M225 112H241V145H225Z"/><path d="M87 30H100V43H87Z"/><path d="M133 218H145V235H133Z"/></g>
-    <path d="M14 81H34M12 148H28M228 76H244M224 146H242M54 217H94M174 236H133" fill="none" stroke="#e0d28b" stroke-width="1" stroke-dasharray="2 2" opacity=".8"/>
+    <g fill="#d6b23e" stroke="#231d0a" stroke-width=".6">
+      <rect x="69" y="109" width="8" height="3"/><rect x="108" y="117" width="4" height="8"/><rect x="144" y="117" width="4" height="8"/><rect x="177" y="109" width="8" height="3"/>
+      <rect x="108" y="151" width="4" height="8"/><rect x="144" y="151" width="4" height="8"/><rect x="69" y="146" width="8" height="3"/><rect x="177" y="146" width="8" height="3"/>
+      <rect x="124" y="181" width="8" height="3"/>
+    </g>
+    <g fill="url(#hazard)" stroke="#b64d48" stroke-width=".9">
+      <path d="M41 52H62V65H41Z"/><path d="M202 77H218V92H202Z"/><path d="M28 126H42V140H28Z"/><path d="M200 181H217V194H200Z"/>
+    </g>
+    <g fill="#121719" stroke="#d0d8d5" stroke-width=".8"><path d="M84 76H99V83H84Z"/><path d="M157 76H172V83H157Z"/><path d="M81 177H96V184H81Z"/><path d="M159 177H174V184H159Z"/></g>
   </g>
-  <g fill="#e2e7e0" font-family="Arial, sans-serif" font-size="4.3" font-weight="700" letter-spacing=".55" text-anchor="middle" opacity=".9"><text x="53" y="61">CÂMARA 01</text><text x="99" y="49">CÂMARA 02</text><text x="169" y="48">CÂMARA 03</text><text x="62" y="160">CÂMARA 04</text><text x="128" y="106">NEXO CENTRAL</text><text x="188" y="151">CÂMARA 05</text><text x="128" y="176" fill="#d6bd62">SETOR DE CONTROLE</text><text x="112" y="231" font-size="3.5">ACESSO INFERIOR</text></g>
-  <g fill="#d2b65c" font-family="Arial, sans-serif" font-size="3.1" letter-spacing=".3" opacity=".85"><text x="18" y="108">CORREDOR OESTE</text><text x="203" y="106">CORREDOR LESTE</text><text x="86" y="18">ANEL NORTE</text><text x="152" y="249">ANEL SUL</text></g>
+
+  <g fill="#ecf0e8" font-family="Arial, sans-serif" font-size="3.7" font-weight="700" letter-spacing=".42" text-anchor="middle" opacity=".92">
+    <text x="94" y="87">CÂMARA I</text><text x="161" y="87">CÂMARA II</text><text x="94" y="174">CÂMARA III</text><text x="161" y="174">CÂMARA IV</text>
+    <text x="128" y="104" fill="#e5c866">NEXO CENTRAL</text><text x="128" y="158">CONTROLE / ALARME</text><text x="52" y="117">ALA OESTE</text><text x="207" y="119">ALA LESTE</text>
+    <text x="127" y="215">ACESSO INFERIOR</text><text x="55" y="37" font-size="3.2">SETOR NORTE</text><text x="210" y="67" font-size="3.2">SERVIÇO</text>
+  </g>
+  <g fill="#d9c36c" font-family="Arial, sans-serif" font-size="3" letter-spacing=".25" opacity=".9"><text x="14" y="76">ENTRADA OESTE</text><text x="190" y="53">CORREDOR NORTE</text><text x="195" y="205">RAMAL LESTE</text></g>
 </svg>

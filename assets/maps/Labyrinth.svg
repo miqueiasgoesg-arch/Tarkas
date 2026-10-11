@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Planta tática do Labirinto">
+  <defs>
+    <linearGradient id="floor" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#34403d"/><stop offset="1" stop-color="#1b2422"/></linearGradient>
+    <pattern id="grid" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M8 0H0V8" fill="none" stroke="#60706a" stroke-opacity=".12" stroke-width=".35"/></pattern>
+    <filter id="shadow"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity=".6"/></filter>
+  </defs>
+  <rect width="256" height="256" fill="#0b0f0e"/>
+  <g filter="url(#shadow)">
+    <path d="M8 136L8 104 30 104 30 76 50 76 50 17 76 17 76 31 103 31 103 18 132 18 132 38 161 38 161 20 194 20 194 37 232 37 232 57 247 57 247 93 226 93 226 122 247 122 247 158 224 158 224 188 205 188 205 222 173 222 173 240 136 240 136 226 101 226 101 244 66 244 66 220 37 220 37 190 17 190 17 160 7 160Z" fill="url(#floor)" stroke="#a89c74" stroke-width="1.7"/>
+    <path d="M9 136H58V114H87V142H115V109H146V131H178V96H211V122H246M51 18V55H77V82H111V62H141V90H170V64H199V91H231M17 160H48V181H84V156H110V181H143V151H178V184H205M38 220V195H67V177M101 226V199H128V178M137 240V207H162V184M205 188H184V159" fill="none" stroke="#0d1414" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M9 136H58V114H87V142H115V109H146V131H178V96H211V122H246M51 18V55H77V82H111V62H141V90H170V64H199V91H231M17 160H48V181H84V156H110V181H143V151H178V184H205M38 220V195H67V177M101 226V199H128V178M137 240V207H162V184M205 188H184V159" fill="none" stroke="#77837e" stroke-opacity=".7" stroke-width="3.4" stroke-linejoin="round"/>
+    <g fill="#273130" stroke="#87918a" stroke-opacity=".55" stroke-width=".8">
+      <rect x="33" y="91" width="22" height="17" rx="1"/><rect x="91" y="84" width="20" height="22" rx="1"/><rect x="151" y="47" width="25" height="15" rx="1"/><rect x="199" y="65" width="24" height="25" rx="1"/><rect x="60" y="154" width="20" height="23" rx="1"/><rect x="121" y="137" width="24" height="16" rx="1"/><rect x="150" y="190" width="24" height="16" rx="1"/>
+    </g>
+    <g fill="#b99b4c" fill-opacity=".85"><rect x="64" y="37" width="8" height="4"/><rect x="124" y="51" width="7" height="4"/><rect x="185" y="72" width="8" height="4"/><rect x="77" y="193" width="8" height="4"/><rect x="174" y="136" width="7" height="4"/></g>
+    <rect x="8" y="8" width="240" height="240" rx="3" fill="url(#grid)" opacity=".45"/>
+  </g>
+  <g fill="#d5c481" font-family="Arial, sans-serif" font-size="5" letter-spacing=".8" opacity=".75"><text x="17" y="98">CÂMARA NORTE</text><text x="112" y="102">NEXO</text><text x="179" y="116">OFICINAS</text><text x="48" y="188">ALA OESTE</text><text x="141" y="216">CÂMARA SUL</text></g>
+</svg>

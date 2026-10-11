@@ -1042,13 +1042,13 @@ async function addPersonalRoutePlanner(){
   stage.dataset.personalRouteLoading='true';
   const key='mapRoute:'+mapName;
   const panel=document.createElement('section');panel.className='personal-route-planner';
-  panel.innerHTML='<div><small>PLANEJADOR DE ROTA PESSOAL</small><h3>Desenhe sua própria rota</h3><p>Adicione os pontos na ordem em que pretende passar por eles: spawn, objetivo, porta, extração. É uma anotação visual sua — não uma promessa de caminho seguro.</p></div><div class="personal-route-actions"><button type="button" class="qaction route-add">Adicionar pontos</button><button type="button" class="qaction route-clear">Limpar rota</button></div><small class="personal-route-status"></small>';
-  const add=panel.querySelector('.route-add'),clear=panel.querySelector('.route-clear'),status=panel.querySelector('.personal-route-status');
+  panel.innerHTML='<div><small>PLANEJADOR DE ROTA PESSOAL</small><h3>Desenhe sua própria rota</h3><p>Adicione os pontos na ordem em que pretende passar por eles: spawn, objetivo, porta, extração. É uma anotação visual sua — não uma promessa de caminho seguro.</p></div><div class="personal-route-actions"><button type="button" class="qaction route-add">Adicionar pontos</button><button type="button" class="qaction route-undo">Desfazer ponto</button><button type="button" class="qaction route-clear">Limpar rota</button></div><small class="personal-route-status"></small>';
+  const add=panel.querySelector('.route-add'),undo=panel.querySelector('.route-undo'),clear=panel.querySelector('.route-clear'),status=panel.querySelector('.personal-route-status');
   let points=[];
   try{const stored=JSON.parse(await window.tarkas.getSetting(key,'[]'));points=Array.isArray(stored)?stored.filter(point=>Number.isFinite(Number(point?.x))&&Number.isFinite(Number(point?.z))).slice(0,24):[]}catch{}
   if(stage!==document.querySelector('#mapstage')||stage.querySelector('.personal-route-planner')){delete stage.dataset.personalRouteLoading;return}
   const save=()=>window.tarkas.saveSetting(key,JSON.stringify(points)).catch(()=>{});
-  const announce=()=>{status.textContent=svg.dataset.routePlacement==='ready'?'Clique no mapa para adicionar o próximo ponto.':'Rota salva com '+points.length+' ponto'+(points.length===1?'':'s')+'.';clear.disabled=!points.length};
+  const announce=()=>{status.textContent=svg.dataset.routePlacement==='ready'?'Clique no mapa para adicionar o próximo ponto.':'Rota salva com '+points.length+' ponto'+(points.length===1?'':'s')+'.';clear.disabled=!points.length;undo.disabled=!points.length};
   const render=()=>{
     svg.querySelector('.personal-route-layer')?.remove();
     if(points.length){
@@ -1060,6 +1060,7 @@ async function addPersonalRoutePlanner(){
     announce();
   };
   add.onclick=()=>{svg.dataset.pinPlacement='';svg.dataset.routePlacement=svg.dataset.routePlacement==='ready'?'':'ready';add.textContent=svg.dataset.routePlacement==='ready'?'Concluir pontos':'Adicionar pontos';render()};
+  undo.onclick=()=>{const removed=points.pop();if(!removed)return;save();render();status.textContent='Removido: '+(removed.label||'último ponto')+'.'};
   clear.onclick=()=>{points=[];svg.dataset.routePlacement='';add.textContent='Adicionar pontos';save();render()};
   if(svg.dataset.personalRoutePlanner!==mapName){
     svg.dataset.personalRoutePlanner=mapName;

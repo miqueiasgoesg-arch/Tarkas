@@ -1221,6 +1221,8 @@ function wireQuestDossier(){
    };
    modes.append(button);
   });
+  const syncMode=()=>{const value=state?.value;modes.querySelectorAll('button').forEach(button=>button.classList.toggle('active',(value==='active'&&button.textContent==='Operacional')||(value==='all'&&button.textContent==='Secundárias')))};
+  state?.addEventListener('change',syncMode);
   toolbar.insertAdjacentElement('beforebegin',modes);
  }
  const dossier=document.createElement('section');
@@ -1235,10 +1237,14 @@ function wireQuestDossier(){
   const tag=row.querySelector('.tag')?.textContent||'';
   const name=row.querySelector('h3')?.textContent||'Missão';
   const summary=row.querySelector('small')?.textContent||'';
+  const [trader='',level='',location='',status=''] = tag.split(' · ');
   const objectives=[...row.querySelectorAll('.qguide li')].map(item=>{const copy=item.cloneNode(true);copy.querySelectorAll('button').forEach(button=>button.remove());return copy});
   dossier.replaceChildren();
   const header=document.createElement('header'),eyebrow=document.createElement('small'),title=document.createElement('h2'),meta=document.createElement('p');
   eyebrow.textContent='DOSSIÊ OPERACIONAL';title.textContent=name;meta.textContent=tag;header.append(eyebrow,title,meta);
+  const facts=document.createElement('article');facts.className='quest-dossier-facts';
+  const factData=[['COMERCIANTE',trader||'Não informado'],['LOCALIZAÇÃO',location||'Qualquer local'],['SITUAÇÃO',status||'Não informada'],['PROGRESSO',objectives.length+' objetivo'+(objectives.length===1?'':'s')]];
+  factData.forEach(([label,value])=>{const fact=document.createElement('div'),factLabel=document.createElement('small'),factValue=document.createElement('b');factLabel.textContent=label;factValue.textContent=value;fact.append(factLabel,factValue);facts.append(fact)});
   const briefing=document.createElement('article'),briefTitle=document.createElement('small'),briefCopy=document.createElement('p');
   briefTitle.textContent='SITUAÇÃO';briefCopy.textContent=summary||'Abra os objetivos para conferir o que é exigido nesta missão.';briefing.append(briefTitle,briefCopy);
   const objectivesPanel=document.createElement('article'),objectivesTitle=document.createElement('small'),objectiveList=document.createElement('ol');
@@ -1251,7 +1257,7 @@ function wireQuestDossier(){
   const mapButton=row.querySelector('.qmap,.qobjmap');
   if(mapButton){const action=document.createElement('button');action.type='button';action.className='qaction';action.textContent='Preparar no mapa';action.onclick=()=>mapButton.click();actions.append(action)}
   const guideButton=document.createElement('button');guideButton.type='button';guideButton.className='qaction';guideButton.textContent='Abrir guia completo';guideButton.onclick=()=>{const guide=row.querySelector('.qguide');if(guide){guide.open=true;row.scrollIntoView({behavior:'smooth',block:'center'})}};actions.append(guideButton);
-  dossier.append(header,briefing,objectivesPanel,rewards,actions);
+  dossier.append(header,facts,briefing,objectivesPanel,rewards,actions);
   const localName=name;
   const data=await getCatalog();
   if(localName!==dossier.querySelector('h2')?.textContent)return;
@@ -1267,5 +1273,5 @@ function wireQuestDossier(){
  void render(list.querySelector('.qrow'));
 }
 const operationsActionsStyle=document.createElement('style');operationsActionsStyle.textContent=`.operations-grid .qaction{margin:16px 0 0;padding:7px 10px!important;font-size:10px!important}.operations-grid article{display:flex;flex-direction:column}.operations-grid article .qaction{align-self:flex-start}`;document.head.append(operationsActionsStyle);
-const questDossierStyle=document.createElement('style');questDossierStyle.textContent=`.quest-dossier{display:grid;grid-template-columns:1.15fr repeat(3,minmax(0,1fr));gap:10px;margin:14px 0;padding:14px;border:1px solid #756337;background:linear-gradient(120deg,#1d1b10,#0e140f)}.quest-dossier header{grid-row:span 2;padding:8px 12px;border-right:1px solid #554b2a}.quest-dossier small{display:block;color:#dfbd58;font-size:9px;letter-spacing:1.2px}.quest-dossier h2{margin:8px 0;color:#f2ead4;font-size:21px;line-height:1.1}.quest-dossier header p{margin:0;color:#aab4a5;font-size:11px;line-height:1.45}.quest-dossier article{padding:10px;border:1px solid #394332;background:#0b100c}.quest-dossier article p{margin:7px 0 0;color:#c2c8be;font-size:11px;line-height:1.5}.quest-dossier ol{display:grid;gap:5px;margin:8px 0 0;padding-left:18px;color:#c8cec5;font-size:11px;line-height:1.4}.quest-dossier li::marker{color:#e4c262}.quest-dossier-actions{display:flex;gap:7px;align-items:end;flex-wrap:wrap}.quest-dossier-actions .qaction{margin:0}.qrow.quest-selected{border-color:#bd9d45!important;box-shadow:inset 3px 0 #e1bd5a}@media(max-width:980px){.quest-dossier{grid-template-columns:1fr 1fr}.quest-dossier header{grid-column:1/-1;grid-row:auto;border-right:0;border-bottom:1px solid #554b2a}}@media(max-width:600px){.quest-dossier{grid-template-columns:1fr}.quest-dossier-actions{align-items:flex-start}}`;document.head.append(questDossierStyle);
+const questDossierStyle=document.createElement('style');questDossierStyle.textContent=`.quest-dossier{display:grid;grid-template-columns:1.15fr repeat(3,minmax(0,1fr));gap:10px;margin:14px 0;padding:14px;border:1px solid #756337;background:linear-gradient(120deg,#1d1b10,#0e140f)}.quest-dossier header{grid-row:span 2;padding:8px 12px;border-right:1px solid #554b2a}.quest-dossier small{display:block;color:#dfbd58;font-size:9px;letter-spacing:1.2px}.quest-dossier h2{margin:8px 0;color:#f2ead4;font-size:21px;line-height:1.1}.quest-dossier header p{margin:0;color:#aab4a5;font-size:11px;line-height:1.45}.quest-dossier article{padding:10px;border:1px solid #394332;background:#0b100c}.quest-dossier article p{margin:7px 0 0;color:#c2c8be;font-size:11px;line-height:1.5}.quest-dossier-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;padding:1px!important;background:#394332!important}.quest-dossier-facts div{min-height:48px;padding:8px;background:#111711}.quest-dossier-facts b{display:block;margin-top:5px;color:#e6e9df;font-size:11px;line-height:1.2}.quest-dossier-facts div:nth-child(3) b{color:#e2bf5b}.quest-dossier ol{display:grid;gap:5px;margin:8px 0 0;padding-left:18px;color:#c8cec5;font-size:11px;line-height:1.4}.quest-dossier li::marker{color:#e4c262}.quest-dossier-actions{display:flex;gap:7px;align-items:end;flex-wrap:wrap}.quest-dossier-actions .qaction{margin:0}.qrow.quest-selected{border-color:#bd9d45!important;box-shadow:inset 3px 0 #e1bd5a}@media(max-width:980px){.quest-dossier{grid-template-columns:1fr 1fr}.quest-dossier header{grid-column:1/-1;grid-row:auto;border-right:0;border-bottom:1px solid #554b2a}}@media(max-width:600px){.quest-dossier{grid-template-columns:1fr}.quest-dossier-actions{align-items:flex-start}}`;document.head.append(questDossierStyle);
 const questModesStyle=document.createElement('style');questModesStyle.textContent=`.quest-mode-switcher{display:flex;gap:2px;margin:14px 0 0;padding:5px;border:1px solid #425046;background:#111713}.quest-mode-switcher button{min-height:38px;border:0;border-right:1px solid #384438;background:transparent;color:#abb5a8;padding:0 16px;font-size:11px;letter-spacing:.7px;cursor:pointer}.quest-mode-switcher button:last-child{border-right:0}.quest-mode-switcher button:hover,.quest-mode-switcher button.active{background:#292613;color:#f0dfaa;box-shadow:inset 0 -2px #d6b251}@media(max-width:580px){.quest-mode-switcher{display:grid;grid-template-columns:repeat(3,1fr)}.quest-mode-switcher button{padding:0 5px;font-size:10px}}`;document.head.append(questModesStyle);

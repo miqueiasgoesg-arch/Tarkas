@@ -234,7 +234,7 @@ async function openTarkasPage(page){
     console.error('Tarkas page',page,error);
     content.innerHTML='<div class="placeholder" role="alert"><b>Esta área não pôde ser carregada agora.</b>Os dados locais permanecem preservados.<br><button type="button" class="qaction">Tentar novamente</button></div>';
     content.querySelector('button').onclick=()=>openTarkasPage(page);
-  }finally{content.removeAttribute('aria-busy');window.tarkasI18n?.translateUi(appLanguage,content)}
+  }finally{content.removeAttribute('aria-busy');window.tarkasI18n?.translateUi(appLanguage,content);if(page==='operations')requestAnimationFrame(wireOperationsActions)}
 }
 function renderActiveProfile(){const status=document.querySelector('aside .status');if(!status||status.dataset.profileLoading)return;status.dataset.profileLoading='true';window.tarkas.currentProfile().then(profile=>{let label=status.querySelector('.active-profile');if(!label){label=document.createElement('small');label.className='active-profile';status.append(label)}label.textContent='Perfil: '+profile.name}).catch(()=>{}).finally(()=>delete status.dataset.profileLoading)}
 document.querySelectorAll('#nav button').forEach(button=>{
@@ -1162,3 +1162,25 @@ const pageFlowStyle=document.createElement('style');pageFlowStyle.textContent=`.
  personalMapPinsExplainObserver,battlePassVerifiedLinksObserver,personalRoutePlannerObserver,battlePassPurposeObserver,
  operationsPurposeObserver,hideoutBlueprintObserver,pageFlowObserver
 ].forEach(observer=>observer?.disconnect());
+
+/* A Central de Operações precisa levar a uma ação, não apenas exibir contadores. */
+function wireOperationsActions(){
+ const grid=content.querySelector('.operations-grid');
+ if(!grid||grid.dataset.actionsReady)return;
+ grid.dataset.actionsReady='true';
+ const destinations=[
+  ['armory','Abrir Arsenal'],['market','Abrir Mercado'],['mapa','Abrir mapas'],
+  ['mapa','Planejar raid'],['story','Ver progresso'],['market','Ver favoritos']
+ ];
+ [...grid.querySelectorAll('article')].forEach((card,index)=>{
+  const [page,label]=destinations[index]||[];
+  if(!page)return;
+  const action=document.createElement('button');
+  action.type='button';action.className='qaction';action.textContent=label;
+  action.onclick=()=>openTarkasPage(page);
+  card.append(action);
+ });
+ void addOperatorPanel();
+ void addSavedBuildsPanel().then(()=>addBuildShoppingActions()).catch(()=>{});
+}
+const operationsActionsStyle=document.createElement('style');operationsActionsStyle.textContent=`.operations-grid .qaction{margin:16px 0 0;padding:7px 10px!important;font-size:10px!important}.operations-grid article{display:flex;flex-direction:column}.operations-grid article .qaction{align-self:flex-start}`;document.head.append(operationsActionsStyle);

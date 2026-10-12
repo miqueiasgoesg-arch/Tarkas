@@ -14,6 +14,8 @@ const { catalog:marketCatalog,details:marketDetails } = require('./services/mark
 const { officialNews } = require('./services/news');
 const { setDataRoot } = require('./shared/dataStorage');
 let win; const svgCache=new Map();
+const applicationIcon=path.join(__dirname,'..','assets','tarkas-icon.ico');
+if(process.platform==='win32')app.setAppUserModelId('br.com.tarkas.app');
 const maxSvgCacheEntries=2;
 function getCachedMapSvg(file){
   if(!svgCache.has(file))return null;
@@ -83,9 +85,19 @@ function createDesktopShortcut(){
   return{created,message:created?'Atalho criado na área de trabalho.':'Não foi possível criar o atalho agora.'};
 }
 function createWindow() {
-  win = new BrowserWindow({ title: 'Tarkas', width: 1440, height: 900, minWidth: 1050, minHeight: 700,
+  win = new BrowserWindow({ title: 'Tarkas', icon: applicationIcon, width: 1440, height: 900, minWidth: 1050, minHeight: 700,
     backgroundColor: '#0b0d0c', show: false,
-    webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false } });
+    webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false, webviewTag: true } });
+  // O navegador de mapas é isolado: ele só recebe páginas do Tarkov.dev e não
+  // tem Node, preload ou acesso às APIs locais do Tarkas.
+  win.webContents.on('will-attach-webview',(event,webPreferences,params)=>{
+    if(!/^https:\/\/(?:www\.)?tarkov\.dev\//i.test(String(params.src||''))){event.preventDefault();return}
+    delete webPreferences.preload;
+    webPreferences.nodeIntegration=false;
+    webPreferences.contextIsolation=true;
+    webPreferences.sandbox=true;
+    webPreferences.webSecurity=true;
+  });
   win.loadFile(path.join(__dirname, 'renderer', 'index.html'));
   ipcMain.removeHandler('map:svg'); ipcMain.handle('map:svg',(_e,file)=>{if(!/^[A-Za-z0-9.-]+\.(?:svg|png|json)$/.test(file||''))return null;const cached=getCachedMapSvg(file);if(cached)return cached;try{const target=path.join(__dirname,'..','assets','maps',file);let s;if(file.endsWith('.json')){const manifest=JSON.parse(require('fs').readFileSync(target,'utf8').replace(/^\uFEFF/,''));if(!Array.isArray(manifest.layers)||!/^[-\d.\s]+$/.test(String(manifest.viewBox||'')))return null;const label=String(manifest.label||'Mapa tático').replace(/[<>&"']/g,'');const layers=manifest.layers.map(layer=>{if(!/^[A-Za-z0-9_-]+$/.test(String(layer.id||''))||!/^[A-Za-z0-9.-]+\.png$/.test(String(layer.file||'')))throw new Error('invalid map layer');const image=require('fs').readFileSync(path.join(path.dirname(target),layer.file)).toString('base64');return '<g id="'+layer.id+'"'+(layer.hidden?' style="display:none"':'')+'><image width="'+manifest.width+'" height="'+manifest.height+'" href="data:image/png;base64,'+image+'"/></g>'}).join('');s='<svg xmlns="http://www.w3.org/2000/svg" viewBox="'+manifest.viewBox+'" role="img" aria-label="'+label+'">'+layers+'</svg>'}else if(file.endsWith('.png')){const image=require('fs').readFileSync(target).toString('base64');s='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1167 803" role="img" aria-label="Mapa do Labirinto"><image width="1167" height="803" href="data:image/png;base64,'+image+'"/></svg>'}else{s=require('fs').readFileSync(target,'utf8').replace(/<\?xml[^>]*>|<!--[^]*?-->/g,'').replace(/>\s+</g,'><').trim()}return cacheMapSvg(file,s)}catch{return null}});
   win.once('ready-to-show', () => win.show());

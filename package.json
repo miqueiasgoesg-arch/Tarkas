@@ -32,6 +32,7 @@
     "files": [
       "src/**/*",
       "assets/**/*",
+      "!assets/maps/**/*",
       "calibration-config.json",
       "map-config.json",
       "package.json"

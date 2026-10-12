@@ -163,5 +163,10 @@ ipcMain.handle('clock:tarkov',()=>tarkovPair());
 ipcMain.handle('update:status',()=>updateSnapshot());
 ipcMain.handle('update:check',async()=>{if(!app.isPackaged)return updateSnapshot();updateState={...updateState,status:'checking',message:'Verificando atualizações…'};sendUpdateState();await autoUpdater.checkForUpdates().catch(()=>{});if(['checking','error','current'].includes(updateState.status))await confirmCurrentVersion();return updateSnapshot()});
 ipcMain.handle('update:open-release',()=>shell.openExternal(updateState.version?releaseBase+'/tag/v'+updateState.version:releaseBase+'/latest'));
+const externalMapSlugs=new Set(['customs','factory','ground-zero','interchange','icebreaker','lighthouse','reserve','shoreline','streets-of-tarkov','terminal','the-lab','the-labyrinth','woods']);
+ipcMain.handle('map:open-external',(_event,slug)=>{
+  if(!externalMapSlugs.has(slug))return false;
+  return shell.openExternal('https://tarkov.dev/map/'+slug+'?lng=pt').then(()=>true).catch(()=>false);
+});
 ipcMain.handle('shortcut:desktop',()=>createDesktopShortcut());
 ipcMain.handle('update:install',()=>{if(updateState.status!=='ready')return false;updateState={...updateState,status:'installing',message:'Instalando atualização e reiniciando o Tarkas…'};sendUpdateState();setTimeout(()=>autoUpdater.quitAndInstall(true,true),250);return true});

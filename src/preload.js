@@ -60,6 +60,7 @@ contextBridge.exposeInMainWorld('tarkas', {
   maps:mode=>ipcRenderer.invoke('maps:list',mode),
   mapDetail:(mode,id)=>ipcRenderer.invoke('maps:detail',mode,id),
   mapSvg:file=>ipcRenderer.invoke('map:svg',file),
+  openExternalMap:slug=>ipcRenderer.invoke('map:open-external',slug),
   mapProject:(mode,id,position)=>ipcRenderer.invoke('map:project',mode,id,position),
   tarkovClock:()=>ipcRenderer.invoke('clock:tarkov'),
   createDesktopShortcut:()=>ipcRenderer.invoke('shortcut:desktop')

@@ -89,14 +89,10 @@ function createWindow() {
   ipcMain.removeHandler('map:svg'); ipcMain.handle('map:svg',(_e,file)=>{if(!/^[A-Za-z0-9.-]+\.(?:svg|png|json)$/.test(file||''))return null;const cached=getCachedMapSvg(file);if(cached)return cached;try{const target=path.join(__dirname,'..','assets','maps',file);let s;if(file.endsWith('.json')){const manifest=JSON.parse(require('fs').readFileSync(target,'utf8').replace(/^\uFEFF/,''));if(!Array.isArray(manifest.layers)||!/^[-\d.\s]+$/.test(String(manifest.viewBox||'')))return null;const label=String(manifest.label||'Mapa tático').replace(/[<>&"']/g,'');const layers=manifest.layers.map(layer=>{if(!/^[A-Za-z0-9_-]+$/.test(String(layer.id||''))||!/^[A-Za-z0-9.-]+\.png$/.test(String(layer.file||'')))throw new Error('invalid map layer');const image=require('fs').readFileSync(path.join(path.dirname(target),layer.file)).toString('base64');return '<g id="'+layer.id+'"'+(layer.hidden?' style="display:none"':'')+'><image width="'+manifest.width+'" height="'+manifest.height+'" href="data:image/png;base64,'+image+'"/></g>'}).join('');s='<svg xmlns="http://www.w3.org/2000/svg" viewBox="'+manifest.viewBox+'" role="img" aria-label="'+label+'">'+layers+'</svg>'}else if(file.endsWith('.png')){const image=require('fs').readFileSync(target).toString('base64');s='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1167 803" role="img" aria-label="Mapa do Labirinto"><image width="1167" height="803" href="data:image/png;base64,'+image+'"/></svg>'}else{s=require('fs').readFileSync(target,'utf8').replace(/<\?xml[^>]*>|<!--[^]*?-->/g,'').replace(/>\s+</g,'><').trim()}return cacheMapSvg(file,s)}catch{return null}});
   win.once('ready-to-show', () => win.show());
 }
-app.commandLine.appendSwitch('disable-gpu-shader-disk-cache');
-app.commandLine.appendSwitch('disable-gpu-program-cache');
-app.commandLine.appendSwitch('disk-cache-size','1');
-app.commandLine.appendSwitch('disable-features','DawnGraphiteCache');
 const gotLock=app.requestSingleInstanceLock();
 if(!gotLock){app.quit()}else{
 app.on('second-instance',()=>{if(win){if(win.isMinimized())win.restore();win.show();win.focus()}});
-app.whenReady().then(()=>{setDataRoot(path.join(app.getPath('userData'),'game-data'));const {profile}=activeProfile();initDb(profile.id);const last=getStatus().last;createWindow();configureUpdates();setTimeout(()=>createDesktopShortcut(),900);const age=last?.updatedAt?Date.now()-Date.parse(last.updatedAt):0;if(!last||age>6*60*60*1000)setTimeout(()=>syncCore('regular').catch(()=>{}),900);});
+app.whenReady().then(()=>{setDataRoot(path.join(app.getPath('userData'),'game-data'));const {profile}=activeProfile();initDb(profile.id);const last=getStatus().last;createWindow();configureUpdates();setTimeout(()=>createDesktopShortcut(),900);const age=last?.updatedAt?Date.now()-Date.parse(last.updatedAt):0;if(!last||age>6*60*60*1000)setTimeout(()=>syncCore('regular').catch(()=>{}),8000);});
 }
 app.on('window-all-closed',()=>app.quit());
 ipcMain.handle('dashboard:get',()=>getDashboard());

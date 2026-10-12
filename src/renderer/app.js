@@ -10,11 +10,11 @@ const MutationObserver=BatchedMutationObserver;
 const interfaceAudio=(()=>{let context=null,lastTone=0,ready=false;const arm=()=>{try{context??=new(window.AudioContext||window.webkitAudioContext)();context.resume?.();ready=context.state==='running'}catch{ready=false}};const tone=(frequency,duration=.035,volume=.018)=>{if(!ready||!context)return;const now=context.currentTime;if(now-lastTone<.055)return;lastTone=now;const oscillator=context.createOscillator(),gain=context.createGain();oscillator.type='sine';oscillator.frequency.setValueAtTime(frequency,now);gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(volume,now+.006);gain.gain.exponentialRampToValueAtTime(.0001,now+duration);oscillator.connect(gain).connect(context.destination);oscillator.start(now);oscillator.stop(now+duration+.012)};window.addEventListener('pointerdown',arm,{once:true,capture:true});window.addEventListener('keydown',arm,{once:true,capture:true});return{hover:()=>tone(510),select:()=>tone(680,.045,.024)}})();
 document.addEventListener('pointerover',event=>{if(event.pointerType==='touch')return;const control=event.target.closest?.('button,a,[role="button"],select');if(control&&!control.disabled)interfaceAudio.hover()},{passive:true});
 function bossRadarHtml(bosses){if(!bosses?.length)return'<section class="boss-radar"><label>Boss Radar <b>0</b></label><small>Nenhum boss estruturado para este mapa no cache local.</small></section>';const percent=value=>Math.round((Number(value)||0)*100)+'%';return'<section class="boss-radar"><label>Boss Radar <b>'+bosses.length+'</b></label><div class="boss-radar-list">'+bosses.map(b=>'<article class="boss-radar-card"><strong>'+b.name+'</strong><span class="boss-chance">'+percent(b.chance)+'</span><small>'+((b.locations||[]).map(l=>l.name+' '+percent(l.chance)).join(' · ')||'Sem posição estruturada')+'</small>'+((b.escorts||[]).length?'<em>Grupo: '+b.escorts.map(e=>e.name+(e.amount?' ×'+e.amount:'')).join(' · ')+'</em>':'')+(b.spawnTime>=0?'<em>Entrada: '+Math.floor(b.spawnTime/60)+' min'+(b.spawnTimeRandom?' (variável)':'')+'</em>':'')+'</article>').join('')+'</div></section>'}
-const names={dashboard:'Visão Geral',quests:'Missões',mapa:'Mapa Interativo',battlepass:'Passe de Batalha',hideout:'Esconderijo',market:'Itens e Mercado'};
+const names={dashboard:'Visão Geral',quests:'Missões',mapa:'Mapa Interativo',battlepass:'Passe de Batalha',hideout:'Esconderijo',market:'Itens e Mercado',news:'Notícias'};
 function syncLanguageChrome(){
   document.documentElement.lang=appLanguage;
   const select=document.querySelector('#language-select');if(select)select.value=appLanguage;
-  const labels={dashboard:'dashboard',quests:'quests',mapa:'mapa',battlepass:'battlepass',hideout:'hideout',armory:'armory',operations:'operations',roadmap:'roadmap',story:'story',market:'market'};
+  const labels={dashboard:'dashboard',quests:'quests',mapa:'mapa',battlepass:'battlepass',hideout:'hideout',armory:'armory',operations:'operations',roadmap:'roadmap',story:'story',market:'market',news:'news'};
   Object.entries(labels).forEach(([page,key])=>{names[page]=t(key);const button=document.querySelector('#nav button[data-page="'+page+'"]');if(button){const icon=button.dataset.icon||(button.textContent.match(/^[^\w]*\s*/)?.[0]||'');button.dataset.icon=icon;button.textContent=icon+names[page]}});
   document.querySelector('#project-label').textContent=t('project');document.querySelector('#language-label').textContent=t('languageLabel');document.querySelector('#local-data-label').textContent=t('localData');document.querySelector('#developed-by').textContent=t('developedBy');
   const brandVersion=document.querySelector('#brand-version');if(brandVersion&&brandVersion.textContent.includes('carregando'))brandVersion.textContent=t('commandCenter')+' · '+t('loadingVersion');
@@ -230,6 +230,22 @@ raid=async function(){
   }
 };
 
+async function news(){
+  content.innerHTML='<section class="news-hero"><div><small>INTELIGÊNCIA DE CAMPO</small><h2>Notícias de Tarkov</h2><p>Acompanhe anúncios, eventos, correções e atualizações sem confundir publicação oficial com comentário da comunidade.</p></div><div class="news-source-actions"><a href="https://x.com/tarkov" target="_blank" rel="noreferrer">X oficial @tarkov ↗</a><a href="https://steamcommunity.com/app/3932890/announcements/" target="_blank" rel="noreferrer">Steam oficial ↗</a><a href="https://www.escapefromtarkov.com/news" target="_blank" rel="noreferrer">Site oficial ↗</a></div></section><section class="news-disclaimer"><b>FONTES</b><span>O feed abaixo vem dos anúncios oficiais na Steam. X e site oficial abrem no navegador para preservar sua sessão e exibir postagens em tempo real.</span></section><section class="news-feed" aria-live="polite"><div class="placeholder"><b>Carregando anúncios oficiais…</b>Consultando o feed da Steam.</div></section>';
+  const feed=content.querySelector('.news-feed');
+  try{
+    const items=await window.tarkas.officialNews();
+    if(!items?.length)throw new Error('empty feed');
+    const date=value=>{const parsed=new Date(value);return Number.isNaN(parsed.valueOf())?'Data não informada':parsed.toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'})};
+    feed.replaceChildren();
+    items.forEach((item,index)=>{const card=document.createElement('article');card.className='news-card';card.innerHTML='<small></small><h3></h3><p></p><a target="_blank" rel="noreferrer">Ler anúncio oficial ↗</a>';card.querySelector('small').textContent=(index===0?'MAIS RECENTE · ':'STEAM · ')+date(item.publishedAt);card.querySelector('h3').textContent=item.title;card.querySelector('p').textContent=item.summary||'Abra o anúncio para conferir todos os detalhes publicados pela equipe do jogo.';card.querySelector('a').href=item.url;feed.append(card)});
+  }catch(error){
+    feed.innerHTML='<div class="news-empty"><b>Não foi possível atualizar as notícias agora.</b><span>Confira os canais oficiais ou tente novamente quando estiver conectado.</span><button type="button" class="qaction">Tentar novamente</button></div>';
+    feed.querySelector('button').onclick=()=>news();
+  }
+}
+const newsNav=document.createElement('button');newsNav.type='button';newsNav.dataset.page='news';newsNav.textContent='◉ Notícias';document.querySelector('#nav')?.append(newsNav);newsNav.onclick=()=>openTarkasPage('news');
+const newsStyle=document.createElement('style');newsStyle.textContent=`.news-hero{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-top:24px;padding:28px;border:1px solid #675b35;background:radial-gradient(circle at 90% 5%,rgba(204,171,73,.17),transparent 35%),linear-gradient(115deg,#171b14,#0b100c)}.news-hero small,.news-card small{color:#dabb60;font-size:10px;letter-spacing:1.3px}.news-hero h2{margin:7px 0;color:#f0ead7;font-size:30px}.news-hero p{max-width:640px;margin:0;color:#b5bfb0;font-size:12px;line-height:1.55}.news-source-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:7px}.news-source-actions a,.news-card a{border:1px solid #566143;background:#121810;color:#dfc267;padding:9px 10px;font-size:10px;text-decoration:none;white-space:nowrap}.news-source-actions a:hover,.news-card a:hover{border-color:#d1ae55;background:#292414}.news-disclaimer{display:grid;grid-template-columns:auto 1fr;gap:13px;margin-top:12px;padding:12px 14px;border:1px solid #384638;background:#101610}.news-disclaimer b{color:#dfbd62;font-size:10px;letter-spacing:1px}.news-disclaimer span{color:#9ca89b;font-size:11px;line-height:1.45}.news-feed{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:10px;margin-top:12px}.news-card{display:flex;flex-direction:column;align-items:flex-start;min-height:180px;padding:17px;border:1px solid #374438;background:linear-gradient(135deg,#151b15,#0d120e)}.news-card h3{margin:8px 0;color:#efead8;font-size:17px;line-height:1.25}.news-card p{margin:0;color:#adb6aa;font-size:11px;line-height:1.55}.news-card a{margin-top:auto;padding:7px 8px}.news-empty{display:grid;gap:9px;padding:22px;border:1px solid #465042;background:#111711;color:#b6c0b3;font-size:12px}.news-empty b{color:#e4d8b5}.news-empty .qaction{width:max-content;margin:0}@media(max-width:720px){.news-hero{align-items:start;flex-direction:column}.news-source-actions{justify-content:flex-start}.news-disclaimer{grid-template-columns:1fr}}`;document.head.append(newsStyle);
 async function openTarkasPage(page){
   stopMapClock();
   renderActiveProfile();
@@ -240,7 +256,7 @@ async function openTarkasPage(page){
   try{
     // Fonte única de verdade para a navegação. As telas legadas continuam no arquivo
     // durante a migração, mas só estes renderizadores podem ser chamados pelo app.
-    const renderers={dashboard,quests,mapa:raid,battlepass:battlePass,armory,operations,hideout,story,market,roadmap};
+    const renderers={dashboard,quests,mapa:raid,battlepass:battlePass,armory,operations,hideout,story,market,roadmap,news};
     const render=renderers[page];
     if(!render)throw new Error('Página não registrada: '+page);
     await Promise.race([

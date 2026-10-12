@@ -46,6 +46,7 @@ contextBridge.exposeInMainWorld('tarkas', {
   hideoutCatalog:mode=>ipcRenderer.invoke('hideout:catalog',mode),
   marketCatalog:mode=>ipcRenderer.invoke('market:catalog',mode),
   marketDetail:(mode,id)=>ipcRenderer.invoke('market:detail',mode,id),
+  officialNews:()=>ipcRenderer.invoke('news:official'),
   itemLocations:itemId=>ipcRenderer.invoke('item-locations:list',itemId),
   addItemLocation:(itemId,itemName,mapName,area,note)=>ipcRenderer.invoke('item-locations:add',itemId,itemName,mapName,area,note),
   removeItemLocation:id=>ipcRenderer.invoke('item-locations:remove',id),

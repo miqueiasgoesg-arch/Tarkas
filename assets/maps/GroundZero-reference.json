@@ -1,0 +1,28 @@
+﻿{
+    "label":  "GroundZero Â· planta tÃ¡tica detalhada",
+    "width":  2048,
+    "height":  2048,
+    "viewBox":  "0 0 2048 2048",
+    "layers":  [
+                   {
+                       "hidden":  false,
+                       "id":  "Ground_Level",
+                       "file":  "GroundZero-Ground_Level.png"
+                   },
+                   {
+                       "hidden":  true,
+                       "id":  "Second_Floor",
+                       "file":  "GroundZero-Second_Floor.png"
+                   },
+                   {
+                       "hidden":  true,
+                       "id":  "Third_Floor",
+                       "file":  "GroundZero-Third_Floor.png"
+                   },
+                   {
+                       "hidden":  true,
+                       "id":  "Underground_Level",
+                       "file":  "GroundZero-Underground_Level.png"
+                   }
+               ]
+}

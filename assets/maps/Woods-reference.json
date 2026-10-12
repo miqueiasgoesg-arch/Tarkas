@@ -1,0 +1,13 @@
+﻿{
+    "label":  "Woods Â· planta tÃ¡tica detalhada",
+    "width":  2048,
+    "height":  2048,
+    "viewBox":  "0 0 2048 2048",
+    "layers":  [
+                   {
+                       "hidden":  false,
+                       "id":  "Ground_Level",
+                       "file":  "Woods-Ground_Level.png"
+                   }
+               ]
+}

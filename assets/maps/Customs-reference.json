@@ -1,0 +1,28 @@
+﻿{
+    "label":  "Customs Â· planta tÃ¡tica detalhada",
+    "width":  2048,
+    "height":  2048,
+    "viewBox":  "0 0 2048 2048",
+    "layers":  [
+                   {
+                       "hidden":  false,
+                       "id":  "Ground_Level",
+                       "file":  "Customs-Ground_Level.png"
+                   },
+                   {
+                       "hidden":  true,
+                       "id":  "Second_Floor",
+                       "file":  "Customs-Second_Floor.png"
+                   },
+                   {
+                       "hidden":  true,
+                       "id":  "Third_Floor",
+                       "file":  "Customs-Third_Floor.png"
+                   },
+                   {
+                       "hidden":  true,
+                       "id":  "Underground_Level",
+                       "file":  "Customs-Underground_Level.png"
+                   }
+               ]
+}

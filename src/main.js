@@ -13,6 +13,19 @@ const { catalog:hideoutCatalog } = require('./services/hideout');
 const { catalog:marketCatalog,details:marketDetails } = require('./services/market');
 const { setDataRoot } = require('./shared/dataStorage');
 let win; const svgCache=new Map();
+const maxSvgCacheEntries=2;
+function getCachedMapSvg(file){
+  if(!svgCache.has(file))return null;
+  const value=svgCache.get(file);
+  svgCache.delete(file);
+  svgCache.set(file,value);
+  return value
+}
+function cacheMapSvg(file,value){
+  svgCache.set(file,value);
+  while(svgCache.size>maxSvgCacheEntries)svgCache.delete(svgCache.keys().next().value);
+  return value
+}
 const profileRegistryPath=()=>path.join(app.getPath('userData'),'profiles.json');
 function loadProfiles(){try{const saved=JSON.parse(fs.readFileSync(profileRegistryPath(),'utf8'));if(Array.isArray(saved?.profiles)&&saved.profiles.length)return saved}catch{}return{activeId:'default',profiles:[{id:'default',name:'Principal',createdAt:new Date().toISOString()}]}}
 function saveProfiles(registry){fs.writeFileSync(profileRegistryPath(),JSON.stringify(registry,null,2),'utf8')}
@@ -73,7 +86,7 @@ function createWindow() {
     backgroundColor: '#0b0d0c', show: false,
     webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false } });
   win.loadFile(path.join(__dirname, 'renderer', 'index.html'));
-  ipcMain.removeHandler('map:svg'); ipcMain.handle('map:svg',(_e,file)=>{if(!/^[A-Za-z0-9.-]+\.(?:svg|png|json)$/.test(file||''))return null;if(svgCache.has(file))return svgCache.get(file);try{const target=path.join(__dirname,'..','assets','maps',file);let s;if(file.endsWith('.json')){const manifest=JSON.parse(require('fs').readFileSync(target,'utf8').replace(/^\uFEFF/,''));if(!Array.isArray(manifest.layers)||!/^[-\d.\s]+$/.test(String(manifest.viewBox||'')))return null;const label=String(manifest.label||'Mapa tático').replace(/[<>&"']/g,'');const layers=manifest.layers.map(layer=>{if(!/^[A-Za-z0-9_-]+$/.test(String(layer.id||''))||!/^[A-Za-z0-9.-]+\.png$/.test(String(layer.file||'')))throw new Error('invalid map layer');const image=require('fs').readFileSync(path.join(path.dirname(target),layer.file)).toString('base64');return '<g id="'+layer.id+'"'+(layer.hidden?' style="display:none"':'')+'><image width="'+manifest.width+'" height="'+manifest.height+'" href="data:image/png;base64,'+image+'"/></g>'}).join('');s='<svg xmlns="http://www.w3.org/2000/svg" viewBox="'+manifest.viewBox+'" role="img" aria-label="'+label+'">'+layers+'</svg>'}else if(file.endsWith('.png')){const image=require('fs').readFileSync(target).toString('base64');s='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1167 803" role="img" aria-label="Mapa do Labirinto"><image width="1167" height="803" href="data:image/png;base64,'+image+'"/></svg>'}else{s=require('fs').readFileSync(target,'utf8').replace(/<\?xml[^>]*>|<!--[^]*?-->/g,'').replace(/>\s+</g,'><').trim()}svgCache.set(file,s);return s}catch{return null}});
+  ipcMain.removeHandler('map:svg'); ipcMain.handle('map:svg',(_e,file)=>{if(!/^[A-Za-z0-9.-]+\.(?:svg|png|json)$/.test(file||''))return null;const cached=getCachedMapSvg(file);if(cached)return cached;try{const target=path.join(__dirname,'..','assets','maps',file);let s;if(file.endsWith('.json')){const manifest=JSON.parse(require('fs').readFileSync(target,'utf8').replace(/^\uFEFF/,''));if(!Array.isArray(manifest.layers)||!/^[-\d.\s]+$/.test(String(manifest.viewBox||'')))return null;const label=String(manifest.label||'Mapa tático').replace(/[<>&"']/g,'');const layers=manifest.layers.map(layer=>{if(!/^[A-Za-z0-9_-]+$/.test(String(layer.id||''))||!/^[A-Za-z0-9.-]+\.png$/.test(String(layer.file||'')))throw new Error('invalid map layer');const image=require('fs').readFileSync(path.join(path.dirname(target),layer.file)).toString('base64');return '<g id="'+layer.id+'"'+(layer.hidden?' style="display:none"':'')+'><image width="'+manifest.width+'" height="'+manifest.height+'" href="data:image/png;base64,'+image+'"/></g>'}).join('');s='<svg xmlns="http://www.w3.org/2000/svg" viewBox="'+manifest.viewBox+'" role="img" aria-label="'+label+'">'+layers+'</svg>'}else if(file.endsWith('.png')){const image=require('fs').readFileSync(target).toString('base64');s='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1167 803" role="img" aria-label="Mapa do Labirinto"><image width="1167" height="803" href="data:image/png;base64,'+image+'"/></svg>'}else{s=require('fs').readFileSync(target,'utf8').replace(/<\?xml[^>]*>|<!--[^]*?-->/g,'').replace(/>\s+</g,'><').trim()}return cacheMapSvg(file,s)}catch{return null}});
   win.once('ready-to-show', () => win.show());
 }
 app.commandLine.appendSwitch('disable-gpu-shader-disk-cache');

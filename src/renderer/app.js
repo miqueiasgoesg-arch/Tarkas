@@ -1,9 +1,13 @@
 const content=document.querySelector('#content'),title=document.querySelector('#title');let mapClockTimer=null,pendingMapName='',pendingQuestId='',pendingObjectiveId='',appLanguage='pt-BR';const t=key=>window.tarkasI18n?.t(appLanguage,key)||key;function stopMapClock(){if(mapClockTimer){clearInterval(mapClockTimer);mapClockTimer=null}}const hasAddedSelector=(mutations,selector)=>mutations.some(m=>[...m.addedNodes].some(node=>node.nodeType===1&&(node.matches?.(selector)||node.querySelector?.(selector))));
 // A tela possui extensões opcionais em módulos diferentes. Sem esta fila, cada
 // alteração de conteúdo fazia dezenas de observadores recalcularem a mesma tela.
-const NativeMutationObserver=window.MutationObserver,queuedMutationObservers=new Set();let mutationFrame=0;
-function flushMutationObservers(){mutationFrame=0;const observers=[...queuedMutationObservers];queuedMutationObservers.clear();observers.forEach(observer=>{const records=observer.records.splice(0);if(!records.length)return;try{observer.callback(records,observer)}catch(error){console.error('Extensão de interface ignorada:',error)}})}
-class BatchedMutationObserver{constructor(callback){this.callback=callback;this.records=[];this.nativeObserver=new NativeMutationObserver(records=>{this.records.push(...records);queuedMutationObservers.add(this);if(!mutationFrame)mutationFrame=requestAnimationFrame(flushMutationObservers)})}observe(...args){this.nativeObserver.observe(...args)}disconnect(){this.records.length=0;queuedMutationObservers.delete(this);this.nativeObserver.disconnect()}takeRecords(){return this.nativeObserver.takeRecords()}}
+const NativeMutationObserver=window.MutationObserver,queuedMutationObservers=new Set();let mutationFrame=0,mutationIdleHandle=0;
+// Muitos módulos observam a mesma área. Processá-los todos no mesmo frame é a
+// principal causa de engasgos ao abrir uma tela extensa. O lote abaixo usa
+// pequenos blocos ociosos, preservando a resposta do clique e do scroll.
+function queueMutationFlush(){if(mutationIdleHandle||mutationFrame)return;const run=deadline=>{mutationIdleHandle=0;mutationFrame=0;flushMutationObservers(deadline)};if(typeof window.requestIdleCallback==='function'){mutationIdleHandle=window.requestIdleCallback(run,{timeout:140})}else{mutationFrame=requestAnimationFrame(()=>{mutationFrame=0;setTimeout(()=>run(null),0)})}}
+function flushMutationObservers(deadline){const observers=[...queuedMutationObservers];queuedMutationObservers.clear();let index=0,processed=0,started=performance.now();while(index<observers.length&&processed<12){const observer=observers[index++],records=observer.records.splice(0);if(records.length){try{observer.callback(records,observer)}catch(error){console.error('Extensão de interface ignorada:',error)}}processed++;if(performance.now()-started>8||(deadline&&typeof deadline.timeRemaining==='function'&&deadline.timeRemaining()<2))break}for(;index<observers.length;index++){const observer=observers[index];if(observer.records.length)queuedMutationObservers.add(observer)}if(queuedMutationObservers.size)queueMutationFlush()}
+class BatchedMutationObserver{constructor(callback){this.callback=callback;this.records=[];this.nativeObserver=new NativeMutationObserver(records=>{this.records.push(...records);queuedMutationObservers.add(this);queueMutationFlush()})}observe(...args){this.nativeObserver.observe(...args)}disconnect(){this.records.length=0;queuedMutationObservers.delete(this);this.nativeObserver.disconnect()}takeRecords(){return this.nativeObserver.takeRecords()}}
 const MutationObserver=BatchedMutationObserver;
 
 /* Som de interface: discreto, sem arquivo externo e acionado apenas ao entrar em um item. */
@@ -1492,3 +1496,35 @@ async function roadmap(){
  const timeline=content.querySelector('.roadmap-timeline');
  stages.forEach(([version,title,status,summary,items])=>{const card=document.createElement('article');card.className='roadmap-stage '+status.replace(' ','-');card.innerHTML='<div class="roadmap-version"></div><div><small></small><h3></h3><p></p><ul></ul></div>';card.querySelector('.roadmap-version').textContent=version;card.querySelector('small').textContent=status.toUpperCase();card.querySelector('h3').textContent=title;card.querySelector('p').textContent=summary;items.forEach(item=>{const entry=document.createElement('li');entry.textContent=item;card.querySelector('ul').append(entry)});timeline.append(card)});
 }
+
+// Camada visual final: elimina efeitos de composição caros e mantém uma
+// hierarquia tática legível em monitores pequenos e no celular.
+const leanTarkasDesignStyle=document.createElement('style');
+leanTarkasDesignStyle.textContent=`
+  :root{--lean-panel:#101610;--lean-panel-raised:#151d15;--lean-line:#3b4939;--lean-muted:#9ba697;--lean-accent:#dfbb4c;--lean-ink:#f4efe0}
+  body{background:#080c09!important;color:var(--lean-ink);text-rendering:optimizeLegibility}
+  body::before,body::after{opacity:.28!important;filter:none!important}
+  aside{background:linear-gradient(180deg,#111812 0%,#0a0f0b 100%)!important;border-right-color:var(--lean-line)!important}
+  main{background:linear-gradient(135deg,#090d0a 0%,#0b110c 62%,#0a0e0a 100%)!important}
+  main>header{min-height:86px!important;padding-block:18px!important;border-bottom-color:var(--lean-line)!important}
+  main>header h1,#title{letter-spacing:-.035em!important}
+  #content{max-width:1540px;margin-inline:auto;padding-bottom:36px!important}
+  .card,.qrow,.bp-doc-card,.market-item,.market-row,.roadmap-stage,.news-card,.story-card,.operations-grid article,.hideout-card{background:var(--lean-panel)!important;border-color:var(--lean-line)!important;box-shadow:none!important}
+  .card:hover,.qrow:hover,.market-item:hover,.market-row:hover,.roadmap-stage:hover{border-color:#69755b!important;transform:none!important}
+  button,.qaction,select,input,textarea{box-shadow:none!important;backdrop-filter:none!important}
+  button,.qaction{min-height:36px;border-color:#5c653e!important;background:#151a10!important;color:#ede3c1!important;transition:background-color .12s linear,border-color .12s linear,color .12s linear!important}
+  button:hover,.qaction:hover{background:#292715!important;border-color:var(--lean-accent)!important;color:#fff6d6!important}
+  input,select,textarea{background:#0a0f0b!important;border-color:#445140!important;color:var(--lean-ink)!important}
+  .qrow,.market-item,.market-row{content-visibility:auto;contain-intrinsic-size:110px}
+  .roadmap-stage,.operations-grid article{content-visibility:auto;contain-intrinsic-size:170px}
+  .ad-slot{background:#10150e!important;border-style:dashed!important;border-color:#5d613c!important;box-shadow:none!important}
+  [style*="backdrop-filter"]{backdrop-filter:none!important}
+  @media (max-width:760px){
+    main>header{min-height:auto!important;padding:16px!important;gap:10px!important}
+    main>header h1,#title{font-size:30px!important}
+    #content{padding-inline:12px!important}
+    .qrow,.market-item,.market-row{contain-intrinsic-size:96px}
+  }
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+`;
+document.head.append(leanTarkasDesignStyle);

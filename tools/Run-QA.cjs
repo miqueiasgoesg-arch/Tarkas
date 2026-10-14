@@ -8,6 +8,6 @@ function run(file,electron=false){
 }
 for(const file of fs.readdirSync(path.join(root,'dev/tests')).filter(name=>name.endsWith('.js')).sort())run('dev/tests/'+file);
 for(const file of ['tools/test-map-window.cjs','tools/test-tarkovinho.cjs','tools/test-tarkovinho-navigation.cjs','tools/test-mobile-server.cjs','tools/test-update-flow.cjs'])run(file);
-for(const file of ['tools/test-market-browser.cjs','tools/test-tarkovinho-browser.cjs','tools/test-mobile-browser.cjs','tools/test-real-browser.cjs'])run(file,true);
+for(const file of ['tools/test-market-browser.cjs','tools/test-tarkovinho-browser.cjs','tools/test-mobile-browser.cjs','tools/test-real-browser.cjs','tools/test-map-integration.cjs'])run(file,true);
 fs.mkdirSync(path.join(root,'logs'),{recursive:true});fs.writeFileSync(path.join(root,'logs/qa-final.json'),JSON.stringify({time:new Date().toISOString(),results},null,2));
 console.log(results.filter(x=>x.passed).length+'/'+results.length+' approved');if(results.some(x=>!x.passed))process.exitCode=1;

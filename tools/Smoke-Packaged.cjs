@@ -16,6 +16,7 @@ const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const evaluate=async expression=>{const result=await send('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});if(result.exceptionDetails)throw new Error(result.exceptionDetails.text);return result.result.value};
   for(let i=0;i<80;i++){if(await evaluate("Boolean(document.querySelector('.command-hero'))"))break;await pause(100)}
   const state=await evaluate('window.tarkas.updateStatus()');assert.equal(state.currentVersion,'0.7.19');assert.equal(state.enabled,true);
+  if(process.argv.includes('--check-live-update')){const update=await evaluate('window.tarkas.checkUpdate()');assert.equal(update.status,'current');console.log('PASS: installed updater checked the published feed and reported 0.7.19 current.');}
   const profiles=await evaluate('window.tarkas.profiles()');assert.ok(profiles.length);
   const dashboard=await evaluate('window.tarkas.dashboard()');assert.ok(Array.isArray(dashboard.reminders));
   const mobile=await evaluate('window.tarkas.startMobile()');assert.equal(mobile.enabled,true);assert.ok(mobile.urls.length);

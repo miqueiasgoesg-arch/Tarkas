@@ -4,7 +4,7 @@ Atualizado: 14/10/2026. Máquina oficial: MgoesPC.
 
 ## Candidata 0.7.19
 - package.json, package-lock.json e VERSION unificados em 0.7.19.
-- Instalador/portátil gerados; 0.7.19 instalada em AppData/Local/Programs/Tarkas.
+- 0.7.19 instalada e publicada: https://github.com/miqueiasgoesg-arch/Tarkas/releases/tag/v0.7.19
 - Correções locais anteriores preservadas: Missões, Mercado/Arsenal, Mapas e Tarkovinho.
 
 ## Celular pelo Wi-Fi
@@ -48,17 +48,17 @@ Atualizado: 14/10/2026. Máquina oficial: MgoesPC.
 - Textos editoriais extensos e mensagens dinâmicas ainda têm trechos em português.
 
 ## Validação e proteção de dados
-- Check de sintaxe/dados aprovado; 27 testes da validação consolidada aprovados.
+- Check aprovado; 27 testes consolidados e integração real de mapa/zoom/390px/cache offline aprovados.
 - Teste adicional com sincronização real aprovado, sem alterar dados do usuário.
 - Backup fechado cobre SQLite, perfis, avatares, cache e armazenamento local.
 - Backup 20261014-100014-400: 260 arquivos verificados por SHA-256.
 - Pit Stop e Sinal Verde aprovados; sem dependência do notebook.
 - App empacotado passou: versão, perfis existentes, painel, Wi-Fi, QR e atalho.
-- Atualizador validado com eventos simulados; publicação GitHub em fechamento.
+- Atualizador instalado consultou a release publicada e confirmou 0.7.19 atualizada.
 
 ## Próximos passos
 1. Instalação aprovada; 4 bancos SQLite idênticos ao backup e perfis preservados.
-2. Salvar checkpoint Git, publicar release e abrir pelo atalho normal.
+2. Release publicada e checkpoint em branch release/0.7.19; main/master remotas preservadas.
 3. Obter feedback humano específico do minigame e dos trechos editoriais.
 
 Histórico anterior preservado em docs/ARCHIVE/PROJECT-STATE-before-0.7.19-20261014.md.

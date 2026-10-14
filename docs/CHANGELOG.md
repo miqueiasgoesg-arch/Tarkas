@@ -5,7 +5,8 @@
 - Unificados VERSION e pacote; arquivos locais de QA excluídos do Git.
 - Traduções reversíveis dos fluxos atuais, armas/antebraços articulados e mira inimiga sem rastreamento oculto.
 - Sincronização real, 13 destinos online, 27 testes, backup de 260 arquivos e Sinal Verde aprovados.
-- Gerados instalador/portátil e validado aplicativo empacotado com perfis existentes.
+- Gerados instalador/portátil; instalação 0.7.19 e atualizador real aprovados. Quatro bancos idênticos ao backup e perfis preservados.
+- Publicada release v0.7.19 no GitHub, com manifesto de atualização e hashes.
 
 
 ## 2026-10-14 — Retratos dos comerciantes

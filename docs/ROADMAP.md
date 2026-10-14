@@ -11,7 +11,7 @@
 - [x] Backup completo verificado, versões alinhadas, 27 testes e Sinal Verde.
 - [x] Instalador/portátil gerados e teste do aplicativo empacotado aprovado.
 - [x] Instalação 0.7.19, atalho e preservação de quatro bancos/perfis verificados.
-- [ ] Checkpoint Git e distribuição.
+- [x] Checkpoint Git e release GitHub 0.7.19 publicados; atualizador instalado conferido.
 
 ## Validações humanas remanescentes
 - Dificuldade, qualidade artística e áudio do Tarkovinho.

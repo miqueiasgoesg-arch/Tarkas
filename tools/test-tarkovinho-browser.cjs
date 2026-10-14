@@ -1,0 +1,30 @@
+const {app,BrowserWindow}=require('electron');
+const fs=require('node:fs'),os=require('node:os'),path=require('node:path'),assert=require('node:assert/strict');
+app.setPath('userData',fs.mkdtempSync(path.join(os.tmpdir(),'tarkovinho-button-')));
+app.whenReady().then(async()=>{
+ const win=new BrowserWindow({show:false,width:1050,height:800,webPreferences:{nodeIntegration:false,contextIsolation:true,sandbox:true}});
+ const errors=[];win.webContents.on('console-message',(_event,level,message)=>{if(level===3)errors.push(message)});
+ const file=path.join(__dirname,'../src/renderer/tarkovinho.html');
+ await win.loadFile(file);
+ const initial=await win.webContents.executeJavaScript(`document.getElementById('startBtn').click();({started:document.getElementById('startScreen').classList.contains('hide'),ammo:document.getElementById('ammoTxt').textContent})`);
+ assert.equal(initial.started,true);
+ await win.webContents.executeJavaScript(`document.getElementById('soundBtn').click();window.dispatchEvent(new KeyboardEvent('keydown',{key:'d'}));window.dispatchEvent(new KeyboardEvent('keydown',{key:' ',code:'Space'}));`);
+ await new Promise(resolve=>setTimeout(resolve,350));
+ await win.webContents.executeJavaScript(`window.dispatchEvent(new KeyboardEvent('keyup',{key:'d'}));document.getElementById('soundBtn').click();`);
+ await win.webContents.executeJavaScript(`localStorage.setItem('tv_economy_v1',JSON.stringify({money:100,owned:['pistol','smg'],selected:'smg',inventory:{}}))`);
+ await win.loadFile(file);
+ const rejected=await win.webContents.executeJavaScript(`document.getElementById('startBtn').scrollIntoView();document.getElementById('startBtn').click();(()=>{const status=document.getElementById('menuStatus'),box=status.getBoundingClientRect();return {started:document.getElementById('startScreen').classList.contains('hide'),message:status.textContent,visible:box.top>=0&&box.bottom<=innerHeight}})()`);
+ assert.equal(rejected.started,false);assert.match(rejected.message,/Sem munição/);assert.equal(rejected.visible,true);
+ await win.webContents.executeJavaScript(`localStorage.setItem('tv_economy_v1',JSON.stringify({money:100,owned:['pistol','smg'],selected:'smg',inventory:{ammo9:24}}))`);
+ await win.loadFile(file);
+ const armed=await win.webContents.executeJavaScript(`(()=>{const quantity=document.querySelector('[data-supply="ammo9"]').value;document.getElementById('startBtn').click();return {quantity,started:document.getElementById('startScreen').classList.contains('hide')}})()`);
+ assert.equal(armed.quantity,'24');assert.equal(armed.started,true);
+ // Preparation remains usable at phone width, with no off-screen launch button.
+ win.setContentSize(390,700);
+ await win.loadFile(file);
+ const compact=await win.webContents.executeJavaScript(`(()=>{const button=document.getElementById('startBtn'),box=button.getBoundingClientRect(),scroller=document.querySelector('.prep-scroll');return {visible:box.top>=0&&box.bottom<=innerHeight&&box.left>=0&&box.right<=innerWidth,scrollable:scroller.scrollHeight>scroller.clientHeight,summary:document.getElementById('prepSummary').textContent}})()`);
+ assert.equal(compact.visible,true);assert.equal(compact.scrollable,true);assert.match(compact.summary,/slots/);
+ assert.deepEqual(errors,[]);
+ console.log('PASS Electron: raid entry, missing ammo feedback, equipped ammo, fixed preparation footer at 390px and no console errors.');
+ win.destroy();app.exit(0);
+}).catch(error=>{console.error(error);app.exit(1)});

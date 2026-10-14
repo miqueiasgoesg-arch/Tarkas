@@ -1,5 +1,9 @@
 const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('tarkas', {
+  mobileStatus:()=>ipcRenderer.invoke('mobile:status'),
+  startMobile:()=>ipcRenderer.invoke('mobile:start'),
+  stopMobile:()=>ipcRenderer.invoke('mobile:stop'),
+  mobileQr:url=>ipcRenderer.invoke('mobile:qr',url),
   dashboard:()=>ipcRenderer.invoke('dashboard:get'),
   profiles:()=>ipcRenderer.invoke('profiles:list'),
   currentProfile:()=>ipcRenderer.invoke('profiles:current'),
@@ -62,6 +66,7 @@ contextBridge.exposeInMainWorld('tarkas', {
   mapDetail:(mode,id)=>ipcRenderer.invoke('maps:detail',mode,id),
   mapSvg:file=>ipcRenderer.invoke('map:svg',file),
   openExternalMap:slug=>ipcRenderer.invoke('map:open-external',slug),
+  openMapWindow:slug=>ipcRenderer.invoke('map:open-window',slug),
   mapProject:(mode,id,position)=>ipcRenderer.invoke('map:project',mode,id,position),
   tarkovClock:()=>ipcRenderer.invoke('clock:tarkov'),
   createDesktopShortcut:()=>ipcRenderer.invoke('shortcut:desktop')

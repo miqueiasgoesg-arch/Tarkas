@@ -3,6 +3,7 @@ dist/
 release/
 .tarkas-data/
 *.log
+.preview-profile/
 
 # Nick Core runtime/local state
 config/settings.json

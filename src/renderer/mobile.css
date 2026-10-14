@@ -1,0 +1,54 @@
+.mobile-connection{display:grid;justify-items:center;gap:12px;margin:20px 0;padding:16px;border:1px solid #435347}
+.mobile-connection img{display:block;max-width:100%;height:auto;image-rendering:pixelated;background:white}
+.mobile-connection img[hidden]{display:none}
+.mobile-connection a{font-size:12px;overflow-wrap:anywhere}
+.mission-traders{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:18px}
+.mission-trader{display:grid;gap:12px;min-height:130px;padding:20px;text-align:left;background:#15221b;color:#eee9d8;border:1px solid #49533b;font:inherit;cursor:pointer}
+.mission-trader:hover,.mission-trader:focus-visible{border-color:#e2c171;background:#202c20}
+.mission-trader b{font-size:20px}.mission-trader span{color:#aab7a5;font-size:13px;line-height:1.6}
+.mission-trader-portrait{position:relative;width:112px;height:112px;background:#0b130e;border:1px solid #435347;overflow:hidden}
+.mission-trader-portrait img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;z-index:1}
+.mission-trader-portrait .mission-trader-initials{display:grid;place-items:center;width:100%;height:100%;font-size:28px;color:#d9bf72}
+.mission-trader-portrait .mission-trader-initials[hidden]{display:none}
+.mission-trader-nav{display:flex;align-items:center;flex-wrap:wrap;gap:14px;margin:18px 0}
+.mission-trader-empty{padding:24px;border:1px solid #435347;line-height:1.6}
+@media(max-width:800px){
+  html{width:100%;overflow-x:clip}
+  body{display:block!important;width:100%;min-width:0;min-height:100dvh;overflow-x:clip;font-size:15px}
+  body>aside{position:sticky!important;top:0;width:100%!important;height:auto!important;max-height:none!important;padding:8px 12px 0!important;overflow:visible!important;border-right:0!important;border-bottom:1px solid #435347;z-index:30}
+  body>aside::before,body>aside .brand::after{display:none!important}
+  body>aside .brand{display:flex;align-items:center;gap:12px;padding:0!important;min-height:42px;white-space:normal}
+  body>aside .brand .tarkas-logo{width:116px!important;height:40px!important;max-width:116px;flex-shrink:0;object-fit:contain}
+  body>aside .brand small{margin:0!important;font-size:9px;letter-spacing:1px;line-height:1.5;max-width:170px}
+  body>aside .status,body>aside .ad-slot-sidebar{display:none!important}
+  body>aside #nav{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;width:auto;max-height:none!important;margin:8px -12px 0!important;padding:0 12px 8px!important;gap:6px}
+  body>aside #nav button{flex:0 0 auto;min-height:44px;padding:10px 12px;font-size:14px;white-space:nowrap}
+  body>main{width:100%;max-width:100%!important;margin:0!important;padding:18px 14px 30px!important}
+  body>main>header{display:flex;flex-wrap:wrap;gap:12px;align-items:center!important;padding:0 0 16px!important;min-height:0!important}
+  body>main>header h1{font-size:26px!important;line-height:1.2}
+  body>main>header small{font-size:10px;letter-spacing:1px}
+  body>main>header button{min-height:44px;margin:0!important}
+  #content{width:100%;min-width:0}
+  #content .command-hero,#content .mission-command{display:flex!important;flex-direction:column;align-items:stretch;gap:18px;padding:20px!important;margin-top:16px}
+  #content .command-hero h2,#content .mission-command h2{font-size:25px!important;line-height:1.25}
+  #content .command-hero p,#content .mission-command p{font-size:15px;line-height:1.6}
+  #content .command-level{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;min-width:0;width:100%}
+  #content .command-level b{font-size:32px}#content .command-level button{min-height:44px}
+  #content .command-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px}
+  #content .command-stats article{padding:16px!important;min-width:0}
+  #content .command-grid{display:grid;grid-template-columns:minmax(0,1fr)!important;gap:12px}
+  #content .command-grid article{min-width:0;padding:20px!important}
+  #content .command-grid .qaction{width:100%;margin:6px 0!important}
+  #content .command-grid select{width:100%;max-width:100%;min-height:44px}
+  #content .mission-search{display:grid;grid-template-columns:minmax(0,1fr)!important;width:100%}
+  #content input,#content select{min-width:0;max-width:100%;font-size:16px}
+  #content .mission-workspace{display:grid;grid-template-columns:minmax(0,1fr)!important}
+  #content .mission-workspace>aside{position:static!important;width:100%!important;height:auto!important;padding:14px!important;max-height:42dvh;min-width:0}
+  #content .mission-workspace>main{padding:18px!important;min-width:0}
+  #content .mission-detail h3{font-size:23px;line-height:1.3;overflow-wrap:anywhere}
+  #content .mission-list button{min-height:54px}
+  .mission-traders{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .mission-trader{padding:16px;min-width:0;min-height:130px}.mission-trader b{font-size:18px;overflow-wrap:anywhere}
+  .mission-trader span{font-size:12px}
+}
+@media(max-width:350px){.mission-traders{grid-template-columns:minmax(0,1fr)}body>aside .brand small{font-size:8px}}

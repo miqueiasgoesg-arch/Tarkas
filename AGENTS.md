@@ -21,3 +21,18 @@
 - Ignorar node_modules/dist/build/backups/logs/caches/mÃ­dias/dados salvo necessidade explÃ­cita.
 - Manter PROJECT-STATE.md conciso; histÃ³ria antiga vai para CHANGELOG/ARCHIVE.
 - Resposta final curta: AlteraÃ§Ãµes | Testes | Problemas | PrÃ³ximo passo.
+
+## Economia Desktop Commander [NICK-DESKTOP-COMMANDER-ECONOMY-V1]
+- Desktop Commander Ã© recurso remoto limitado; usar somente quando acesso real Ã  mÃ¡quina for necessÃ¡rio.
+- Planejamento, brainstorming, critÃ©rios de aceite e desenho do pacote devem ser concluÃ­dos antes da primeira chamada remota.
+- Agrupar leituras com mÃºltiplos arquivos e evitar reler conteÃºdo jÃ¡ conhecido.
+- Preferir um patch/lote coerente a vÃ¡rias microalteraÃ§Ãµes remotas.
+- Rodar testes direcionados durante o lote e check/suÃ­te completa apenas uma vez no fechamento.
+- Evitar restart, smoke test, git status e validaÃ§Ãµes repetidas apÃ³s cada microalteraÃ§Ã£o; fazer um fechamento Ãºnico quando seguro.
+- NÃ£o usar Desktop Commander para tarefas que podem ser resolvidas sem acesso ao PC.
+- Reaproveitar scripts determinÃ­sticos locais para diagnÃ³stico, build, QA e release.
+- Manter reserva mensal para recuperaÃ§Ã£o, rollback, launcher quebrado, release blocker e incidentes.
+- Com <=15% das chamadas mensais restantes: congelar evoluÃ§Ã£o remota nÃ£o crÃ­tica e trabalhar por pacotes finais consolidados.
+- Com <=5% restantes: usar apenas para emergÃªncia, recuperaÃ§Ã£o, bloqueio real de release ou entrega final indispensÃ¡vel.
+- Nunca consumir a reserva apenas para "prossseguir" em polimento incremental sem impacto claro.
+- Meta: menos chamadas, mais trabalho Ãºtil por chamada, sem reduzir testes de seguranÃ§a ou integridade.

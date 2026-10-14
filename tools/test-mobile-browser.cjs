@@ -1,0 +1,73 @@
+const {app,BrowserWindow}=require('electron');
+const fs=require('node:fs'),os=require('node:os'),path=require('node:path'),assert=require('node:assert/strict');
+app.setPath('userData',fs.mkdtempSync(path.join(os.tmpdir(),'tarkas-mobile-test-')));
+require('../src/main');
+app.whenReady().then(async()=>{
+ try{
+  const desktop=BrowserWindow.getAllWindows()[0];
+  if(desktop.webContents.isLoading())await new Promise(resolve=>desktop.webContents.once('did-finish-load',resolve));
+  assert.equal(await desktop.webContents.executeJavaScript("typeof window.tarkas.startMobile"),'function');
+  assert.equal(await desktop.webContents.executeJavaScript("[...document.querySelectorAll('button')].some(b=>b.textContent==='Acessar no celular')"),true);
+  const state=await desktop.webContents.executeJavaScript('window.tarkas.startMobile()');
+  const qr=await desktop.webContents.executeJavaScript('window.tarkas.mobileQr('+JSON.stringify(state.urls[0])+')');
+  assert.equal(qr,await require('qrcode').toDataURL(state.urls[0],{errorCorrectionLevel:'M',margin:4,scale:6}));
+  await assert.rejects(desktop.webContents.executeJavaScript("window.tarkas.mobileQr('http://invalid')"));
+  const link=new URL(state.urls[0]);link.hostname='127.0.0.1';
+  const mobile=new BrowserWindow({show:false,width:390,height:844,webPreferences:{contextIsolation:true,nodeIntegration:false,sandbox:true}});
+  mobile.webContents.on('console-message',(_event,details)=>{if(details.level==='error')console.log('Renderer:',details.message)});
+  await mobile.loadURL(link.href);
+  assert.equal(await mobile.webContents.executeJavaScript('typeof window.tarkas.dashboard'),'function');
+  assert.equal(await mobile.webContents.executeJavaScript("document.querySelector('main > header h1').textContent"),'Visão Geral');
+  await mobile.webContents.executeJavaScript("window.tarkas.saveSetting('mobileSmoke','verified')");
+  assert.equal(await desktop.webContents.executeJavaScript("window.tarkas.getSetting('mobileSmoke','')"),'verified');
+  assert.equal(await mobile.webContents.executeJavaScript("sessionStorage.getItem('tarkasAccess').length"),64);
+  assert.equal(await mobile.webContents.executeJavaScript('location.hash'),'');
+  const waitFor=async expression=>{for(let attempt=0;attempt<60;attempt++){if(await mobile.webContents.executeJavaScript(expression))return;await new Promise(resolve=>setTimeout(resolve,50))}throw new Error('Timeout: '+expression)};
+  await waitFor("Boolean(document.querySelector('.command-hero')) && document.querySelector('.tarkas-logo').naturalWidth > 0 && [...document.styleSheets].some(s=>s.href?.endsWith('mobile.css'))");
+  for(const width of [360,390,430,768]){
+   mobile.setContentSize(width,844);
+   await mobile.webContents.executeJavaScript('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
+   const geometry=await mobile.webContents.executeJavaScript(`(()=>{const side=document.querySelector('body>aside').getBoundingClientRect(),main=document.querySelector('body>main').getBoundingClientRect(),hero=document.querySelector('.command-hero').getBoundingClientRect();return{width:document.documentElement.clientWidth,sideWidth:side.width,sideHeight:side.height,mainLeft:main.left,heroRight:hero.right,ad:getComputedStyle(document.querySelector('.ad-slot-sidebar')).display,overflow:document.documentElement.scrollWidth>innerWidth}})()`);
+   assert.ok(Math.abs(geometry.sideWidth-geometry.width)<2,JSON.stringify(geometry));assert.ok(geometry.sideHeight<155,JSON.stringify(geometry));assert.equal(geometry.mainLeft,0);assert.ok(geometry.heroRight<=geometry.width);assert.equal(geometry.ad,'none');assert.equal(geometry.overflow,false);
+  }
+  mobile.setContentSize(390,844);
+  console.log('Layout passed; testing trader navigation.');
+  fs.writeFileSync(path.join(os.tmpdir(),'tarkas-mobile-dashboard.png'),(await mobile.webContents.capturePage()).toPNG());
+  await mobile.webContents.executeJavaScript(`(async()=>{window.tarkas.questCatalog=async()=>({quests:[...Array.from({length:245},(_,i)=>({id:'p'+i,name:'Missão de munição '+i,trader:'Prapor',traderImage:'/brand-logo.png',map:'Customs',level:1,objectives:[{description:'Entregar munição',count:1,maps:[]}]})),{id:'t1',name:'Suprimentos médicos',trader:'Therapist',map:'Woods',level:1,objectives:[]}]});window.tarkas.plannedQuests=async()=>[...Array.from({length:245},(_,i)=>({id:'p'+i,status:i===0?'active':'available'})),{id:'t1',status:'available'}];await quests();})()`);
+  assert.equal(await mobile.webContents.executeJavaScript("document.querySelectorAll('.mission-trader').length"),2);
+  assert.equal(await mobile.webContents.executeJavaScript("document.querySelectorAll('.mission-workspace').length"),0);
+  console.log('Trader cards passed.');
+  await waitFor("document.querySelector('.mission-trader[data-trader=Prapor] img')?.naturalWidth>0");
+  assert.equal(await mobile.webContents.executeJavaScript("document.querySelector('.mission-trader[data-trader=Prapor] img').alt"),'Retrato de Prapor');
+  assert.equal(await mobile.webContents.executeJavaScript("document.querySelector('.mission-trader[data-trader=Therapist] .mission-trader-initials').textContent"),'T');
+  await mobile.webContents.executeJavaScript("document.querySelector('#title').textContent='Missões';new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))");
+  fs.writeFileSync(path.join(os.tmpdir(),'tarkas-mobile-traders.png'),(await mobile.webContents.capturePage()).toPNG());
+  await mobile.webContents.executeJavaScript("[...document.querySelectorAll('.mission-trader')].find(b=>b.dataset.trader==='Prapor').click()");
+  assert.equal(await mobile.webContents.executeJavaScript("document.querySelectorAll('.mission-list button:not(.mission-more)').length"),120);
+  assert.equal(await mobile.webContents.executeJavaScript("[...document.querySelectorAll('.mission-list button:not(.mission-more)')].every(b=>b.textContent.includes('Prapor'))"),true);
+  console.log('Prapor list passed.');
+  await mobile.webContents.executeJavaScript("document.querySelector('.mission-more').click()");
+  assert.equal(await mobile.webContents.executeJavaScript("document.querySelectorAll('.mission-list button:not(.mission-more)').length"),240);
+  await mobile.webContents.executeJavaScript("const search=document.querySelector('.mission-search input');search.value='municao 244';search.dispatchEvent(new Event('input'))");
+  assert.equal(await mobile.webContents.executeJavaScript("document.querySelectorAll('.mission-list button:not(.mission-more)').length"),1);
+  await mobile.webContents.executeJavaScript("document.querySelector('.mission-trader-nav button').click();[...document.querySelectorAll('.mission-trader')].find(b=>b.dataset.trader==='Therapist').click()");
+  assert.equal(await mobile.webContents.executeJavaScript("document.querySelector('.mission-detail h3').textContent"),'Suprimentos médicos');
+  assert.equal(await mobile.webContents.executeJavaScript("document.querySelectorAll('.mission-list button:not(.mission-more)').length"),1);
+  assert.equal(await mobile.webContents.executeJavaScript('document.documentElement.scrollWidth>innerWidth'),false);
+  await mobile.webContents.executeJavaScript("(async()=>{pendingQuestId='p5';await quests()})()");
+  assert.equal(await mobile.webContents.executeJavaScript("document.querySelector('.mission-detail h3').textContent"),'Missão de munição 5');
+  await mobile.webContents.executeJavaScript("new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))");
+  fs.writeFileSync(path.join(os.tmpdir(),'tarkas-mobile-missions.png'),(await mobile.webContents.capturePage()).toPNG());
+  await mobile.webContents.executeJavaScript("window.tarkas.setQuestStatus=async()=>true;document.querySelector('[data-detail=status]').click()");
+  await waitFor("document.querySelector('[data-detail=status]')?.textContent==='Concluir missão'");
+  await mobile.webContents.executeJavaScript("const select=document.querySelector('.mission-search select');select.value='completed';select.dispatchEvent(new Event('change'))");
+  assert.equal(await mobile.webContents.executeJavaScript("document.querySelectorAll('.mission-list button:not(.mission-more)').length"),0);
+  assert.equal(await mobile.webContents.executeJavaScript("document.querySelector('.empty-detail b').textContent"),'Nenhuma missão encontrada.');
+  await desktop.webContents.executeJavaScript("[...document.querySelectorAll('button')].find(b=>b.textContent==='Acessar no celular').click()");
+  for(let i=0;i<60;i++){if(await desktop.webContents.executeJavaScript("Boolean(document.querySelector('.mobile-connection img')?.naturalWidth)"))break;await new Promise(resolve=>setTimeout(resolve,50))}
+  assert.equal(await desktop.webContents.executeJavaScript("document.querySelector('.mobile-connection img').src"),qr);
+  assert.equal(await desktop.webContents.executeJavaScript("document.querySelector('.mobile-connection img').hidden"),false);
+  await desktop.webContents.executeJavaScript('window.tarkas.stopMobile()');
+  console.log('PASS: QR with exact access link, 360/390/430/768px layout, loaded logo, trader grouping, pagination, accent search, trader isolation, direct quest focus, shared SQLite and shutdown. Screenshots in '+os.tmpdir());app.exit(0);
+ }catch(error){console.error(error);app.exit(1)}
+});

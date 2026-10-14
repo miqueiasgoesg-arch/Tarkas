@@ -2,18 +2,30 @@ const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const fs = require('fs');
 const path = require('path');
+const mobileHandlers = new Map();
+const originalHandle = ipcMain.handle.bind(ipcMain);
+ipcMain.handle = (channel, handler) => { originalHandle(channel, handler); mobileHandlers.set(channel, handler); };
+const mobileServer = require('./services/mobileServer').createMobileServer({handlers:mobileHandlers,rendererRoot:path.join(__dirname,'renderer'),preloadPath:path.join(__dirname,'preload.js')});
+ipcMain.handle('mobile:status',()=>mobileServer.status());
+ipcMain.handle('mobile:start',()=>mobileServer.start());
+ipcMain.handle('mobile:stop',()=>mobileServer.stop());
+ipcMain.handle('mobile:qr',async(_event,url)=>{
+  if(!mobileServer.status().urls.includes(url))throw new Error('Link de acesso expirado');
+  return require('qrcode').toDataURL(url,{errorCorrectionLevel:'M',margin:4,scale:6});
+});
+app.on('before-quit',()=>{void mobileServer.stop()});
 const { initDb,getDashboard,commandOverview,profileSummary,savedBuilds,saveBuild,shoppingList,addShoppingItem,completeShoppingItem,addBuildMissingToShopping,raidHistory,addRaidLog,goalsList,addGoal,completeGoal,mapPins,addMapPin,removeMapPin,favorites,toggleFavorite,stashItems,setStashItem,addReminder,completeReminder,toggleQuest,saveSetting,getSetting,listSettings,playerLevel,questProgress,setQuestStatus,toggleObjective,objectiveProgress,raidKits,saveRaidKit,removeRaidKit,itemLocations,addItemLocation,removeItemLocation,exportProfile,importProfile } = require('./services/db');
 const { syncCore, getStatus } = require('./services/tarkovData');
 const { getBattlePassDocuments } = require('./services/battlePass');
 const { questSummary, planQuests, raidPlan, kappaTracker, questLines } = require('./services/questEngine');
-const { maps, mapDetail, projectPoint, pointLayer } = require('./services/mapEngine');
+const { maps, mapDetail, clearMapCache, projectPoint, pointLayer } = require('./services/mapEngine');
 const { tarkovPair } = require('./services/gameClock');
 const { catalog:armoryCatalog,details:armoryDetails } = require('./services/armory');
 const { catalog:hideoutCatalog } = require('./services/hideout');
 const { catalog:marketCatalog,details:marketDetails } = require('./services/market');
 const { officialNews } = require('./services/news');
 const { setDataRoot } = require('./shared/dataStorage');
-let win; const svgCache=new Map();
+let win, mapWindow; const svgCache=new Map();
 const applicationIcon=path.join(__dirname,'..','assets','tarkas-icon.ico');
 if(process.platform==='win32')app.setAppUserModelId('br.com.tarkas.app');
 const maxSvgCacheEntries=2;
@@ -105,7 +117,7 @@ function createWindow() {
 const gotLock=app.requestSingleInstanceLock();
 if(!gotLock){app.quit()}else{
 app.on('second-instance',()=>{if(win){if(win.isMinimized())win.restore();win.show();win.focus()}});
-app.whenReady().then(()=>{setDataRoot(path.join(app.getPath('userData'),'game-data'));const {profile}=activeProfile();initDb(profile.id);const last=getStatus().last;createWindow();configureUpdates();setTimeout(()=>createDesktopShortcut(),900);const age=last?.updatedAt?Date.now()-Date.parse(last.updatedAt):0;if(!last||age>6*60*60*1000)setTimeout(()=>syncCore('regular').catch(()=>{}),8000);});
+app.whenReady().then(()=>{setDataRoot(path.join(app.getPath('userData'),'game-data'));const {profile}=activeProfile();initDb(profile.id);const last=getStatus().last;createWindow();configureUpdates();setTimeout(()=>createDesktopShortcut(),900);const age=last?.updatedAt?Date.now()-Date.parse(last.updatedAt):0;if(!last||age>6*60*60*1000)setTimeout(()=>syncCore('regular').then(()=>clearMapCache('regular')).catch(()=>{}),8000);});
 }
 app.on('window-all-closed',()=>app.quit());
 ipcMain.handle('dashboard:get',()=>getDashboard());
@@ -146,7 +158,7 @@ ipcMain.handle('setting:save',(_e,key,value)=>{if(key==='playerLevel'){const n=N
 ipcMain.handle('setting:get',(_e,key,fallback)=>getSetting(key,fallback));
 ipcMain.handle('setting:list',(_e,prefix)=>listSettings(prefix));
 ipcMain.handle('player:level',()=>playerLevel());
-ipcMain.handle('data:sync',(_e,mode)=>syncCore(mode));
+ipcMain.handle('data:sync',async(_e,mode)=>{const result=await syncCore(mode);clearMapCache(mode);return result});
 ipcMain.handle('data:status',()=>getStatus());
 ipcMain.handle('battlepass:documents',()=>getBattlePassDocuments());
 ipcMain.handle('armory:catalog',(_e,mode)=>armoryCatalog(mode));
@@ -174,9 +186,46 @@ ipcMain.handle('update:status',()=>updateSnapshot());
 ipcMain.handle('update:check',async()=>{if(!app.isPackaged)return updateSnapshot();updateState={...updateState,status:'checking',message:'Verificando atualizações…'};sendUpdateState();await autoUpdater.checkForUpdates().catch(()=>{});if(['checking','error','current'].includes(updateState.status))await confirmCurrentVersion();return updateSnapshot()});
 ipcMain.handle('update:open-release',()=>shell.openExternal(updateState.version?releaseBase+'/tag/v'+updateState.version:releaseBase+'/latest'));
 const externalMapSlugs=new Set(['customs','factory','ground-zero','interchange','icebreaker','lighthouse','reserve','shoreline','streets-of-tarkov','terminal','the-lab','the-labyrinth','woods']);
+function mapLoadFailurePage(targetUrl){const retry=String(targetUrl||'https://tarkov.dev').replace(/'/g,'%27');return 'data:text/html;charset=utf-8,'+encodeURIComponent('<!doctype html><meta charset="utf-8"><title>Tarkas · Mapa indisponível</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#090d09;color:#e8eadf;font:16px Segoe UI,Arial,sans-serif}.panel{max-width:580px;padding:34px;border:1px solid #56603f;background:#121812;box-shadow:0 18px 50px #000}.tag{color:#d5b65c;font-size:11px;letter-spacing:1.4px}.panel h1{margin:9px 0 12px;font-size:28px}.panel p{margin:0;color:#afb8ac;line-height:1.6}.panel small{display:block;margin-top:20px;color:#7f8c7b}button{margin-top:20px;border:1px solid #89713d;background:#282315;color:#f1d982;padding:10px 13px;font:600 14px Segoe UI,Arial;cursor:pointer}</style><main class="panel"><div class="tag">JANELA TÁTICA DO TARKAS</div><h1>Não foi possível carregar o mapa agora.</h1><p>O Tarkov.dev pode estar indisponível ou sua conexão precisa ser verificada. Seu plano de raid local continua preservado.</p><button onclick="location.replace(\''+retry+'\')">Tentar novamente</button><small>Se o problema continuar, confira a conexão e tente mais tarde.</small></main>')}
+function openMapWindow(slug){
+  if(slug==='night-factory'||slug==='factory-night')slug='factory';
+  if(!externalMapSlugs.has(slug))return false;
+  const url='https://tarkov.dev/map/'+slug+'?lng=pt';
+  if(mapWindow&&!mapWindow.isDestroyed()){
+    mapWindow.tarkasMapUrl=url;
+    mapWindow.loadURL(url).catch(()=>{});
+    if(mapWindow.isMinimized())mapWindow.restore();
+    mapWindow.show();mapWindow.focus();
+    return true;
+  }
+  mapWindow=new BrowserWindow({
+    title:'Tarkas · Mapa tático',
+    icon:applicationIcon,
+    parent:win,
+    width:1540,height:980,minWidth:980,minHeight:680,
+    backgroundColor:'#090d09',
+    webPreferences:{contextIsolation:true,nodeIntegration:false,sandbox:true}
+  });
+  mapWindow.setMenuBarVisibility(false);
+  mapWindow.tarkasMapUrl=url;
+  mapWindow.webContents.setWindowOpenHandler(()=>({action:'deny'}));
+  mapWindow.webContents.on('will-navigate',(event,target)=>{
+    if(!/^(?:https:\/\/(?:www\.)?tarkov\.dev\/|data:text\/html)/i.test(String(target||'')))event.preventDefault();
+  });
+  mapWindow.webContents.on('did-fail-load',(_event,_code,_description,validatedURL,isMainFrame)=>{
+    if(_code===-3||!isMainFrame||String(validatedURL||'').startsWith('data:')||!mapWindow||mapWindow.isDestroyed())return;
+    if(validatedURL&&validatedURL!==mapWindow.tarkasMapUrl)return;
+    mapWindow.loadURL(mapLoadFailurePage(mapWindow.tarkasMapUrl)).catch(()=>{});
+  });
+  mapWindow.on('closed',()=>{mapWindow=null});
+  mapWindow.loadURL(url).catch(()=>{});
+  return true;
+}
 ipcMain.handle('map:open-external',(_event,slug)=>{
+  if(slug==='night-factory'||slug==='factory-night')slug='factory';
   if(!externalMapSlugs.has(slug))return false;
   return shell.openExternal('https://tarkov.dev/map/'+slug+'?lng=pt').then(()=>true).catch(()=>false);
 });
+ipcMain.handle('map:open-window',(_event,slug)=>openMapWindow(slug));
 ipcMain.handle('shortcut:desktop',()=>createDesktopShortcut());
 ipcMain.handle('update:install',()=>{if(updateState.status!=='ready')return false;updateState={...updateState,status:'installing',message:'Instalando atualização e reiniciando o Tarkas…'};sendUpdateState();setTimeout(()=>autoUpdater.quitAndInstall(true,true),250);return true});

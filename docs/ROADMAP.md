@@ -1,53 +1,31 @@
-# Projeto Tarkas — Plano de versões
+# Tarkas — Plano atual
 
-## Regra atual
-Prioridade absoluta: **V0.1 funcionando > refinamentos > novas funcionalidades**.
-O PC MgoesPC é a máquina oficial de desenvolvimento. O MGOES-NOTE é apenas laboratório e não deve executar Codex neste projeto. Antes de trocar de máquina, conferir o estado do projeto e evitar processos duplicados.
+## Pacote 0.7.19
+- [x] Acesso Wi-Fi por QR Code, layout móvel e perfil compartilhado.
+- [x] Missões por comerciante com retratos, busca, status e lotes.
+- [x] Recuperação de erros e estabilidade de Mercado/Arsenal.
+- [x] Sincronização real de catálogo e documentos.
+- [x] Conferência online dos 13 destinos de mapas; alias de Factory noturna.
+- [x] Arma articulada, mira sem rastrear jogador oculto, economia/rotas testadas.
+- [x] Traduções dos fluxos atuais e troca reversível PT/EN/ES.
+- [x] Backup completo verificado, versões alinhadas, 27 testes e Sinal Verde.
+- [x] Instalador/portátil gerados e teste do aplicativo empacotado aprovado.
+- [x] Instalação 0.7.19, atalho e preservação de quatro bancos/perfis verificados.
+- [ ] Checkpoint Git e distribuição.
 
-## V0.1 — mínima, funcional e estável
-- Aplicativo Windows iniciado por executável, sem terminal/BAT para uso normal.
-- Instância única e encerramento limpo.
-- Sincronização/cache dos dados essenciais do Tarkov com fallback local.
-- Visão Geral enxuta e nível do jogador persistente.
-- Catálogo de Quests com busca, filtro, pré-requisitos e ações Ativar/Concluir.
-- Atalho Quest → Mapa.
-- Mapa Interativo com SVG local, marcadores essenciais, filtros, andares quando suportados, zoom/pan e horário Tarkov.
-- Labs validado com três níveis e dados estruturados disponíveis para extrações, trânsito, switches e loot.
-- Tratamento de erro sem derrubar o restante do aplicativo.
-- Baixo uso de recursos quando ocioso.
-- Nenhum watcher, servidor ou processo de desenvolvimento iniciado automaticamente.
+## Validações humanas remanescentes
+- Dificuldade, qualidade artística e áudio do Tarkovinho.
+- Retratos e detalhes finais na instalação atualizada do celular.
+- Revisão editorial de traduções extensas e mensagens dinâmicas.
 
-## Fora da V0.1 — ideias preservadas
-### V0.2
-- Boss Radar completo (chance, pontos, grupos e janela de entrada exibidos a partir do cache local).
-- Progresso de quests mais detalhado e cadeia/pré-requisitos avançados.
-- “O que fazer agora?” por mapa.
-- Melhorias de calibração e tratamento dos poucos outliers de mapas.
-- Guia de chaves ligado a quests/mapas.
-- Raid Mode: checklist de chaves e itens de objetivo das quests ativas/disponíveis por mapa; riscos só entram com posições estruturadas verificáveis.
-- Rastreador local do inventário dos documentos de Battle Pass sustentados pelo cache do tarkov.dev; progresso por tier/recompensas aguardam fonte estruturada.
+## Entregas futuras fora deste pacote
+- Nuvem, PWA offline, múltiplos PCs e uso com PC desligado.
+- Novos mapas/campanhas, Raid Scan e vídeos contextualizados.
+- Battle Pass por tier/recompensas apenas com dados verificáveis.
 
-### V0.3
-- Stash/inventário.
-- Hideout e timers.
-- Gerador/combustível e lembretes.
-- Cultist Circle: receitas, histórico, confiança e avisos.
-- Loadouts e economia.
+## Regras
+- Desenvolvimento oficial no PC MgoesPC; notebook somente laboratório auxiliar.
+- Dados do jogo vêm do tarkov.dev; não inventar posições ou requisitos.
+- Build completa em release/checkpoint, com backup, testes e Sinal Verde.
 
-### V0.4+
-- Raid Scan por screenshot/foto.
-- Assistente NICK // RAID.
-- Vídeos/YouTube contextualizados por patch.
-- Sincronização em nuvem e múltiplos computadores.
-- Web/PWA/mobile para usar o celular como segunda tela.
-- Planejamento público/estático de bosses.
-- Arsenal/builds/munição como dados exclusivamente do jogo.
-
-## Regras técnicas
-- Shared Core não deve depender do Electron.
-- Dados globais do jogo separados do progresso pessoal.
-- Antes de criar manualmente uma ferramenta/dataset do Tarkov, verificar primeiro tarkov.dev/API e ecossistema aberto.
-- Nada de inventar coordenadas ou conteúdo dinâmico ausente da fonte.
-- Sem polling pesado; cache e atualização sob demanda/intervalos conservadores.
-- Scripts de diagnóstico/teste ficam em dev/.
-- Disponibilidade > preferência de máquina; notebook preferido, PC como fallback automático e vice-versa.
+Histórico preservado em docs/ARCHIVE/ROADMAP-before-0.7.19-20261014.md.

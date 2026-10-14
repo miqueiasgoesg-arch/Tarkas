@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="theme-color" content="#111816">
+<title>Tarkovinho — Extração no Quintal</title>
+<style>
+:root{--bg:#101714;--panel:#1b2621;--line:#435347;--cream:#ece8d9;--lime:#c4e36a;--orange:#e6924e;--red:#e56a59}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--cream);font-family:system-ui,-apple-system,Segoe UI,sans-serif;touch-action:none}button{font:inherit;color:inherit}.shell{height:100%;display:flex;flex-direction:column;background:radial-gradient(ellipse at 50% 40%,#26352a 0,#101714 75%)}header{height:64px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid #ffffff12;background:#111915e8;z-index:2}.brand{font-weight:950;letter-spacing:1px;font-size:21px}.brand span{color:var(--lime)}.tag{font-size:11px;color:#a8b39f;letter-spacing:1.5px}.topright{display:flex;align-items:center;gap:10px}.pill{font-size:12px;border:1px solid #4a594b;border-radius:99px;padding:7px 10px;color:#c3cdb9}.iconbtn{background:#26322b;border:1px solid #4a594b;border-radius:10px;padding:7px 10px;cursor:pointer}main{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:14px}.gameframe{width:min(100%,1000px);height:min(100%,700px);position:relative;border:1px solid #68745b;border-radius:16px;overflow:hidden;box-shadow:0 24px 80px #0009;background:#202b24}.gameframe canvas{width:100%;height:100%;display:block}.hud{position:absolute;inset:0;pointer-events:none}.hudtop{position:absolute;left:14px;right:14px;top:12px;display:flex;gap:8px;align-items:flex-start;justify-content:space-between}.hudcard{background:#111915dc;border:1px solid #ffffff25;border-radius:11px;padding:8px 10px;font-size:12px;backdrop-filter:blur(6px)}.meter{width:150px;height:7px;border-radius:8px;background:#536054;margin-top:5px;overflow:hidden}.meter i{display:block;height:100%;background:var(--lime);width:100%;transition:width .15s}.meter.ammo i{background:var(--orange)}.hudright{text-align:right;line-height:1.6}.hint{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);background:#111915dd;border:1px solid #ffffff25;border-radius:9px;padding:8px 12px;font-size:12px;white-space:nowrap;color:#e7e5d8}.toast{position:absolute;left:50%;top:25%;transform:translate(-50%,-50%);background:#111915e8;border:1px solid var(--lime);border-radius:11px;padding:12px 18px;font-weight:750;display:none}.screen{position:absolute;inset:0;background:#0c1210c9;display:flex;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(3px)}.modal{width:min(440px,100%);max-height:96%;overflow:auto;background:linear-gradient(145deg,#26332b,#17201b);border:1px solid #63705d;border-radius:18px;padding:24px;box-shadow:0 20px 60px #0009}.eyebrow{font-size:11px;letter-spacing:2px;color:var(--lime);font-weight:800}.modal h1{font-size:36px;line-height:1;margin:8px 0 10px;letter-spacing:-1px}.modal p{color:#c0c8b9;line-height:1.55;font-size:14px}.stats{display:flex;gap:8px;margin:18px 0}.stat{flex:1;border:1px solid #48574a;border-radius:10px;padding:9px;text-align:center;background:#121a15}.stat b{display:block;font-size:17px;color:var(--lime)}.stat small{color:#aeb8aa;font-size:10px;text-transform:uppercase;letter-spacing:1px}.primary{background:var(--lime);color:#172018;border:0;border-radius:10px;width:100%;padding:13px;font-weight:900;cursor:pointer;margin-top:5px}.primary:active{transform:scale(.98)}.secondary{background:#344137;border:1px solid #60705d;border-radius:9px;padding:9px 14px;cursor:pointer}.lootlist{max-height:150px;overflow:auto;color:#d7dfce;font-size:13px;line-height:1.9}.mobile{display:none;position:absolute;inset:0;pointer-events:none}.stick{position:absolute;left:18px;bottom:23px;width:116px;height:116px;border-radius:50%;background:#17201999;border:1px solid #dbe4d044;pointer-events:auto}.knob{position:absolute;width:48px;height:48px;border-radius:50%;background:#b5d36299;border:1px solid #ecffc488;left:33px;top:33px}.fire{position:absolute;right:24px;bottom:42px;width:68px;height:68px;border-radius:50%;border:2px solid #ffe1a677;background:#c35d3caa;font-weight:900;pointer-events:auto}.interact{position:absolute;right:104px;bottom:28px;width:54px;height:54px;border-radius:50%;border:1px solid #efffbd99;background:#708b39bb;font-weight:900;pointer-events:auto}.mobile.show{display:block}.hide{display:none!important}.maplabel{color:#bdc8b6}.shop{display:grid;gap:6px;margin:12px 0}.shopitem{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 9px;border:1px solid #48574a;border-radius:9px;background:#121a15;font-size:12px}.shopitem small{display:block;color:#aeb8aa;font-size:10px}.buy{background:#344137;border:1px solid #60705d;border-radius:8px;padding:7px 9px;font-size:11px;font-weight:800;white-space:nowrap;cursor:pointer}.buy:disabled{opacity:.45;cursor:default}
+@media(max-width:650px){header{height:53px;padding:0 12px}.tag{display:none}.pill{font-size:10px;padding:6px 8px}main{padding:6px}.gameframe{height:100%;border-radius:10px}.hudtop{left:7px;right:7px;top:7px}.hudcard{padding:6px 8px;font-size:10px}.meter{width:94px;height:6px}.hint{bottom:155px;font-size:10px}.modal{padding:20px}.modal h1{font-size:31px}.stats{margin:13px 0}}
+.gameframe{background:#152018;box-shadow:0 30px 90px #000c,0 0 0 1px #c6d69012}.gameframe:after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 45%,#07100888 100%),repeating-linear-gradient(0deg,transparent 0 3px,#00000009 4px);mix-blend-mode:multiply}.gameframe canvas{cursor:crosshair}.hudcard{box-shadow:0 8px 20px #0005}.brand{text-shadow:0 0 18px #c4e36a33}.pill{background:#142017cc}.toast{box-shadow:0 12px 30px #0008}</style><style>.gameframe canvas{position:relative;z-index:0}.gameframe:after{z-index:1}.hud{z-index:2}</style><style>.medic{right:168px;background:#4d7480;border-color:#c4e7e888}</style><style>.screen{z-index:4}.mobile{z-index:3}.modal{width:min(760px,100%);touch-action:pan-y}.weapon-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:8px}.weapon-grid article{display:grid;gap:9px;background:#111c17;padding:12px;border:1px solid #53664e;border-radius:8px}.weapon-grid small{font-size:11px;line-height:1.5}.stock-list{display:grid;gap:5px;margin-top:14px}.loadout{display:grid;gap:8px}.loadout label{display:flex;justify-content:space-between;gap:8px}.loadout input{width:80px;padding:7px;background:#111c17;color:#eee;border:1px solid #53664e}.food{bottom:92px;right:104px}.grenade{bottom:92px;right:168px}.shopitem{flex-wrap:wrap}.hint{white-space:normal;text-align:center;width:90%;pointer-events:none}.screen .primary{margin-top:15px}</style><style>#menuStatus:not(:empty){padding:12px;border:1px solid #e6b85a;background:#342916;color:#ffe6a0;line-height:1.5}#startBtn{scroll-margin-bottom:16px}</style><style>
+#startScreen .modal{display:flex;flex-direction:column;padding:0;max-height:96%;overflow:hidden}
+.prep-scroll{overflow-y:auto;min-height:0;padding:22px;overscroll-behavior:contain;touch-action:pan-y}
+.prep-footer{flex-shrink:0;padding:12px 22px 18px;border-top:1px solid #52664d;background:#142019;box-shadow:0 -8px 20px #0004}
+.prep-footer p{margin:0;font-size:12px}.prep-footer #menuStatus:not(:empty){margin-top:8px;padding:8px}
+#startScreen .primary{margin-top:9px;min-height:44px}
+.loadout{border:1px solid #607345;background:#17251d;padding:15px;border-radius:10px}
+.loadout h3{margin:0 0 6px}.loadout label{align-items:center;min-height:44px}
+.stock-list .buy{min-height:40px}.weapon-grid .buy{min-height:42px}
+@media(max-width:650px){.prep-scroll{padding:14px}.prep-footer{padding:10px 14px}.weapon-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stock-list .shopitem>span{flex-basis:100%}}
+</style></head>
+<body><div class="shell"><header><div><div class="brand">TARKO<span>VINHO</span></div><div class="tag">EXTRAÇÃO NO QUINTAL</div></div><div class="topright"><span class="pill" id="stashPill">🪙 0 sucatas</span><button class="iconbtn" id="soundBtn" aria-label="Ativar ou desativar som">🔇</button></div></header><main><div class="gameframe"><canvas id="game"></canvas><div class="hud hide" id="hud"><div class="hudtop"><div class="hudcard"><b>❤️ <span id="hpTxt">100</span></b><div class="meter"><i id="hpBar"></i></div><div style="margin-top:5px">🔫 <span id="ammoTxt">12 / 36</span></div><div class="meter ammo"><i id="ammoBar"></i></div><div style="margin-top:5px">🩹 <span id="medTxt">1</span> kit(s)</div></div><div class="hudcard hudright"><b id="mapTxt">QUINTAL</b><br><span id="lootTxt">Mochila vazia</span><br><small id="questTxt" style="color:#d7e5b4">Contrato da incursão</small><br><span id="timerTxt">02:00</span></div></div><div class="hint" id="hint">WASD mover · mouse mirar/atirar · E saqueia · R recarrega · Q cura</div><div class="toast" id="toast"></div><div class="mobile" id="mobile"><div class="stick" id="stick"><div class="knob" id="knob"></div></div><button class="interact" id="interactBtn">E</button><button class="interact medic" id="medBtn">🩹</button><button class="interact food" id="foodBtn" aria-label="Comer">F</button><button class="interact grenade" id="grenadeBtn" aria-label="Lançar granada">G</button><button class="fire" id="fireBtn">🔥</button></div></div>
+<div class="screen" id="startScreen"><div class="modal"><div class="prep-scroll"><div class="eyebrow">UMA INCURSÃO DE BOLSO</div><h1>Tarkovinho</h1><p>Entre no quintal, pegue o que conseguir e corra para a extração antes que os saqueadores te encontrem. Se cair, perde o loot da mochila!</p><div class="stats"><div class="stat"><b>2 min</b><small>por incursão</small></div><div class="stat"><b>2 mapas</b><small>para saquear</small></div><div class="stat"><b id="stashValue">0</b><small>créditos disponíveis</small></div></div><section id="equipment"></section><div class="shop"><div class="shopitem"><span>🦺 Colete leve<small id="armorInfo">Nível 0/3 · +15 de vida</small></span><button class="buy" id="armorBuy">80 🪙</button></div><div class="shopitem"><span>🎒 Mochila reforçada<small id="bagInfo">Nível 0/3 · +2 slots por nível</small></span><button class="buy" id="bagBuy">70 🪙</button></div><div class="shopitem"><span>🔋 Reserva de munição<small id="ammoInfo">Nível 0/3 · +12 balas</small></span><button class="buy" id="ammoBuy">50 🪙</button></div></div><p style="font-size:12px">PC: WASD + mouse · Celular: joystick + botões<br>Chegue perto das caixas e aperte <b>E</b>. Extraia pela zona verde.</p></div><div class="prep-footer"><p id="prepSummary" aria-live="polite"></p><p id="menuStatus" role="status" aria-live="polite"></p><button class="primary" id="startBtn" aria-describedby="menuStatus">ENTRAR NA INCURSÃO →</button></div></div></div><div class="screen hide" id="endScreen"><div class="modal"><div class="eyebrow" id="endEyebrow">RELATÓRIO DA INCURSÃO</div><h1 id="endTitle">Extraído!</h1><p id="endDesc"></p><div class="stats"><div class="stat"><b id="earned">0</b><small>bônus em créditos</small></div><div class="stat"><b id="kills">0</b><small>saqueadores</small></div><div class="stat"><b id="healthEnd">100</b><small>vida restante</small></div></div><div class="lootlist" id="lootList"></div><button class="primary" id="againBtn">PREPARAR PRÓXIMA RAID →</button><button class="secondary" id="backBtn" style="width:100%;margin-top:8px">VOLTAR AO ESCONDERIJO</button></div></div></div></main></div>
+<script src="tarkovinho-sound.js"></script>
+<script src="tarkovinho-navigation.js"></script>
+<script src="tarkovinho-economy.js"></script>
+<script>
+(()=>{'use strict';function readJSON(key,fallback){try{return JSON.parse(localStorage.getItem(key))||fallback}catch{return fallback}}const canvas=document.getElementById('game'),ctx=canvas.getContext('2d'),frame=document.querySelector('.gameframe');const $=id=>document.getElementById(id);let W=960,H=620,DPR=1;
+function drawTerrainDetails(){ctx.save();ctx.globalAlpha=.52;if(mapType==='yard'){for(let i=0;i<54;i++){let x=(i*83+31)%W,y=(i*61+47)%H;ctx.strokeStyle=i%3?'#263528':'#718050';ctx.lineWidth=i%4===0?2:1;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+11+(i%5)*5,y+(i%3-1)*7);ctx.stroke()}for(let i=0;i<9;i++){let x=(i*151+94)%W,y=(i*97+73)%H;ctx.fillStyle='#202c22';ctx.fillRect(x,y,22,7);ctx.fillStyle='#596447';ctx.fillRect(x+3,y-2,12,2)}}else{for(let i=0;i<25;i++){let x=(i*113+37)%W,y=(i*79+29)%H;ctx.fillStyle=i%2?'#2d302b':'#515147';ctx.fillRect(x,y,15+(i%4)*5,4);ctx.strokeStyle='#85836a';ctx.strokeRect(x,y,15+(i%4)*5,4)}ctx.fillStyle='#c9ab4e';for(let x=24;x<W-24;x+=88){ctx.fillRect(x,H*.44,39,4);ctx.fillRect(x,H*.57,39,4)}}ctx.restore()}
+function animateUnit(unit,dt,hostile){
+ const previous=unit.motionPosition||{x:unit.x,y:unit.y},distance=Math.hypot(unit.x-previous.x,unit.y-previous.y);
+ unit.motionPosition={x:unit.x,y:unit.y};
+ unit.motionBlend=Math.max(0,Math.min(1,(unit.motionBlend||0)+(distance>.1?dt*9:-dt*12)));
+ if(distance>.1){unit.gait=(unit.gait||0)+distance*Math.PI/58;unit.stepDistance=(unit.stepDistance||0)+distance;
+ if(unit.stepDistance>=58){unit.stepDistance%=58;if(!muted){const distanceToPlayer=hostile?Math.hypot(unit.x-player.x,unit.y-player.y):0;const volume=hostile?Math.max(0,1-distanceToPlayer/320)*.45:.8;if(volume>0)combatSound.play('step',volume,hostile?(unit.x-player.x)/320:0,mapType)}}}
+}
+function impact(x,y,color,count=5){for(let i=0;i<count;i++){const angle=Math.random()*Math.PI*2,speed=20+Math.random()*50;combatEffects.push({x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,life:.22+Math.random()*.12,color})}if(combatEffects.length>100)combatEffects.splice(0,combatEffects.length-100)}
+function tickCombat(dt){
+ hitMarker=Math.max(0,hitMarker-dt);
+ for(const unit of [player,...enemies]){unit.recoil=Math.max(0,(unit.recoil||0)-dt*28);unit.hitFlash=Math.max(0,(unit.hitFlash||0)-dt);unit.muzzle=Math.max(0,(unit.muzzle||0)-dt)}
+ for(const effect of combatEffects){effect.life-=dt;effect.x+=effect.vx*dt;effect.y+=effect.vy*dt}
+ combatEffects=combatEffects.filter(effect=>effect.life>0);
+}
+function drawAim(){
+ if(state!=='raid')return;
+ const x=mouse.active?mouse.x:player.x+Math.cos(player.angle)*85,y=mouse.active?mouse.y:player.y+Math.sin(player.angle)*85;
+ ctx.save();ctx.strokeStyle=hitMarker>0?'#fff3b0':'#d9e4c5b0';ctx.lineWidth=1.5;
+ ctx.beginPath();ctx.arc(x,y,hitMarker>0?7:4,0,Math.PI*2);ctx.stroke();
+ for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){ctx.beginPath();ctx.moveTo(x+dx*9,y+dy*9);ctx.lineTo(x+dx*14,y+dy*14);ctx.stroke()}
+ if(player.reloading>0){ctx.fillStyle='#f2d69b';ctx.font='11px system-ui';ctx.textAlign='center';ctx.fillText('RECARGA '+player.reloading.toFixed(1)+'s',x,y+28)}
+ ctx.restore();
+}
+function drawUnit(unit,hostile){
+ const angle=hostile?(unit.aimAngle??0):unit.angle,art=hostile?unitArt.scav:unitArt.operator,size=hostile?52:58;
+ const blend=unit.motionBlend||0,stride=Math.sin(unit.gait||0)*blend,bob=Math.abs(Math.sin(unit.gait||0))*blend*1.3;
+ ctx.save();ctx.translate(unit.x,unit.y);ctx.fillStyle='#06100899';ctx.beginPath();ctx.ellipse(0,12,size*.34,size*.14,0,0,Math.PI*2);ctx.fill();
+ if(unit.hitFlash>0){ctx.strokeStyle=hostile?'#f1cf91':'#ef8a73';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(0,0,19,27,0,0,Math.PI*2);ctx.stroke()}
+ if(unit.muzzle>0){ctx.save();ctx.rotate(angle);ctx.fillStyle='#ffe3a5';ctx.beginPath();ctx.moveTo(17,-3);ctx.lineTo(30,0);ctx.lineTo(17,3);ctx.closePath();ctx.fill();ctx.restore()}
+ ctx.translate(-Math.cos(angle)*(unit.recoil||0),-Math.sin(angle)*(unit.recoil||0));
+ ctx.scale(Math.cos(angle)<0?-1:1,1);
+ if(art.complete&&art.naturalWidth){
+  const split=.62,hip=-size/2+size*split;
+  for(const side of [-1,1]){
+   const phase=stride*side;ctx.save();ctx.translate(side*size*.12,hip);ctx.rotate(phase*.17);
+   ctx.drawImage(art,side<0?0:art.naturalWidth/2,art.naturalHeight*split,art.naturalWidth/2,art.naturalHeight*(1-split),side<0?-size*.38:-size*.12,phase*4,size/2,size*(1-split));ctx.restore();
+  }
+  // Keep the helmet/shoulders and animated legs; the vest and arms no longer
+  // carry the fixed weapon painted into the original image.
+  ctx.fillStyle=hostile?'#695447':'#52614a';ctx.fillRect(-size*.19,-size*.18-bob,size*.38,size*.32);
+  ctx.fillStyle='#303b30';ctx.fillRect(-size*.14,-size*.14-bob,size*.28,size*.24);
+  for(const side of [-1,1]){ctx.fillStyle='#738068';ctx.fillRect(side*size*.075-size*.05,-size*.06-bob,size*.09,size*.13)}
+  ctx.drawImage(art,0,0,art.naturalWidth,art.naturalHeight*.35,-size/2,-size/2-bob,size,size*.35+1);
+ }else{
+  for(const side of [-1,1]){ctx.fillStyle=hostile?'#745448':'#647654';ctx.fillRect(side*7-4,8+stride*side*5,8,14);ctx.fillStyle='#20251d';ctx.fillRect(side*7-4,19+stride*side*5,8,6)}
+  ctx.fillStyle=hostile?'#bb5549':'#aebd70';ctx.fillRect(-10,-14-bob,20,27);ctx.fillStyle='#242b22';ctx.fillRect(3,-4-bob,26,8);ctx.fillStyle='#d8c4a2';ctx.beginPath();ctx.arc(0,-18-bob,7,0,Math.PI*2);ctx.fill();
+ }ctx.restore();
+ drawHeldWeapon(unit,angle,hostile,bob);
+}
+function drawHeldWeapon(unit,angle,hostile,bob){
+ const type=hostile?'pistol':economy.selected,length={pistol:13,smg:20,m4:27,shotgun:29,sniper:34}[type]||13;
+ ctx.save();ctx.translate(unit.x-Math.cos(angle)*(unit.recoil||0),unit.y-Math.sin(angle)*(unit.recoil||0)-bob);ctx.rotate(angle);
+ ctx.strokeStyle=hostile?'#806654':'#68765b';ctx.lineWidth=6;ctx.lineCap='round';
+ for(const side of [-1,1]){ctx.beginPath();ctx.moveTo(-3,side*9);ctx.lineTo(4,side*6);ctx.lineTo(side>0?13:7,2);ctx.stroke()}
+ ctx.fillStyle='#161e1b';ctx.fillRect(3,-3,length,6);ctx.fillStyle='#87918b';ctx.fillRect(length+1,-1,5,2);
+ ctx.fillStyle='#d1b38c';ctx.fillRect(8,-1,4,4);ctx.fillStyle='#435148';ctx.fillRect(5,3,5,5);
+ if(type==='sniper'){ctx.fillStyle='#a2aea0';ctx.fillRect(9,-5,10,2)}
+ ctx.restore();
+}
+function drawObstacles(){
+ for(const o of obstacles){
+  ctx.save();ctx.translate(o.x,o.y);
+  const w=o.w,h=o.h;
+  ctx.fillStyle='#06090570';ctx.fillRect(4,5,w,h);
+  // Painted footprint and collision rectangle share the same bounds.
+  ctx.fillStyle=o.type==='container'?'#394b43':o.type==='barrier'?'#686958':o.type==='shelf'?'#41443b':'#66513a';
+  ctx.fillRect(0,0,w,h);
+  ctx.fillStyle='#151c18';ctx.fillRect(0,h-4,w,4);
+  ctx.fillStyle='#ffffff22';ctx.fillRect(1,1,w-2,2);
+  if(o.type==='container'){
+   for(let y=7;y<h-5;y+=9){ctx.fillStyle='#182a2566';ctx.fillRect(3,y,w-6,3);ctx.fillStyle='#87908055';ctx.fillRect(3,y+3,w-6,1)}
+   ctx.fillStyle='#9b9d83';ctx.fillRect(3,3,2,h-8);ctx.fillRect(w-5,3,2,h-8);
+   ctx.fillStyle='#c4b686';ctx.fillRect(7,Math.min(20,h/3),Math.max(3,w-14),8);
+  }else if(o.type==='barrier'){
+   for(let x=15;x<w-5;x+=35){ctx.strokeStyle='#252d2866';ctx.beginPath();ctx.moveTo(x,2);ctx.lineTo(x+5,h*.5);ctx.lineTo(x+2,h-3);ctx.stroke()}
+   for(let x=5;x<w-12;x+=26){ctx.fillStyle='#ad985766';ctx.fillRect(x,4,14,4)}
+  }else{
+   const sections=Math.max(1,Math.floor(w/35)),span=w/sections;
+   for(let i=0;i<sections;i++){
+    const x=i*span+3;ctx.fillStyle=i%2?'#786342':'#8a7350';ctx.fillRect(x,3,span-6,h-8);
+    ctx.strokeStyle='#30291e';ctx.strokeRect(x,3,span-6,h-8);
+    ctx.beginPath();ctx.moveTo(x+2,5);ctx.lineTo(x+span-8,h-7);ctx.stroke();
+    ctx.fillStyle='#ac9a7255';ctx.fillRect(x+2,4,span-10,2);
+   }
+   if(o.type==='shelf'){ctx.fillStyle='#323d39';for(let x=0;x<w;x+=35)ctx.fillRect(x,0,3,h);ctx.fillRect(0,h-3,w,3)}
+  }
+  // Stable wear pattern: no random noise/flicker in the animation loop.
+  for(let i=0;i<Math.ceil(w*h/130);i++){const x=(i*17+7)%Math.max(1,w-3),y=(i*11+3)%Math.max(1,h-3);ctx.fillStyle=i%2?'#bcaa8044':'#171f1844';ctx.fillRect(x,y,2,1)}
+  ctx.strokeStyle='#151e1a';ctx.lineWidth=1;ctx.strokeRect(.5,.5,w-1,h-1);ctx.restore();
+ }
+}
+function drawEnemyBar(enemy){ctx.save();if(enemy.windup>0){ctx.strokeStyle='#f1bd68';ctx.lineWidth=2;ctx.beginPath();ctx.arc(enemy.x,enemy.y,22,-Math.PI/2,-Math.PI/2+(1-enemy.windup/.4)*Math.PI*2);ctx.stroke();ctx.fillStyle='#f1bd68';ctx.font='bold 15px system-ui';ctx.textAlign='center';ctx.fillText('!',enemy.x,enemy.y-39)}ctx.translate(enemy.x,enemy.y-33);ctx.fillStyle='#130f0fbb';ctx.fillRect(-15,-3,30,5);ctx.fillStyle='#d96352';ctx.fillRect(-14,-2,28*(enemy.hp/enemy.maxHp),3);ctx.restore()}
+function resize(){const r=frame.getBoundingClientRect();DPR=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(r.width*DPR);canvas.height=Math.round(r.height*DPR);W=r.width;H=r.height;ctx.setTransform(DPR,0,0,DPR,0,0)}new ResizeObserver(resize).observe(frame);resize();
+let state='menu',player,enemies=[],crates=[],bullets=[],loot=[],obstacles=[],extract,keys={},mouse={x:0,y:0,down:false},last=0,time=120,stash=Number(localStorage.getItem('tv_stash')||0),profile=readJSON('tv_profile',{armor:0,bag:0,ammo:0}),kills=0,quest=null,mapType='yard',muted=true,audio,medkits=1,extracting=0,raidEvent=null;const mapArt={yard:new Image(),warehouse:new Image()};mapArt.yard.src='assets/tarkovinho/quintal-v1.jpg';mapArt.warehouse.src='assets/tarkovinho/deposito-v1.jpg';const unitArt={operator:new Image(),scav:new Image()};unitArt.operator.src='assets/tarkovinho/operador-v1.png';unitArt.scav.src='assets/tarkovinho/saqueador-v1.png';const contracts=[{type:'crates',target:2,label:'Saquear 2 caixas',reward:25},{type:'kills',target:2,label:'Eliminar 2 saqueadores',reward:30},{type:'value',target:45,label:'Encontrar 45 sucatas',reward:35}];const prices={armor:[80,130,190],bag:[70,120,180],ammo:[50,80,120]};$('stashPill').textContent='🪙 '+stash+' sucatas';$('stashValue').textContent=stash;
+
+const E=TarkovinhoEconomy;
+const combatSound=new TarkovinhoSound();
+let economy=E.normalize(readJSON('tv_economy_v1',null),stash);
+if(!readJSON('tv_economy_v1',null))economy.upgrades=E.normalize({upgrades:profile}).upgrades;
+profile=economy.upgrades;stash=economy.money;
+let combatEffects=[],hitMarker=0;
+let weapon=E.weapons.pistol,food=0,grenades=0,energy=100,explosives=[],capacity=8;
+function saveProfile(){try{economy.money=stash;economy.upgrades=profile;localStorage.setItem('tv_economy_v1',JSON.stringify(economy));return true}catch{toastMsg('Não foi possível salvar. Libere espaço antes de continuar.');return false}}
+function transaction(action){
+ const snapshot=JSON.stringify(economy);
+ if(action()===false)return false;
+ stash=economy.money;profile=economy.upgrades;
+ if(saveProfile())return true;
+ economy=JSON.parse(snapshot);stash=economy.money;profile=economy.upgrades;return false;
+}
+function bagContents(){
+ const bag=Object.fromEntries(Object.keys(E.items).map(id=>[id,0]));
+ for(const entry of loot)bag[entry.id]=(bag[entry.id]||0)+entry.qty;
+ bag.medkit+=medkits;bag.food+=food;bag.grenade+=grenades;
+ bag[weapon.ammo]+=Math.max(0,player.ammo+player.reserve-(player.loan||0));
+ return bag;
+}
+function occupiedSlots(){const bag=bagContents();bag[weapon.ammo]=Math.max(0,bag[weapon.ammo]-Math.max(0,player.ammo-(player.loan||0)));return E.slots(bag)}
+function refreshPreparation(){
+ const load={};let invalid=false;
+ document.querySelectorAll('[data-supply]').forEach(input=>{
+  const value=Number(input.value),stock=economy.inventory[input.dataset.supply]||0;
+  if(!Number.isInteger(value)||value<0||value>stock)invalid=true;
+  load[input.dataset.supply]=Math.min(stock,Math.max(0,Math.trunc(value)||0));
+ });
+ const used=E.slots(load),limit=8+(profile.bag||0)*2,w=E.weapons[economy.selected];
+ const rounds=(load[w.ammo]||0)+(economy.selected==='pistol'?12+(profile.ammo||0)*12:0);
+ $('prepSummary').textContent=w.name+' · '+rounds+' tiros · '+used+'/'+limit+' slots'+(invalid?' · Revise as quantidades':used>limit?' · Mochila acima do limite':rounds===0?' · Falta munição':' · Pronto para entrar');
+ $('prepSummary').style.color=invalid||used>limit||rounds===0?'#ffd18b':'#c4e36a';
+ return !invalid&&used<=limit;
+}
+function renderInventory(){
+ const previous={};document.querySelectorAll('[data-supply]').forEach(input=>previous[input.dataset.supply]=Math.max(0,Math.trunc(Number(input.value))||0));
+
+ const shop=$('equipment');shop.replaceChildren();
+ const heading=document.createElement('h2');heading.textContent='Arsenal e esconderijo';shop.append(heading);
+ const note=document.createElement('p');note.textContent='Armas compradas são permanentes. Ao morrer, você perde os suprimentos levados. A pistola recebe tiros de emergência por raid (12 + melhorias): não podem ser vendidos. O loot só vira dinheiro quando você vende.';shop.append(note);
+ const arms=document.createElement('div');arms.className='weapon-grid';
+ for(const [id,w] of Object.entries(E.weapons)){
+  const card=document.createElement('article'),name=document.createElement('b'),desc=document.createElement('small'),button=document.createElement('button');
+  name.textContent=w.name;desc.textContent='Dano '+(w.damage*w.pellets).toFixed(1)+' · alcance '+w.range+' · '+(1/w.interval).toFixed(1)+' tiros/s · '+w.mag+' tiros';
+  button.className='buy';const owned=economy.owned.includes(id);button.textContent=economy.selected===id?'EQUIPADA':owned?'Equipar':'Comprar · '+w.price;button.disabled=economy.selected===id||(!owned&&stash<w.price);
+  button.onclick=()=>{transaction(()=>{if(owned){economy.selected=id;return true}return E.buyWeapon(economy,id)});updateShop()};
+  card.append(name,desc,button);arms.append(card);
+ }shop.append(arms);
+ const stock=document.createElement('div');stock.className='stock-list';
+ for(const [id,item] of Object.entries(E.items)){
+  const row=document.createElement('div'),label=document.createElement('span'),sell=document.createElement('button');row.className='shopitem';label.textContent=item.name+' ×'+economy.inventory[id];
+  const qty=id.startsWith('ammo')||id==='shells'?12:1;
+  sell.className='buy';sell.textContent='Vender '+Math.min(qty,economy.inventory[id])+' · '+Math.min(qty,economy.inventory[id])*item.sell;sell.disabled=!economy.inventory[id];
+  sell.onclick=()=>{transaction(()=>E.sell(economy,id,Math.min(qty,economy.inventory[id])));updateShop()};row.append(label,sell);
+  if(item.buy){const buy=document.createElement('button');buy.className='buy';buy.textContent='Comprar '+qty+' · '+qty*item.buy;buy.disabled=stash<qty*item.buy;buy.onclick=()=>{transaction(()=>E.buyItem(economy,id,qty));updateShop()};row.append(buy)}stock.append(row);
+ }shop.append(stock);
+ const loadout=document.createElement('div');loadout.className='loadout';
+ const title=document.createElement('h3');title.textContent='Levar na próxima raid';loadout.append(title);
+ for(const [id,label,step] of [['medkit','Medkits',1],['food','Comida',1],['grenade','Granadas',1],[E.weapons[economy.selected].ammo,'Munição adicional',12]]){
+  const wrap=document.createElement('label'),input=document.createElement('input');wrap.textContent=label;input.type='number';input.min=0;input.max=economy.inventory[id];input.step=1;input.value=previous[id]!==undefined?Math.min(previous[id],economy.inventory[id]):id===E.weapons[economy.selected].ammo&&economy.selected!=='pistol'?Math.min(E.weapons[economy.selected].mag,economy.inventory[id]):0;input.oninput=()=>{$('menuStatus').textContent='';refreshPreparation()};input.dataset.supply=id;input.setAttribute('aria-label',label);wrap.append(input);loadout.append(wrap);
+ }const slots=document.createElement('p');slots.textContent='Mochila: '+(8+(profile.bag||0)*2)+' slots. Munição ocupa 1 slot por 12 tiros; demais itens, 1 por unidade.';loadout.append(slots);shop.append(loadout);refreshPreparation();
+}
+
+function updateShop(){renderInventory();$('stashPill').textContent='🪙 '+stash+' créditos';$('stashValue').textContent=stash;const entries=[['armor','armorBuy','armorInfo','+15 de vida'],['bag','bagBuy','bagInfo','+2 slots por nível'],['ammo','ammoBuy','ammoInfo','+12 balas']];for(const [key,button,info,benefit] of entries){let level=profile[key]||0,price=prices[key][level];$(info).textContent='Nível '+level+'/3 · '+benefit;$(button).textContent=level>=3?'MÁXIMO':price+' 🪙';$(button).disabled=level>=3||stash<price}}
+function buyUpgrade(key){transaction(()=>{const level=profile[key]||0,price=prices[key][level];if(level>=3||economy.money<price)return false;economy.money-=price;economy.upgrades[key]=level+1;return true});updateShop()}
+[['armor','armorBuy'],['bag','bagBuy'],['ammo','ammoBuy']].forEach(([key,id])=>$(id).onclick=()=>buyUpgrade(key));updateShop();
+function sound(freq=500,dur=.07){if(muted)return;try{audio??=new(window.AudioContext||window.webkitAudioContext)();let o=audio.createOscillator(),g=audio.createGain();o.frequency.value=freq;o.type='square';g.gain.value=.035;o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+dur);o.stop(audio.currentTime+dur)}catch{}}
+$('soundBtn').onclick=()=>{muted=!muted;if(muted)combatSound.mute();$('soundBtn').textContent=muted?'🔇':'🔊';sound(620)};
+function start(){if(state==='raid')return;
+ $('menuStatus').textContent='';
+ if(!refreshPreparation()){toastMsg('Confira as quantidades disponíveis e o limite de slots antes de entrar.');return}
+ const requested={};document.querySelectorAll('[data-supply]').forEach(input=>requested[input.dataset.supply]=input.value);
+ capacity=8+(profile.bag||0)*2;let carried;
+ const ammoId=E.weapons[economy.selected].ammo;
+ if(economy.selected!=='pistol'&&!(Math.min(Number(requested[ammoId]),economy.inventory[ammoId])>=1)){toastMsg('Sem munição para '+E.weapons[economy.selected].name+'. Compre '+E.items[ammoId].name+' na loja e escolha a quantidade em “Levar na próxima raid”, ou equipe a pistola gratuita.');return}
+ if(!transaction(()=>{carried=E.deploy(economy,requested,capacity);return !!carried})){toastMsg('Não foi possível preparar a mochila. Confira os slots e o salvamento.');return}
+ weapon=E.weapons[economy.selected];food=carried.food;grenades=carried.grenade;energy=100;explosives=[];combatEffects=[];hitMarker=0;
+ state='raid';time=120;kills=0;medkits=carried.medkit;extracting=0;raidEvent={at:48+Math.random()*22,active:false,type:Math.random()<.5?'supply':'hot',x:W*(.42+Math.random()*.16),y:H*(.36+Math.random()*.26),r:58};mapType=Math.random()<.5?'yard':'warehouse';$('mapTxt').textContent=mapType==='yard'?'QUINTAL':'DEPÓSITO';quest={...contracts[Math.floor(Math.random()*contracts.length)],progress:0};player={x:W*.15,y:H*.78,r:13,hp:100+(profile.armor||0)*15,maxHp:100+(profile.armor||0)*15,ammo:Math.min(weapon.mag,carried[weapon.ammo]+(economy.selected==='pistol'?12+(profile.ammo||0)*12:0)),reserve:Math.max(0,carried[weapon.ammo]+(economy.selected==='pistol'?12+(profile.ammo||0)*12:0)-weapon.mag),loan:economy.selected==='pistol'?12+(profile.ammo||0)*12:0,shot:0,invuln:0,angle:0};enemies=[];crates=[];bullets=[];loot=[];obstacles=mapType==='yard'?[{x:W*.25,y:H*.46,w:W*.19,h:18,type:'barrier'},{x:W*.56,y:H*.19,w:26,h:H*.24,type:'container'},{x:W*.67,y:H*.58,w:W*.16,h:22,type:'pallet'}]:[{x:W*.26,y:H*.43,w:W*.19,h:23,type:'shelf'},{x:W*.58,y:H*.25,w:W*.18,h:21,type:'shelf'},{x:W*.57,y:H*.68,w:W*.20,h:22,type:'pallet'}];let spots=mapType==='yard'?[[.35,.25],[.67,.29],[.44,.67],[.77,.72]]:[[.27,.25],[.70,.23],[.34,.70],[.73,.68]];spots.forEach((p,i)=>{crates.push({x:W*p[0],y:H*p[1],open:false,loot:Math.floor((12+Math.random()*20)*(1+(profile.bag||0)*.15)),kind:['🧰','📦','🎒','🛢️'][i%4]});if(i<4)enemies.push({x:W*(p[0]+.10),y:H*(p[1]+.02),r:12,hp:i===2?5:4,maxHp:i===2?5:4,shot:1+Math.random()*1.5,walk:Math.random()*6})});extract={x:W*.86,y:H*(mapType==='yard'?.16:.84),r:35};$('startScreen').classList.add('hide');$('endScreen').classList.add('hide');$('hud').classList.remove('hide');$('mobile').classList.toggle('show',('ontouchstart'in window)||navigator.maxTouchPoints>0);$('hint').textContent=$('mobile').classList.contains('show')?'Joystick mover · 🔥 atirar · E saquear / extrair':'WASD mover · mouse atirar · R recarregar · Q curar · F comer · G granada · E saquear / extrair';updateHud();sound(330,.12)}
+$('startBtn').onclick=start;$('againBtn').onclick=()=>{$('endScreen').classList.add('hide');$('startScreen').classList.remove('hide');updateShop()};$('backBtn').onclick=()=>{$('endScreen').classList.add('hide');$('startScreen').classList.remove('hide');updateShop()};
+function updateHud(){$('medTxt').textContent=medkits;$('hpTxt').textContent=Math.max(0,Math.ceil(player.hp));$('hpBar').style.width=Math.max(0,Math.min(100,player.hp/(player.maxHp||100)*100))+'%';$('ammoTxt').textContent=player.reloading>0?'RECARGA '+player.reloading.toFixed(1)+'s':player.ammo+' / '+player.reserve;$('ammoBar').style.width=(player.ammo/weapon.mag*100)+'%';$('lootTxt').textContent=weapon.name+' · '+occupiedSlots()+'/'+capacity+' slots · Energia '+Math.ceil(energy)+' · Comida '+food+' · Granadas '+grenades;$('questTxt').textContent='📋 '+quest.label+' ('+Math.min(quest.progress,quest.target)+'/'+quest.target+')';$('timerTxt').textContent=`${String(Math.floor(time/60)).padStart(2,'0')}:${String(Math.floor(time%60)).padStart(2,'0')}`}
+function finish(ok,why){
+ if(state!=='raid')return;
+ const bonus=ok&&quest&&quest.progress>=quest.target?quest.reward:0;
+ if(ok&&!transaction(()=>{E.recover(economy,bagContents(),bonus);return true}))return;
+ state='end';$('stashPill').textContent='🪙 '+stash+' créditos';
+ $('endEyebrow').textContent=ok?'EXTRAÇÃO CONCLUÍDA':'FIM DA INCURSÃO';
+ $('endTitle').textContent=ok?'De volta ao esconderijo':'Você caiu…';
+ $('endDesc').textContent=ok?'Itens e suprimentos restantes foram guardados. Venda somente o que quiser. Bônus do contrato: '+bonus+' créditos.':why+' Suprimentos levados e loot da raid foram perdidos. Suas armas continuam disponíveis.';
+ $('earned').textContent=bonus;$('kills').textContent=kills;$('healthEnd').textContent=Math.ceil(player.hp);
+ $('lootList').textContent=ok?Object.entries(bagContents()).filter(([,qty])=>qty>0).map(([id,qty])=>E.items[id].name+' ×'+qty).join(' · '):'Nenhum item recuperado.';
+ $('hud').classList.add('hide');$('mobile').classList.remove('show');$('endScreen').classList.remove('hide');$('stashValue').textContent=stash;sound(ok?740:130,.2);
+}
+
+function near(){return crates.find(c=>!c.open&&Math.hypot(c.x-player.x,c.y-player.y)<50)}function blocked(x,y,r){return obstacles.some(obstacle=>x+r>obstacle.x&&x-r<obstacle.x+obstacle.w&&y+r>obstacle.y&&y-r<obstacle.y+obstacle.h)}function action(){if(state!=='raid')return;let c=near();if(c){c.open=true;const pool=['valuables','medkit','food','grenade','ammo9','ammo556','shells','ammo762'];
+ c.itemId??=pool[Math.floor(Math.random()*pool.length)];const id=c.itemId,qty=E.items[id].stack,value=E.items[id].sell*qty;
+ if(occupiedSlots()+1>capacity){c.open=false;toastMsg('MOCHILA CHEIA — USE SUPRIMENTOS OU EXTRAIA');return}
+ if(id==='medkit')medkits++;else if(id==='food')food++;else if(id==='grenade')grenades++;else if(id===weapon.ammo)player.reserve+=qty;else loot.push({id,qty,name:E.items[id].name,value});
+ if(quest.type==='crates')quest.progress++;if(quest.type==='value')quest.progress+=value;toastMsg('COLETADO: '+E.items[id].name);sound(780);updateHud();return}if(Math.hypot(extract.x-player.x,extract.y-player.y)<extract.r+15){if(!crates.some(entry=>entry.open)){toastMsg('SAQUEIE AO MENOS UMA CAIXA ANTES DE EXTRAIR');return}if(extracting<=0){extracting=6;toastMsg('EXTRAÇÃO INICIADA — FIQUE NA ZONA');sound(640,.12)}return}toastMsg('Nada por aqui');sound(250,.05)}function toastMsg(s){if(state!=='raid'){$('menuStatus').textContent=s;$('menuStatus').scrollIntoView?.({block:'nearest'});}let t=$('toast');t.textContent=s;t.style.display='block';clearTimeout(toastMsg.t);toastMsg.t=setTimeout(()=>t.style.display='none',1100)}
+function useMedkit(){if(state!=='raid'||medkits<1||player.hp>=player.maxHp)return;medkits--;player.hp=Math.min(player.maxHp,player.hp+40);toastMsg('KIT MÉDICO USADO +40 VIDA');sound(520,.14);updateHud()}function reload(){if(state!=='raid'||player.reloading>0||player.ammo>=weapon.mag||player.reserve<=0)return;player.reloading=weapon.reload;toastMsg('RECARREGANDO — BUSQUE COBERTURA');sound(280,.12)}
+function shoot(){if(state!=='raid'||player.shot>0||player.reloading>0)return;if(player.ammo<=0){if(player.reserve>0){reload();player.shot=.18}else{toastMsg('Sem munição!');player.shot=.35}return}player.ammo--;player.loan=Math.max(0,player.loan-1);player.shot=weapon.interval;player.recoil=economy.selected==='sniper'||economy.selected==='shotgun'?4:2;player.muzzle=.055;for(let pellet=0;pellet<weapon.pellets;pellet++){let a=player.angle+(Math.random()-.5)*weapon.spread;bullets.push({x:player.x+Math.cos(a)*16,y:player.y+Math.sin(a)*16,vx:Math.cos(a)*weapon.speed,vy:Math.sin(a)*weapon.speed,life:weapon.range/weapon.speed,damage:weapon.damage})}if(!muted)combatSound.play(economy.selected);updateHud()}
+function eat(){if(state!=='raid'||food<1||energy>=100)return;food--;energy=Math.min(100,energy+40);toastMsg('RAÇÃO USADA +40 ENERGIA')}
+function throwGrenade(){if(state!=='raid'||grenades<1)return;grenades--;explosives.push({x:player.x,y:player.y,vx:Math.cos(player.angle)*260,vy:Math.sin(player.angle)*260,fuse:1.6});toastMsg('GRANADA — AFASTE-SE!')}
+function tickGrenades(dt){for(const grenade of explosives){if(grenade.fuse<=0)continue;const x=grenade.x+grenade.vx*dt,y=grenade.y+grenade.vy*dt;if(blocked(x,y,5)||x<10||x>W-10||y<10||y>H-10){grenade.vx=grenade.vy=0}else{grenade.x=x;grenade.y=y;grenade.vx*=Math.max(0,1-dt*2);grenade.vy*=Math.max(0,1-dt*2)}grenade.fuse-=dt;if(grenade.fuse<=0){for(const enemy of [...enemies])if(Math.hypot(enemy.x-grenade.x,enemy.y-grenade.y)<90){enemies=enemies.filter(e=>e!==enemy);kills++;if(quest.type==='kills')quest.progress++}if(Math.hypot(player.x-grenade.x,player.y-grenade.y)<90){player.hp=Math.max(0,player.hp-65);extracting=0;if(!player.hp)finish(false,'Você estava perto da explosão.')}sound(70,.25)}}explosives=explosives.filter(g=>g.fuse>0)}
+function sightClear(e){const dx=player.x-e.x,dy=player.y-e.y,steps=Math.ceil(Math.hypot(dx,dy)/6);for(let i=1;i<steps;i++)if(blocked(e.x+dx*i/steps,e.y+dy*i/steps,1))return false;return true}
+function moveEnemy(enemy,dx,dy,dt){
+ const x=Math.max(enemy.r,Math.min(W-enemy.r,enemy.x+dx*dt)),y=Math.max(enemy.r,Math.min(H-enemy.r,enemy.y+dy*dt));
+ const beforeX=enemy.x,beforeY=enemy.y;
+ if(!blocked(x,enemy.y,enemy.r))enemy.x=x;
+ if(!blocked(enemy.x,y,enemy.r))enemy.y=y;
+ if(Math.hypot(enemy.x-beforeX,enemy.y-beforeY)<.1)enemy.strafe=-(enemy.strafe||1);
+}
+function updateEnemy(enemy,dt){
+ enemy.motionPosition={x:enemy.x,y:enemy.y};
+ enemy.walk=(enemy.walk||0)+dt;
+ const distance=Math.hypot(player.x-enemy.x,player.y-enemy.y),visible=distance<420&&sightClear(enemy);
+ if(visible){enemy.lastSeen={x:player.x,y:player.y};enemy.memory=2.5;enemy.aimAngle=Math.atan2(player.y-enemy.y,player.x-enemy.x)}
+ else enemy.memory=Math.max(0,(enemy.memory||0)-dt);
+ enemy.shot=Math.max(0,(enemy.shot||0)-dt);
+ if(enemy.windup>0){
+  if(!visible||distance>=380){enemy.windup=0;enemy.shot=Math.max(.45,enemy.shot)}
+  else {enemy.windup=Math.max(0,enemy.windup-dt);if(enemy.windup===0){enemyShoot(enemy);enemy.shot=.95+Math.random()*.65}}
+ }else if(visible&&distance<380&&enemy.shot===0){
+  enemy.windup=.4;
+ }else{
+  enemy.decision=(enemy.decision||0)-dt;
+  if(enemy.decision<=0){enemy.strafe=Math.random()<.5?-1:1;enemy.decision=1.2+Math.random()*1.3}
+  if(visible){
+   const angle=Math.atan2(player.y-enemy.y,player.x-enemy.x);
+   const approach=distance>230?75:distance<125?-65:0,side=(enemy.strafe||1)*42;
+   moveEnemy(enemy,Math.cos(angle)*approach-Math.sin(angle)*side,Math.sin(angle)*approach+Math.cos(angle)*side,dt);
+  }else if(enemy.memory>0&&enemy.lastSeen){
+   followEnemyRoute(enemy,enemy.lastSeen,dt);
+  }else{enemy.route=null;moveEnemy(enemy,Math.cos(enemy.walk*.5)*18,Math.sin(enemy.walk*.65)*18,dt)}
+ }
+ animateUnit(enemy,dt,true);
+}
+function followEnemyRoute(enemy,target,dt){
+ enemy.routeCooldown=Math.max(0,(enemy.routeCooldown||0)-dt);
+ const changed=!enemy.routeTarget||Math.hypot(target.x-enemy.routeTarget.x,target.y-enemy.routeTarget.y)>8||enemy.routeSize!==W+':'+H;
+ if(changed||enemy.routeCooldown===0){
+  enemy.route=TarkovinhoNavigation.route(enemy,target,obstacles,W,H,enemy.r);
+  enemy.routeTarget={x:target.x,y:target.y};enemy.routeSize=W+':'+H;enemy.routeCooldown=.7;
+ }
+ while(enemy.route?.length&&Math.hypot(enemy.route[0].x-enemy.x,enemy.route[0].y-enemy.y)<1)enemy.route.shift();
+ const waypoint=enemy.route?.[0];if(!waypoint||dt<=0)return;
+ const dx=waypoint.x-enemy.x,dy=waypoint.y-enemy.y,length=Math.hypot(dx,dy),speed=Math.min(65,length/dt);
+ if(length>0)moveEnemy(enemy,dx/length*speed,dy/length*speed,dt);
+}
+function enemyShoot(e){e.recoil=2;e.muzzle=.055;if(!muted)combatSound.play('pistol',Math.max(.08,1-Math.hypot(e.x-player.x,e.y-player.y)/500)*.5,(e.x-player.x)/400);let a=Math.atan2(player.y-e.y,player.x-e.x);bullets.push({x:e.x+Math.cos(a)*12,y:e.y+Math.sin(a)*12,vx:Math.cos(a)*280,vy:Math.sin(a)*280,life:1.5,bad:true})}
+function step(dt){if(state!=='raid')return;tickCombat(dt);energy=Math.max(0,energy-dt*.8);tickGrenades(dt);if(state!=='raid')return;time-=dt;if(time<=0){finish(false,'O tempo acabou.');return}if(!raidEvent.active&&time<=raidEvent.at){raidEvent.active=true;if(raidEvent.type==='supply'){crates.push({x:raidEvent.x,y:raidEvent.y,open:false,loot:48,kind:'✦',special:true});toastMsg('SUPRIMENTO RARO DETECTADO')}else toastMsg('ZONA QUENTE MARCADA — EVITE A ÁREA');sound(820,.16)}if(raidEvent.active&&raidEvent.type==='hot'&&Math.hypot(player.x-raidEvent.x,player.y-raidEvent.y)<raidEvent.r){player.hp-=9*dt;if(player.hp<=0){player.hp=0;finish(false,'A zona quente consumiu sua incursão.');return}}if(player.reloading>0){player.reloading-=dt;if(player.reloading<=0){const transfer=Math.min(weapon.mag-player.ammo,player.reserve);player.ammo+=transfer;player.reserve-=transfer;toastMsg('RECARREGADO')}}player.shot-=dt;player.invuln-=dt;let dx=(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0)+joy.x,dy=(keys.s||keys.arrowdown?1:0)-(keys.w||keys.arrowup?1:0)+joy.y;let n=Math.hypot(dx,dy);if(n>1){dx/=n;dy/=n}player.motionPosition={x:player.x,y:player.y};let nextX=Math.max(18,Math.min(W-18,player.x+dx*(energy<20?155:220)*dt)),nextY=Math.max(18,Math.min(H-18,player.y+dy*(energy<20?155:220)*dt));if(!blocked(nextX,player.y,player.r))player.x=nextX;if(!blocked(player.x,nextY,player.r))player.y=nextY;animateUnit(player,dt,false);let target=enemies.reduce((best,e)=>!best||Math.hypot(e.x-player.x,e.y-player.y)<Math.hypot(best.x-player.x,best.y-player.y)?e:best,null);if(mouse.active)player.angle=Math.atan2(mouse.y-player.y,mouse.x-player.x);else if(target)player.angle=Math.atan2(target.y-player.y,target.x-player.x);if(extracting>0){if(Math.hypot(extract.x-player.x,extract.y-player.y)>extract.r+15){extracting=0;toastMsg('EXTRAÇÃO INTERROMPIDA')}else{extracting-=dt;if(extracting<=0){finish(true);return}}}if(mouse.down||touchFire)shoot();for(const enemy of enemies)updateEnemy(enemy,dt);
+for(let b of bullets){b.x+=b.vx*dt;b.y+=b.vy*dt;b.life-=dt;if(obstacles.some(obstacle=>b.x>obstacle.x&&b.x<obstacle.x+obstacle.w&&b.y>obstacle.y&&b.y<obstacle.y+obstacle.h)){impact(b.x,b.y,'#a69b7e',3);b.life=0}if(b.life>0&&b.bad&&Math.hypot(b.x-player.x,b.y-player.y)<player.r+4&&player.invuln<=0){b.life=0;player.hitFlash=.18;impact(b.x,b.y,'#c59170',4);player.hp-=20;player.invuln=.35;if(extracting>0){extracting=0;toastMsg('EXTRAÇÃO INTERROMPIDA PELO TIRO')}sound(95);if(player.hp<=0){player.hp=0;updateHud();finish(false,'Um saqueador te pegou.');return}}else if(b.life>0&&!b.bad){let e=enemies.find(e=>Math.hypot(b.x-e.x,b.y-e.y)<e.r+4);if(e){e.hp-=b.damage||1;e.hitFlash=.16;hitMarker=.14;impact(b.x,b.y,'#d8bf87');b.life=0;if(e.hp<=0){enemies=enemies.filter(x=>x!==e);kills++;if(quest.type==='kills')quest.progress++;toastMsg('SAQUEADOR ELIMINADO');sound(640)}}}}bullets=bullets.filter(b=>b.life>0&&b.x>-10&&b.x<W+10&&b.y>-10&&b.y<H+10);updateHud()}
+let joy={x:0,y:0},touchFire=false;window.addEventListener('blur',()=>{for(const key in keys)keys[key]=false;mouse.down=false;touchFire=false;joy.x=joy.y=0});
+function draw(){ctx.clearRect(0,0,W,H);const art=mapArt[mapType];if(art?.complete&&art.naturalWidth){ctx.drawImage(art,0,0,W,H);ctx.fillStyle='rgba(9,16,11,.14)';ctx.fillRect(0,0,W,H)}else{ctx.fillStyle=mapType==='warehouse'?'#42423a':'#344539';ctx.fillRect(0,0,W,H)};if(state==='menu'){ctx.fillStyle='#3d4c3d';for(let i=0;i<45;i++){let x=(i*137)%W,y=(i*239)%H;ctx.beginPath();ctx.ellipse(x,y,9,4,.3,0,Math.PI*2);ctx.fill()}return}ctx.save();ctx.globalAlpha=art&&art.complete?0.24:1; // ground texture
+if(mapType==='yard'){for(let i=0;i<100;i++){let x=(i*137)%W,y=(i*239)%H;ctx.fillStyle=i%2?'#3d4c3d':'#2e3d32';ctx.beginPath();ctx.ellipse(x,y,9,4,.3,0,Math.PI*2);ctx.fill()}}else{ctx.strokeStyle='#55564d';ctx.lineWidth=1;for(let x=24;x<W;x+=42){ctx.beginPath();ctx.moveTo(x,20);ctx.lineTo(x,H-20);ctx.stroke()}for(let y=22;y<H;y+=42){ctx.beginPath();ctx.moveTo(20,y);ctx.lineTo(W-20,y);ctx.stroke()}}
+// map edges and paths
+ctx.strokeStyle='#a5a384';ctx.lineWidth=5;ctx.setLineDash([12,8]);ctx.strokeRect(16,16,W-32,H-32);ctx.setLineDash([]);if(mapType==='yard'){ctx.fillStyle='#726b4d';ctx.fillRect(W*.08,H*.48,W*.82,13);ctx.fillStyle='#52664c';ctx.fillRect(W*.51,H*.12,16,H*.77)}else{ctx.fillStyle='#66685d';ctx.fillRect(W*.08,H*.44,W*.84,H*.13);ctx.fillStyle='#343630';[[.12,.16,.23,.10],[.62,.16,.24,.10],[.12,.72,.23,.10],[.62,.72,.24,.10]].forEach(a=>{ctx.fillRect(W*a[0],H*a[1],W*a[2],H*a[3]);ctx.strokeStyle='#968c6d';ctx.strokeRect(W*a[0],H*a[1],W*a[2],H*a[3]);ctx.strokeStyle='#a5a384'})}
+drawTerrainDetails();
+// cover props
+if(mapType==='yard'){for(let i=0;i<13;i++){let x=(i*197+65)%(W-60)+30,y=(i*149+55)%(H-70)+35;if(Math.hypot(x-player.x,y-player.y)>35){ctx.fillStyle='#263c2d';ctx.beginPath();ctx.arc(x,y,13+(i%3)*3,0,7);ctx.fill();ctx.fillStyle='#405b3d';ctx.beginPath();ctx.arc(x-5,y-4,7,0,7);ctx.fill()}}}else{[[.48,.25],[.50,.73],[.43,.39],[.57,.61]].forEach(a=>{let x=W*a[0],y=H*a[1];ctx.fillStyle='#806d4d';ctx.fillRect(x-18,y-11,36,22);ctx.strokeStyle='#c0a16b';ctx.strokeRect(x-18,y-11,36,22);ctx.strokeStyle='#a5a384'})}
+ctx.restore();drawObstacles();if(raidEvent?.active&&raidEvent.type==='hot'){ctx.save();ctx.fillStyle='#e16b3d35';ctx.strokeStyle='#f4a25c';ctx.lineWidth=2;ctx.setLineDash([6,5]);ctx.beginPath();ctx.arc(raidEvent.x,raidEvent.y,raidEvent.r,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#ffe0ac';ctx.font='bold 10px system-ui';ctx.textAlign='center';ctx.fillText('ZONA QUENTE',raidEvent.x,raidEvent.y+4);ctx.restore()}
+// extraction
+ctx.fillStyle='#78994c55';ctx.beginPath();ctx.arc(extract.x,extract.y,extract.r+8,0,7);ctx.fill();ctx.strokeStyle='#c2e56a';ctx.lineWidth=3;ctx.setLineDash([7,5]);ctx.beginPath();ctx.arc(extract.x,extract.y,extract.r,0,7);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#e2f0a8';ctx.font='bold 12px system-ui';ctx.textAlign='center';ctx.fillText('EXTRAÇÃO',extract.x,extract.y+4);if(extracting>0){ctx.strokeStyle='#fff4b0';ctx.lineWidth=5;ctx.beginPath();ctx.arc(extract.x,extract.y,extract.r+14,-Math.PI/2,-Math.PI/2+(1-extracting/6)*Math.PI*2);ctx.stroke();ctx.fillStyle='#fff4b0';ctx.font='bold 11px system-ui';ctx.fillText('SAINDO '+extracting.toFixed(1)+'s',extract.x,extract.y+58);}
+for(let c of crates){ctx.fillStyle=c.open?'#313b32':c.special?'#b79a39':'#a87c4f';ctx.fillRect(c.x-17,c.y-13,34,26);ctx.strokeStyle=c.open?'#667263':'#e1b477';ctx.lineWidth=2;ctx.strokeRect(c.x-17,c.y-13,34,26);ctx.font='17px system-ui';ctx.textAlign='center';ctx.fillText(c.open?'✓':c.kind,c.x,c.y+6)}
+for(let e of enemies){drawUnit(e,true);drawEnemyBar(e)}
+for(const grenade of explosives){ctx.strokeStyle='#ffb25d';ctx.setLineDash([4,6]);ctx.beginPath();ctx.arc(grenade.x,grenade.y,90,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#ffb25d';ctx.beginPath();ctx.arc(grenade.x,grenade.y,6,0,Math.PI*2);ctx.fill()}
+for(let b of bullets){ctx.strokeStyle=b.bad?'#df886680':'#fff2a580';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(b.x-b.vx*.012,b.y-b.vy*.012);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.fillStyle=b.bad?'#f27460':'#fff2a5';ctx.beginPath();ctx.arc(b.x,b.y,b.bad?4:3,0,7);ctx.fill()}
+drawUnit(player,false);
+for(const effect of combatEffects){ctx.globalAlpha=Math.min(1,effect.life*5);ctx.fillStyle=effect.color;ctx.fillRect(effect.x,effect.y,2,2)}ctx.globalAlpha=1;drawAim();
+if(state==='raid'&&near()){ctx.fillStyle='#111d';ctx.fillRect(player.x-70,player.y+25,140,23);ctx.fillStyle='#e8efdc';ctx.textAlign='center';ctx.fillText('APERTE E PARA SAQUEAR',player.x,player.y+41)}if(state==='raid'&&Math.hypot(extract.x-player.x,extract.y-player.y)<extract.r+22){ctx.fillStyle='#111d';ctx.fillRect(player.x-65,player.y+26,130,23);ctx.fillStyle='#e8efdc';ctx.textAlign='center';ctx.fillText('APERTE E PARA EXTRAIR',player.x,player.y+42)}
+}
+let paused=false;document.addEventListener('visibilitychange',()=>{paused=document.hidden;if(paused&&state==='raid')toastMsg('INCURSÃO PAUSADA')});function loop(ts){let dt=Math.min(.04,(ts-last)/1000||0);last=ts;if(!paused)step(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
+window.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key.toLowerCase()==='e')action();if(e.code==='Space'){e.preventDefault();shoot()}if(e.key.toLowerCase()==='r')reload();if(e.key.toLowerCase()==='q'&&!e.repeat)useMedkit();if(e.key.toLowerCase()==='f'&&!e.repeat)eat();if(e.key.toLowerCase()==='g'&&!e.repeat)throwGrenade()});window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);canvas.addEventListener('mousemove',e=>{let r=canvas.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;mouse.active=true});canvas.addEventListener('mousedown',()=>mouse.down=true);window.addEventListener('mouseup',()=>mouse.down=false);canvas.addEventListener('touchstart',e=>{let r=canvas.getBoundingClientRect(),t=e.touches[0];mouse.x=t.clientX-r.left;mouse.y=t.clientY-r.top;mouse.active=false},{passive:true});
+const stick=$('stick'),knob=$('knob');let joyId=null;stick.addEventListener('pointerdown',e=>{joyId=e.pointerId;stick.setPointerCapture(joyId);moveJoy(e)});stick.addEventListener('pointermove',e=>{if(e.pointerId===joyId)moveJoy(e)});function moveJoy(e){let r=stick.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,n=Math.hypot(dx,dy),max=36;if(n>max){dx*=max/n;dy*=max/n}joy.x=dx/max;joy.y=dy/max;knob.style.transform=`translate(${dx}px,${dy}px)`}function endJoy(){joyId=null;joy.x=joy.y=0;knob.style.transform=''}stick.addEventListener('pointerup',endJoy);stick.addEventListener('pointercancel',endJoy);$('fireBtn').addEventListener('pointerdown',e=>{e.preventDefault();touchFire=true;shoot()});['pointerup','pointercancel','pointerleave'].forEach(ev=>$('fireBtn').addEventListener(ev,()=>touchFire=false));$('interactBtn').addEventListener('pointerdown',e=>{e.preventDefault();action()});$('foodBtn').onclick=eat;$('grenadeBtn').onclick=throwGrenade;$('medBtn').addEventListener('pointerdown',e=>{e.preventDefault();useMedkit()});
+})();
+</script></body></html>
+

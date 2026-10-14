@@ -27,6 +27,9 @@ $pkg = Join-Path $ProjectRoot 'package.json'
 if(Test-Path $pkg){
   $node = Get-Command node -ErrorAction SilentlyContinue
   Add-Check 'Node runtime' ($null -ne $node) ($(if($node){$node.Source}else{'node nao encontrado'}))
+  $package = Get-Content -LiteralPath $pkg -Raw | ConvertFrom-Json
+  $version = (Get-Content -LiteralPath (Join-Path $ProjectRoot 'VERSION') -Raw).Trim()
+  Add-Check 'Versao consistente' ($version -eq $package.version) "VERSION=$version; package=$($package.version)"
 }
 
 $driveName = (Get-Item $ProjectRoot).PSDrive.Name
@@ -35,12 +38,10 @@ $freeGb = [math]::Round($drive.Free/1GB,2)
 Add-Check 'Espaco minimo' ($freeGb -ge 2) "$freeGb GB livres" $true
 Add-Check 'Espaco recomendado' ($freeGb -ge 10) "$freeGb GB livres; recomendado >= 10 GB" $false
 
-$scanExt = @('*.json','*.js','*.cjs','*.mjs','*.ts','*.tsx','*.ps1','*.cmd','*.bat','*.env')
-$files = Get-ChildItem $ProjectRoot -Recurse -File -Include $scanExt -ErrorAction SilentlyContinue |
-  Where-Object { $_.FullName -notmatch '\\(node_modules|dist|release|build|\.git|backups)\\' -and $_.FullName -ne (Join-Path $ProjectRoot 'tools\PitStop.ps1') }
+$files = @(Get-ChildItem -LiteralPath (Join-Path $ProjectRoot 'src') -File -Recurse | Where-Object { $_.Extension -in @('.json','.js','.cjs','.mjs','.html','.css') }) + @(Get-Item -LiteralPath $pkg)
 $bad = @()
 foreach($f in $files){
-  $hit = Select-String -Path $f.FullName -Pattern 'MGOES-NOTE' -SimpleMatch -ErrorAction SilentlyContinue
+  $hit = Select-String -LiteralPath $f.FullName -Pattern '\\\\MGOES-NOTE\\|https?://MGOES-NOTE(?=[:/])' -ErrorAction SilentlyContinue
   if($hit){ $bad += $f.FullName }
 }
 Add-Check 'Sem dependencia do notebook' ($bad.Count -eq 0) ($(if($bad.Count){$bad -join '; '}else{'Nenhuma referencia obrigatoria detectada'}))

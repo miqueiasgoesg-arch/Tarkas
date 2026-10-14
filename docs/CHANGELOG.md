@@ -1,5 +1,161 @@
 # Changelog — Projeto Tarkas
 
+## 2026-10-14 — Pacote consolidado 0.7.19
+- Backup completo com aplicativo fechado, manifesto SHA-256 e verificação; Pit Stop confere versão e evita varrer mídia/cache.
+- Unificados VERSION e pacote; arquivos locais de QA excluídos do Git.
+- Traduções reversíveis dos fluxos atuais, armas/antebraços articulados e mira inimiga sem rastreamento oculto.
+- Sincronização real, 13 destinos online, 27 testes, backup de 260 arquivos e Sinal Verde aprovados.
+- Gerados instalador/portátil e validado aplicativo empacotado com perfis existentes.
+
+
+## 2026-10-14 — Retratos dos comerciantes
+- Catálogo de missões inclui traderImage da base de comerciantes; cartões exibem retrato com texto alternativo e iniciais como fallback.
+- Conferidos os 11 comerciantes do cache. Teste Electron de imagem/fallback e check geral passaram.
+
+
+## 2026-10-14 — Layout móvel, QR Code e comerciantes
+- Corrigidas regras antigas que forçavam a lateral desktop no celular e o logo indisponível pelo HTTP.
+- QR Code local com qrcode 1.5.4 para o link autenticado; nenhum serviço externo recebe a chave.
+- Aba Missões abre cartões dos comerciantes e filtra a lista pelo trader selecionado, com busca/status/paginação e retorno.
+- Testes Electron em 360/390/430/768px, QR/link, busca, paginação, isolamento por comerciante, mudança de status e foco direto passaram; capturas revisadas. Check/HTTP/mapas passaram; nenhum EXE gerado.
+
+
+## 2026-10-14 — Acesso móvel pelo Wi-Fi (local)
+- Adicionados servidor HTTP sob ativação explícita, chave temporária, ponte navegador/IPC e painel de links no PC.
+- Reutiliza dados SQLite; bloqueia operações de sistema e diálogos pelo acesso remoto. Mapas abrem no navegador.
+- Corrigido erro de sintaxe existente no ramo dashboard da navegação.
+- Testes HTTP e Electron em 390px com perfil isolado aprovados; check geral e teste de janela de mapas passaram. Sem build Windows; celular físico pendente.
+
+
+## 2026-10-14 — Menu móvel (local)
+- Menu horizontal mostra indicador de rolagem; seção selecionada entra em vista automaticamente.
+- Adicionado estado `aria-current` para leitores de tela; animação respeita preferência de movimento reduzido.
+- Prévia em dispositivo móvel ainda pendente.
+
+## 2026-10-14 — Missões no celular (local)
+- Lista de missões em telas estreitas recebe rolagem delimitada, evitando empurrar os detalhes para baixo.
+- Detalhes preservam largura e botões de ação ficam mais fáceis de tocar.
+- Prévia móvel pendente; limite de aprovação automática impede nova execução do Electron neste momento.
+
+## 2026-10-14 — Navegação segura em Missões (local)
+- Leituras assíncronas de nível e catálogo ignoram respostas após sair da página.
+- A tela ainda apresenta recuperação se ocorrer falha durante a montagem.
+- Não foi possível validar no Electron: limite de aprovação automática bloqueou a execução do teste.
+
+## 2026-10-13 — Navegação de Missões (local)
+- Corrigido limite silencioso de 120 missões com carregamento em lotes e contador do total filtrado.
+- Busca tolerante a acentos e controles com rótulos acessíveis.
+- Selecionar missão preserva rolagem e foco; busca mantém missão selecionada quando ela continua nos resultados visíveis.
+- Testes Electron com 245 missões simuladas e check geral aprovados. Sem publicação.
+
+## 2026-10-13 — Contexto após atualização (local)
+- Atualização de preços mantém filtros, ordenação e lote visível do catálogo.
+- Estado passa pela recuperação de leitura sem gravar preferências no perfil.
+- Testes Electron com 321 itens e sincronização simulada aprovados, além do check geral. Sem publicação.
+
+## 2026-10-13 — Limpeza de filtros (local)
+- Botão Limpar filtros restaura todos os itens, mantém ordenação e devolve foco ao campo de busca.
+- Filtro de favoritos anuncia estado; mensagens de lista vazia indicam como voltar aos itens.
+- Testes de filtros combinados, foco e regressões passaram no Electron com dados simulados. Sem publicação.
+
+## 2026-10-13 — Primeira abertura do catálogo (local)
+- Catálogo vazio oferece atualização direta com aviso de andamento, proteção contra clique duplicado e retry em falha.
+- Sincronização concluída após sair não reabre a página.
+- Suíte Electron com sincronização simulada e check geral aprovados. Sem publicação.
+
+## 2026-10-13 — Recuperação da abertura do catálogo (local)
+- Tratada rejeição na leitura de catálogo, favoritos ou status: aviso acessível e botão para tentar novamente.
+- Falha recebida depois de sair da página não substitui a tela atual.
+- Testados erro, recuperação por botão e saída durante carregamento, além das regressões existentes. Check geral aprovado; sem publicação.
+
+## 2026-10-13 — Ordenação do Arsenal e Mercado (local)
+- Seletor de ordem original, nome A–Z e preços crescente/decrescente, sem alterar a fonte do catálogo.
+- Itens sem preço válido ficam no final nas ordenações por preço.
+- Favoritos anunciam nome e estado; testes de ordenação e teclado aprovados no Electron com dados simulados.
+
+## 2026-10-13 — Navegação do catálogo (local)
+- Itens além dos primeiros 160 acessíveis por Carregar mais, sem perder filtros.
+- Busca tolerante a acentos e foco de teclado no primeiro item do novo lote.
+- Teclado no botão de favorito não abre inadvertidamente a ficha.
+- Testes Electron com dados simulados e verificação geral aprovados. Sem publicação.
+
+## 2026-10-13 — Fichas do Arsenal e Mercado
+- Respostas antigas não alteram item, categoria ou página mais recente.
+- Removido aviso de carregamento após resposta; estado ocupado acessível, fechamento e retry.
+- Sincronização respeita saída da página; locais pessoais bloqueiam envio duplicado e mantêm texto em falha.
+- Favoritos exibem falha e removem da lista filtrada o item desfavoritado.
+- Testes de concorrência e recuperação no Electron aprovados.
+
+## 2026-10-13 — Preparação da raid (local)
+- Rodapé de entrada fixo com resumo de arma, munição e slots.
+- Quantidades não são mais zeradas a cada compra/venda; estoque restante limita a seleção.
+- Valores inválidos e excesso de slots bloqueiam entrada antes de retirar suprimentos.
+- Testes de preparação e renderização compacta no Electron aprovados.
+
+## 2026-10-13 — Navegação dos inimigos (local)
+- Busca da última posição vista contorna obstáculos com rotas por cantos, sem atravessar paredes.
+- Margem corporal, limites do mapa e falha segura quando não existe caminho.
+- Cache de rota por 0,7s; testes de geometria e deslocamento incluídos.
+
+## 2026-10-13 — Reação dos inimigos (não publicado)
+- Avanço, recuo e movimentação lateral, com parada para mirar e aviso visual de disparo.
+- Cancelamento de tiro ao perder visão; memória limitada da última posição observada.
+- Patrulha limitada ao mapa e sujeita às colisões. Economia e inventário inalterados.
+
+## 2026-10-13 — Feedback de combate (local)
+- Recuo diferenciado, clarão direcional, rastros curtos e impactos leves em cobertura/personagens.
+- Confirmação visual de acerto e recarga junto à mira.
+- Partículas limitadas e efeitos com expiração; nenhuma mudança em preços, estoque ou dano das armas.
+
+## 2026-10-13 — Orientação e obstáculos do Tarkovinho
+- Removida rotação integral do sprite: mira não deixa mais o personagem de cabeça para baixo.
+- Obstáculos diferenciados por material, com sombreamento e desgaste determinístico sem alterar área bloqueada.
+
+## 2026-10-13 — Movimento e som do Tarkovinho
+- Animação segmentada de pernas do jogador e inimigos, com passada calculada pela distância real e repouso suave.
+- Efeitos procedurais distintos para pistola, SMG, M4, calibre 12 e sniper.
+- Passos sincronizados, timbre por cenário e sons inimigos atenuados por distância.
+- Buffer de áudio reutilizado, limite de vozes e botão mudo preservado.
+
+## 2026-10-13 — Botão de entrada no Tarkovinho
+- Aviso de falta de munição movido para junto do botão, com rolagem para ficar visível.
+- Preparação sugere um carregador quando existe munição no estoque e verifica a disponibilidade real antes de entrar.
+- Teste no Electron em perfil temporário aprovou entrada com pistola, bloqueio explicado de SMG vazia e entrada de SMG abastecida.
+
+## 2026-10-13 — Tarkovinho: estoque e arsenal (não publicado)
+- Loja de pistola/SMG/M4/calibre 12/sniper com diferenças reais de alcance, dano, cadência, recarga e dispersão.
+- Inventário persistente com venda seletiva, munição por calibre e preparação da mochila antes de entrar.
+- Extração recupera loot e suprimentos não usados sem venda automática; contrato paga bônus separado.
+- Armas permanecem compradas após morrer; equipamento consumível levado é perdido.
+- Comida, energia, granadas temporizadas, indicação da área de explosão e dano ao próprio jogador.
+- Mochila limitada, melhorias preservadas e proteção contra revenda de munição gratuita.
+- Migração do saldo antigo e testes de extração, morte, duplicação, persistência e falha de gravação.
+
+## 2026-10-13 — Revisão de Mapas 2.0 (não publicado)
+- Plano detalha objetivos, itens/documentos e chaves; remove limite de cinco missões exibidas.
+- Foco em missão pode ser removido; troca de área invalida respostas anteriores e limpa plano antigo.
+- Mensagens de erro com nova tentativa e abertura alternativa no navegador.
+- Janela tática restaura ao reabrir; cancelamentos e falhas de navegações antigas não substituem o destino atual.
+- Teste isolado aprovado para 13 destinos, alias Factory noturna, reutilização, sandbox e falhas simuladas.
+- Roadmap alinhado à integração aprovada. Validação visual online/desempenho ainda pendente.
+
+## 2026-10-13 — Desafio e apresentação (não publicado)
+- Unificação de Arsenal e Mercado com ficha técnica, munições compatíveis e encaixes.
+- Roadmap com pontos de operação responsivos e estado selecionado acessível.
+- Ilustrações remotas de mapas/personagens nos sete capítulos, com créditos e tratamento de falha.
+- Lista de missões sem compressão de linhas; documentos em cartões com descrição quebrável e inventário legível.
+- Tarkovinho com quatro inimigos mais resistentes, projéteis mais rápidos, recarga temporizada e extração condicionada a saque.
+- Corrigidos tiros através de cobertura, setas de movimento e mira automática para o inimigo mais próximo.
+- Testes direcionados de recarga, extração, resistência e cobertura aprovados. Validação visual pendente.
+
+## 2026-10-12 — Correções locais de interação em Missões (não publicado)
+- Atalhos selecionam a missão solicitada mesmo quando ela está em andamento ou concluída; a busca fica preenchida com seu nome.
+- Planejamento da próxima missão usa o mapa da missão em vez do mapa selecionado na Raid Rápida.
+- Busca preserva foco, cursor, espaços e maiúsculas durante a digitação.
+- Filtros refletem o novo status após ativar ou concluir uma missão.
+- Botão bloqueia gravação duplicada, permite repetir após falha e evita redesenhar uma página já fechada.
+- Missões concluídas deixam de exibir a mensagem incorreta de pré-requisitos pendentes.
+
 ## 2026-10-11 — V0.7.7, Missões 2.0 — linhas e desbloqueios
 - Cada linha de missão ganha um **dossiê prático**: próxima etapa, comerciante, nível, mapa e progresso local, sem misturar lore com requisitos verificáveis.
 - O dossiê mostra itens concretos da próxima etapa, quantidade e a exigência de item encontrado em raid quando o catálogo a informar; etapas sem item deixam isso claro.
